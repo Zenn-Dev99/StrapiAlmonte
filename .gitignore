@@ -173,3 +173,8 @@ Thumbs.db
 
 # Archivos con credenciales y secretos
 RAILWAY_ENV_VARS_SENDGRID.txt
+*.env.production
+*.env.local
+*.env.production.local
+env.production
+env.local
