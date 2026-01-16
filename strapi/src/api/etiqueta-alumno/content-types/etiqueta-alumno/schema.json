@@ -1,0 +1,44 @@
+{
+  "kind": "collectionType",
+  "collectionName": "etiquetas_alumnos",
+  "info": {
+    "singularName": "etiqueta-alumno",
+    "pluralName": "etiquetas-alumnos",
+    "displayName": "Etiquetas - Alumnos",
+    "description": "Alumnos asociados a apoderados"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nombres": {
+      "type": "string",
+      "required": true
+    },
+    "primer_apellido": {
+      "type": "string",
+      "required": true
+    },
+    "segundo_apellido": {
+      "type": "string"
+    },
+    "curso": {
+      "type": "string"
+    },
+    "letra": {
+      "type": "string"
+    },
+    "colegio": {
+      "type": "string"
+    },
+    "apoderado": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::etiqueta-apoderado.etiqueta-apoderado",
+      "inversedBy": "alumnos",
+      "required": true
+    }
+  }
+}
+

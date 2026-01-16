@@ -1,0 +1,138 @@
+{
+  "kind": "collectionType",
+  "collectionName": "colegio_list_items",
+  "info": {
+    "singularName": "colegio-list-item",
+    "pluralName": "colegio-list-items",
+    "displayName": "Listas · Item",
+    "description": "Ítems individuales presentes en versiones de listas de útiles"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nombre_detectado": {
+      "type": "string",
+      "required": true
+    },
+    "nombre_normalizado": {
+      "type": "string"
+    },
+    "cantidad": {
+      "type": "decimal"
+    },
+    "unidad": {
+      "type": "enumeration",
+      "enum": [
+        "unidad",
+        "paquete",
+        "caja",
+        "litro",
+        "kilo",
+        "cuaderno",
+        "libro",
+        "otro"
+      ]
+    },
+    "instrucciones": {
+      "type": "text"
+    },
+    "asignatura": {
+      "type": "string"
+    },
+    "categoria_texto": {
+      "type": "string"
+    },
+    "omit_purchase": {
+      "type": "boolean",
+      "default": false
+    },
+    "prioridad_revision": {
+      "type": "enumeration",
+      "enum": [
+        "normal",
+        "alta"
+      ],
+      "default": "normal"
+    },
+    "validacion_estado": {
+      "type": "enumeration",
+      "enum": [
+        "pendiente",
+        "en_revision",
+        "aprobado",
+        "rechazado"
+      ],
+      "default": "pendiente",
+      "required": true
+    },
+    "validation_errors": {
+      "type": "json"
+    },
+    "bounding_boxes": {
+      "type": "component",
+      "repeatable": true,
+      "component": "listas-utiles.bounding-box"
+    },
+    "precio_unitario_referencia": {
+      "type": "decimal"
+    },
+    "producto": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::material.material"
+    },
+    "producto_creado_en_revision": {
+      "type": "boolean",
+      "default": false
+    },
+    "documento": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::colegio-list-document.colegio-list-document",
+      "inversedBy": "items",
+      "required": true
+    },
+    "version": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::colegio-list-version.colegio-list-version",
+      "inversedBy": "items",
+      "required": true
+    },
+    "orden": {
+      "type": "integer"
+    },
+    "detectado_por": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "admin::user"
+    },
+    "verificado_por": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "admin::user"
+    },
+    "aprobado_por": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "admin::user"
+    },
+    "detectado_en": {
+      "type": "datetime"
+    },
+    "verificado_en": {
+      "type": "datetime"
+    },
+    "aprobado_en": {
+      "type": "datetime"
+    },
+    "audits": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::colegio-list-item-audit.colegio-list-item-audit",
+      "mappedBy": "item"
+    }
+  }
+}

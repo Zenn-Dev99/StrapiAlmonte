@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_lista_descuento_reglas",
+  "info": {
+    "displayName": "Regla de descuento",
+    "icon": "percent"
+  },
+  "options": {},
+  "attributes": {
+    "categoria": {
+      "type": "string",
+      "required": true
+    },
+    "descuento_especial": {
+      "type": "decimal",
+      "precision": 5,
+      "scale": 2
+    }
+  }
+}

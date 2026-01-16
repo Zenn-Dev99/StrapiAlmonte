@@ -1,0 +1,62 @@
+{
+  "kind": "collectionType",
+  "collectionName": "categorias_producto",
+  "info": {
+    "singularName": "categoria-producto",
+    "pluralName": "categorias-producto",
+    "displayName": "Categoría de Producto",
+    "description": "Categorías de productos para WooCommerce (Product Categories)"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "descripcion": {
+      "type": "text"
+    },
+    "tipo_visualizacion": {
+      "type": "enumeration",
+      "enum": [
+        "default",
+        "products",
+        "subcategories",
+        "both"
+      ],
+      "default": "default"
+    },
+    "imagen": {
+      "type": "media",
+      "multiple": false
+    },
+    "categoria_padre": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::categoria-producto.categoria-producto",
+      "inversedBy": "categorias_hijas"
+    },
+    "categorias_hijas": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::categoria-producto.categoria-producto",
+      "mappedBy": "categoria_padre"
+    },
+    "externalIds": {
+      "type": "json",
+      "description": "IDs externos de WooCommerce: { woo_moraleja: 123, woo_escolar: 456 }"
+    },
+    "estado_publicacion": {
+      "type": "enumeration",
+      "default": "pendiente",
+      "enum": [
+        "pendiente",
+        "publicado",
+        "borrador"
+      ]
+    }
+  }
+}

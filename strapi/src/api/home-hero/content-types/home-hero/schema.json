@@ -1,0 +1,83 @@
+{
+  "kind": "singleType",
+  "collectionName": "home_hero",
+  "info": {
+    "singularName": "home-hero",
+    "pluralName": "home-heroes",
+    "displayName": "Home · Hero",
+    "description": "Configuración de campañas y hero principal de la portada"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "maxLength": 120
+    },
+    "subtitle": {
+      "type": "richtext",
+      "required": true
+    },
+    "highlight": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "campaign_tag": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "primary_cta": {
+      "type": "component",
+      "component": "home.cta-link",
+      "required": true,
+      "repeatable": false
+    },
+    "secondary_cta": {
+      "type": "component",
+      "component": "home.cta-link",
+      "repeatable": false
+    },
+    "stats": {
+      "type": "component",
+      "component": "home.hero-stat",
+      "repeatable": true,
+      "required": true,
+      "min": 1,
+      "max": 4
+    },
+    "media": {
+      "type": "media",
+      "allowedTypes": ["images"]
+    },
+    "video_url": {
+      "type": "string",
+      "maxLength": 2048
+    },
+    "background_style": {
+      "type": "enumeration",
+      "enum": ["gradient", "image", "video"],
+      "default": "gradient",
+      "required": true
+    },
+    "active_from": {
+      "type": "datetime",
+      "required": true
+    },
+    "active_until": {
+      "type": "datetime"
+    },
+    "is_default": {
+      "type": "boolean",
+      "default": false
+    },
+    "seo": {
+      "type": "component",
+      "component": "shared.seo"
+    },
+    "structured_data": {
+      "type": "json"
+    }
+  }
+}

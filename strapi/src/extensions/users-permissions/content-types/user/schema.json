@@ -1,0 +1,7 @@
+{
+  "attributes": {
+    "smtp_account_key": { "type": "string" },
+    "smtp_accounts_allowed": { "type": "json" }
+  }
+}
+

@@ -1,0 +1,31 @@
+{
+  "collectionName": "components_home_cta_links",
+  "info": {
+    "displayName": "ctaLink",
+    "description": "CTA principal/secundaria para el home hero"
+  },
+  "options": {},
+  "attributes": {
+    "label": {
+      "type": "string",
+      "required": true,
+      "maxLength": 80
+    },
+    "href": {
+      "type": "string",
+      "required": true
+    },
+    "is_primary": {
+      "type": "boolean",
+      "default": true
+    },
+    "aria_label": {
+      "type": "string",
+      "maxLength": 160
+    },
+    "external": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

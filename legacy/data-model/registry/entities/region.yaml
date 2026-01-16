@@ -1,0 +1,16 @@
+version: 1
+entity: region
+table: v2_regions
+uid: region
+fields:
+  nombre:
+    type: string
+    required: true
+    maxLength: 120
+  codigo:
+    type: string
+    required: true
+    maxLength: 8
+  activo:
+    type: boolean
+    default: true

@@ -1,0 +1,317 @@
+═══════════════════════════════════════════════════════
+  🔧 FIX DEFINITIVO: SOBRESCRITURA DE DESCRIPCIONES
+═══════════════════════════════════════════════════════
+
+📅 Fecha: 29 de diciembre de 2025
+🎯 Problema: Las descripciones se sobrescriben entre sí
+✅ Estado: SOLUCIONADO en Strapi
+
+═══════════════════════════════════════════════════════
+1. ❌ EL PROBLEMA IDENTIFICADO
+═══════════════════════════════════════════════════════
+
+En el código de sincronización de Strapi (woo-sync.ts), existían
+"fallbacks cruzados" que causaban que ambas descripciones usaran
+la misma fuente de datos:
+
+CÓDIGO PROBLEMÁTICO:
+--------------------
+// Si description está vacía en rawWooData
+product.description = descripcionTexto || libro.subtitulo_libro || '';
+
+// Si short_description está vacía en rawWooData  
+product.short_description = libro.subtitulo_libro || descripcionTexto || '';
+
+RESULTADO:
+- Si subtitulo_libro estaba vacío → ambas descripciones usaban descripcionTexto
+- Si descripcionTexto estaba vacío → ambas descripciones usaban subtitulo_libro
+- ❌ SE SOBRESCRIBÍAN MUTUAMENTE
+
+═══════════════════════════════════════════════════════
+2. ✅ LA SOLUCIÓN IMPLEMENTADA EN STRAPI
+═══════════════════════════════════════════════════════
+
+Ahora cada campo usa SOLO su fuente de datos correspondiente,
+SIN fallbacks cruzados:
+
+CÓDIGO CORREGIDO:
+-----------------
+// Description usa SOLO libro.descripcion (campo blocks)
+product.description = descripcionTexto || '';
+
+// Short description usa SOLO libro.subtitulo_libro (campo texto)
+product.short_description = libro.subtitulo_libro || '';
+
+MAPEO CORRECTO:
+---------------
+┌─────────────────────────────────────────────────────────┐
+│ STRAPI                    →    WOOCOMMERCE              │
+├─────────────────────────────────────────────────────────┤
+│ libro.descripcion         →    description              │
+│ (tipo: blocks)                 (HTML/texto largo)       │
+│                                                          │
+│ libro.subtitulo_libro     →    short_description        │
+│ (tipo: string)                 (texto corto, max 255)   │
+└─────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════
+3. 📋 QUÉ DEBE HACER LA INTRANET
+═══════════════════════════════════════════════════════════
+
+ESTRUCTURA CORRECTA DEL PAYLOAD:
+--------------------------------
+
+const payload = {
+  data: {
+    nombre_libro: "...",
+    isbn_libro: "...",
+    // ... otros campos de Strapi ...
+    
+    // ⚠️ IMPORTANTE: rawWooData debe tener DOS campos distintos
+    rawWooData: {
+      description: "Descripción larga del producto...",
+      short_description: "Descripción corta del producto...",
+      // ... otros campos de WooCommerce ...
+    }
+  }
+};
+
+═══════════════════════════════════════════════════════════
+4. ✅ CHECKLIST PARA LA INTRANET
+═══════════════════════════════════════════════════════════
+
+□ 1. Tener DOS inputs separados en el formulario:
+     - Input "Descripción del producto" (textarea grande)
+     - Input "Descripción corta" (input texto, max 255 caracteres)
+
+□ 2. Mapear correctamente en el payload:
+     rawWooData.description = valorDelTextareaLargo
+     rawWooData.short_description = valorDelInputCorto
+
+□ 3. NUNCA igualar ambos valores:
+     ❌ MAL:
+     rawWooData.description = descripcion
+     rawWooData.short_description = descripcion  // ¡Duplicado!
+     
+     ✅ BIEN:
+     rawWooData.description = descripcionLarga
+     rawWooData.short_description = descripcionCorta  // ¡Diferente!
+
+□ 4. Permitir que uno esté vacío:
+     ✅ OK: description tiene texto, short_description vacía
+     ✅ OK: short_description tiene texto, description vacía
+     ✅ OK: ambas vacías (Strapi usará campos propios)
+
+□ 5. Validar longitud de short_description:
+     - Máximo recomendado: 160 caracteres
+     - Máximo permitido: 255 caracteres
+
+═══════════════════════════════════════════════════════════
+5. 🧪 CÓMO PROBAR QUE FUNCIONA
+═══════════════════════════════════════════════════════════
+
+PRUEBA 1: Crear producto con ambas descripciones diferentes
+------------------------------------------------------------
+Payload:
+{
+  data: {
+    nombre_libro: "Libro de Prueba",
+    isbn_libro: "9781234567890",
+    rawWooData: {
+      description: "Esta es la descripción larga del libro con todos los detalles.",
+      short_description: "Descripción corta"
+    }
+  }
+}
+
+Esperado en WooCommerce:
+- Description: "Esta es la descripción larga del libro con todos los detalles."
+- Short Description: "Descripción corta"
+
+
+PRUEBA 2: Crear producto solo con description
+----------------------------------------------
+Payload:
+{
+  data: {
+    nombre_libro: "Libro de Prueba 2",
+    isbn_libro: "9781234567891",
+    rawWooData: {
+      description: "Solo descripción larga",
+      short_description: ""
+    }
+  }
+}
+
+Esperado en WooCommerce:
+- Description: "Solo descripción larga"
+- Short Description: "" (vacía)
+
+
+PRUEBA 3: Crear producto solo con short_description
+----------------------------------------------------
+Payload:
+{
+  data: {
+    nombre_libro: "Libro de Prueba 3",
+    isbn_libro: "9781234567892",
+    rawWooData: {
+      description: "",
+      short_description: "Solo descripción corta"
+    }
+  }
+}
+
+Esperado en WooCommerce:
+- Description: "" (vacía)
+- Short Description: "Solo descripción corta"
+
+
+PRUEBA 4: Editar producto cambiando solo la description
+--------------------------------------------------------
+Payload (PUT):
+{
+  data: {
+    rawWooData: {
+      description: "Nueva descripción larga editada",
+      short_description: "Descripción corta original (sin cambios)"
+    }
+  }
+}
+
+Esperado en WooCommerce:
+- Description: "Nueva descripción larga editada" (actualizada)
+- Short Description: "Descripción corta original (sin cambios)" (sin cambios)
+
+═══════════════════════════════════════════════════════════
+6. 📊 DIAGNÓSTICO: ¿POR QUÉ SEGUÍA FALLANDO ANTES?
+═══════════════════════════════════════════════════════════
+
+PROBLEMA 1: Intranet no enviaba rawWooData
+-------------------------------------------
+Si la Intranet no incluía rawWooData en el payload, Strapi usaba
+los fallbacks cruzados que causaban la sobrescritura.
+
+SOLUCIÓN: Siempre enviar rawWooData con ambos campos.
+
+
+PROBLEMA 2: Intranet enviaba ambas descripciones iguales
+---------------------------------------------------------
+Ejemplo:
+const descripcion = formData.get('descripcion');
+rawWooData.description = descripcion;
+rawWooData.short_description = descripcion; // ❌ Duplicado
+
+SOLUCIÓN: Tener dos inputs separados y mapearlos correctamente.
+
+
+PROBLEMA 3: Strapi completaba campos vacíos con fallbacks
+----------------------------------------------------------
+Si rawWooData.short_description venía vacía, Strapi la llenaba
+con descripcionTexto (del campo description).
+
+SOLUCIÓN: ✅ Ya corregido en este fix. Ahora Strapi NO hace
+fallbacks cruzados.
+
+═══════════════════════════════════════════════════════════
+7. 🎯 RESUMEN EJECUTIVO
+═══════════════════════════════════════════════════════════
+
+ANTES (❌):
+-----------
+- Strapi tenía fallbacks cruzados
+- Si un campo estaba vacío, usaba el otro
+- Resultado: descripciones duplicadas
+
+AHORA (✅):
+-----------
+- Strapi usa campos independientes sin fallbacks
+- description ← SOLO libro.descripcion
+- short_description ← SOLO libro.subtitulo_libro
+- Si rawWooData viene con valores, los respeta tal cual
+
+ACCIÓN REQUERIDA INTRANET:
+---------------------------
+1. Verificar que se envíen DOS campos distintos en rawWooData
+2. NO igualar ambos valores
+3. Permitir que estén vacíos si no hay contenido
+
+═══════════════════════════════════════════════════════════
+8. 📝 PROMPT PARA CURSOR (INTRANET)
+═══════════════════════════════════════════════════════════
+
+PROMPT COMPLETO:
+----------------
+
+```
+# FIX: Descripciones sobrescritas en productos
+
+## Problema
+Al crear/editar productos, la "Descripción del producto" y la 
+"Descripción corta" se están sobrescribiendo con el mismo contenido.
+
+## Causa raíz
+Strapi tenía fallbacks cruzados que ya fueron corregidos. Ahora 
+debemos asegurarnos de que la Intranet envíe correctamente DOS 
+valores distintos en rawWooData.
+
+## Solución a implementar
+
+### 1. Verificar que existan DOS inputs separados:
+- Un textarea para "Descripción del producto" (largo)
+- Un input text para "Descripción corta" (max 160-255 caracteres)
+
+### 2. Al construir el payload, mapear correctamente:
+
+```typescript
+const payload = {
+  data: {
+    nombre_libro: formData.get('nombre'),
+    isbn_libro: formData.get('isbn'),
+    rawWooData: {
+      // Descripción larga (del textarea)
+      description: formData.get('descripcionLarga') || '',
+      
+      // Descripción corta (del input separado)
+      short_description: formData.get('descripcionCorta') || '',
+      
+      // ... otros campos ...
+    }
+  }
+};
+```
+
+### 3. NUNCA hacer esto:
+
+```typescript
+// ❌ MAL - Duplica el mismo valor
+const descripcion = formData.get('descripcion');
+rawWooData.description = descripcion;
+rawWooData.short_description = descripcion; // ¡Error!
+```
+
+### 4. ✅ CORRECTO:
+
+```typescript
+// ✅ BIEN - Valores independientes
+rawWooData.description = formData.get('descripcionLarga');
+rawWooData.short_description = formData.get('descripcionCorta');
+```
+
+### 5. Validaciones recomendadas:
+- short_description: máximo 160 caracteres (SEO)
+- Permitir que cualquiera esté vacío
+- Mostrar preview de cómo se verá en WooCommerce
+
+## Testing
+Después de implementar, probar:
+1. Crear producto con ambas descripciones diferentes
+2. Editar solo la descripción larga
+3. Editar solo la descripción corta
+4. Verificar en WooCommerce que no se sobrescriban
+```
+
+═══════════════════════════════════════════════════════════
+✅ FIN DEL DOCUMENTO
+═══════════════════════════════════════════════════════════
+

@@ -1,0 +1,77 @@
+{
+  "kind": "collectionType",
+  "collectionName": "deals",
+  "info": {
+    "singularName": "deal",
+    "pluralName": "deals",
+    "displayName": "Deal",
+    "description": "Negocios y oportunidades de venta en el CRM"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nombre": {
+      "type": "string",
+      "required": true
+    },
+    "empresa": {
+      "type": "string",
+      "required": true
+    },
+    "monto": {
+      "type": "decimal"
+    },
+    "etapa": {
+      "type": "enumeration",
+      "enum": [
+        "calificacion",
+        "propuesta-enviada",
+        "negociacion",
+        "ganado",
+        "perdido"
+      ],
+      "default": "calificacion",
+      "required": true
+    },
+    "probabilidad": {
+      "type": "integer",
+      "min": 0,
+      "max": 100,
+      "default": 0,
+      "required": true
+    },
+    "fecha_cierre": {
+      "type": "date"
+    },
+    "notas": {
+      "type": "text"
+    },
+    "activo": {
+      "type": "boolean",
+      "default": true,
+      "required": true
+    },
+    "relacionado_con_contacto": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::persona.persona"
+    },
+    "relacionado_con_oportunidad": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::oportunidad.oportunidad"
+    },
+    "relacionado_con_colegio": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::colegio.colegio"
+    },
+    "asignado_a": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::colaborador.colaborador"
+    }
+  }
+}

@@ -1,0 +1,1291 @@
+{
+  "generatedAt": "2025-11-08T19:03:47.724Z",
+  "analyses": [
+    {
+      "contentType": "Colegio",
+      "uid": "api::colegio.colegio",
+      "totalFields": 20,
+      "fields": [
+        {
+          "name": "rbd",
+          "type": "integer",
+          "required": true,
+          "unique": true,
+          "usage": {
+            "inControllers": [
+              "src/api/colegio/controllers/colegio.ts"
+            ],
+            "inServices": [],
+            "inScripts": [
+              "scripts/seed-demo-listas-utiles.js",
+              "scripts/seed-demo-academico.js",
+              "scripts/migrate-colegio-logo-to-component.mjs",
+              "scripts/import-promocion-contactos.mjs",
+              "scripts/import-inprocess.ts",
+              "scripts/import-data.mjs",
+              "scripts/import-colegios.mjs",
+              "scripts/import-colegios-v2.mjs",
+              "scripts/import-colegios-contacto.mjs",
+              "scripts/import-colegio-sostenedores.mjs",
+              "scripts/import-cartera.ts",
+              "scripts/import-assignments-team.mjs",
+              "scripts/import-affiliations.mjs",
+              "scripts/generate-colegio-dictionary.mjs",
+              "scripts/fix-colegio-logos.js",
+              "scripts/export-colegios-v2.mjs",
+              "scripts/export-assignments-template.mjs",
+              "scripts/create-demo-colegio.mjs",
+              "scripts/create-demo-colegio.js"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [],
+            "totalMatches": 258
+          },
+          "isUsed": true,
+          "usageCount": 258
+        },
+        {
+          "name": "colegio_nombre",
+          "type": "string",
+          "required": true,
+          "unique": false,
+          "usage": {
+            "inControllers": [
+              "src/api/colegio/controllers/colegio.ts"
+            ],
+            "inServices": [],
+            "inScripts": [
+              "scripts/seed-demo-listas-utiles.js",
+              "scripts/seed-demo-academico.js",
+              "scripts/migrate-colegios-organizacion.ts",
+              "scripts/migrate-colegio-logo-to-component.mjs",
+              "scripts/import-promocion-contactos.mjs",
+              "scripts/import-inprocess.ts",
+              "scripts/import-data.mjs",
+              "scripts/import-colegios.mjs",
+              "scripts/import-colegios-v2.mjs",
+              "scripts/import-colegios-contacto.mjs",
+              "scripts/import-colegio-sostenedores.mjs",
+              "scripts/import-affiliations.mjs",
+              "scripts/generate-colegio-dictionary.mjs",
+              "scripts/fix-colegio-logos.js",
+              "scripts/export-colegios-v2.mjs",
+              "scripts/export-assignments-template.mjs",
+              "scripts/create-demo-colegio.mjs",
+              "scripts/create-demo-colegio.js"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [],
+            "totalMatches": 97
+          },
+          "isUsed": true,
+          "usageCount": 97
+        },
+        {
+          "name": "estado_nombre",
+          "type": "component",
+          "required": false,
+          "unique": false,
+          "usage": {
+            "inControllers": [],
+            "inServices": [],
+            "inScripts": [
+              "scripts/import-colegios-v2.mjs",
+              "scripts/generate-colegio-dictionary.mjs",
+              "scripts/export-colegios-v2.mjs"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [],
+            "totalMatches": 21
+          },
+          "isUsed": true,
+          "usageCount": 21
+        },
+        {
+          "name": "rbd_digito_verificador",
+          "type": "string",
+          "required": false,
+          "unique": false,
+          "usage": {
+            "inControllers": [],
+            "inServices": [],
+            "inScripts": [
+              "scripts/seed-demo-listas-utiles.js",
+              "scripts/seed-demo-academico.js",
+              "scripts/import-colegios.mjs",
+              "scripts/import-colegios-v2.mjs",
+              "scripts/generate-colegio-dictionary.mjs",
+              "scripts/export-colegios-v2.mjs",
+              "scripts/create-demo-colegio.mjs",
+              "scripts/create-demo-colegio.js"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [],
+            "totalMatches": 24
+          },
+          "isUsed": true,
+          "usageCount": 24
+        },
+        {
+          "name": "dependencia",
+          "type": "enumeration",
+          "required": false,
+          "unique": false,
+          "usage": {
+            "inControllers": [
+              "src/api/colegio/controllers/colegio.ts"
+            ],
+            "inServices": [],
+            "inScripts": [
+              "scripts/import-promocion-contactos.mjs",
+              "scripts/import-data.mjs",
+              "scripts/import-colegios.mjs",
+              "scripts/import-colegios-v2.mjs",
+              "scripts/generate-colegio-dictionary.mjs",
+              "scripts/export-colegios-v2.mjs"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [],
+            "totalMatches": 40
+          },
+          "isUsed": true,
+          "usageCount": 40
+        },
+        {
+          "name": "ruralidad",
+          "type": "enumeration",
+          "required": false,
+          "unique": false,
+          "usage": {
+            "inControllers": [],
+            "inServices": [],
+            "inScripts": [
+              "scripts/import-data.mjs",
+              "scripts/import-colegios.mjs",
+              "scripts/import-colegios-v2.mjs",
+              "scripts/generate-colegio-dictionary.mjs",
+              "scripts/export-colegios-v2.mjs"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [],
+            "totalMatches": 25
+          },
+          "isUsed": true,
+          "usageCount": 25
+        },
+        {
+          "name": "estado_estab",
+          "type": "enumeration",
+          "required": false,
+          "unique": false,
+          "usage": {
+            "inControllers": [],
+            "inServices": [],
+            "inScripts": [
+              "scripts/import-colegios.mjs",
+              "scripts/import-colegios-v2.mjs",
+              "scripts/generate-colegio-dictionary.mjs",
+              "scripts/export-colegios-v2.mjs"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [],
+            "totalMatches": 24
+          },
+          "isUsed": true,
+          "usageCount": 24
+        },
+        {
+          "name": "region",
+          "type": "relation",
+          "required": false,
+          "unique": false,
+          "usage": {
+            "inControllers": [
+              "src/api/colegio/controllers/colegio.ts"
+            ],
+            "inServices": [],
+            "inScripts": [
+              "scripts/import-regiones.mjs",
+              "scripts/import-provincias.mjs",
+              "scripts/import-data.mjs",
+              "scripts/import-colegios.mjs",
+              "scripts/import-colegios-v2.mjs",
+              "scripts/generate-colegio-dictionary.mjs",
+              "scripts/export-strapi-csv.mjs",
+              "scripts/export-colegios-v2.mjs",
+              "scripts/backfill-persona-trayectoria-location.mjs",
+              "scripts/analyze-field-usage.mjs"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [
+              "src/api/colegio/content-types/colegio/lifecycles.ts",
+              "src/api/colegio/content-types/colegio/lifecycles.js"
+            ],
+            "totalMatches": 131
+          },
+          "isUsed": true,
+          "usageCount": 131
+        },
+        {
+          "name": "provincia",
+          "type": "relation",
+          "required": false,
+          "unique": false,
+          "usage": {
+            "inControllers": [],
+            "inServices": [],
+            "inScripts": [
+              "scripts/import-zonas.mjs",
+              "scripts/import-provincias.mjs",
+              "scripts/import-data.mjs",
+              "scripts/import-comunas.mjs",
+              "scripts/import-colegios.mjs",
+              "scripts/import-colegios-v2.mjs",
+              "scripts/generate-colegio-dictionary.mjs",
+              "scripts/export-strapi-csv.mjs",
+              "scripts/export-colegios-v2.mjs",
+              "scripts/analyze-field-usage.mjs"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [
+              "src/api/colegio/content-types/colegio/lifecycles.ts",
+              "src/api/colegio/content-types/colegio/lifecycles.js"
+            ],
+            "totalMatches": 159
+          },
+          "isUsed": true,
+          "usageCount": 159
+        },
+        {
+          "name": "zona",
+          "type": "relation",
+          "required": false,
+          "unique": false,
+          "usage": {
+            "inControllers": [],
+            "inServices": [],
+            "inScripts": [
+              "scripts/import-zonas.mjs",
+              "scripts/import-provincias.mjs",
+              "scripts/import-data.mjs",
+              "scripts/import-colegios.mjs",
+              "scripts/import-colegios-v2.mjs",
+              "scripts/generate-colegio-dictionary.mjs",
+              "scripts/export-strapi-csv.mjs",
+              "scripts/export-colegios-v2.mjs"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [
+              "src/api/colegio/content-types/colegio/lifecycles.ts",
+              "src/api/colegio/content-types/colegio/lifecycles.js"
+            ],
+            "totalMatches": 97
+          },
+          "isUsed": true,
+          "usageCount": 97
+        },
+        {
+          "name": "comuna",
+          "type": "relation",
+          "required": false,
+          "unique": false,
+          "usage": {
+            "inControllers": [
+              "src/api/colegio/controllers/colegio.ts"
+            ],
+            "inServices": [],
+            "inScripts": [
+              "scripts/import-inprocess.ts",
+              "scripts/import-data.mjs",
+              "scripts/import-comunas.mjs",
+              "scripts/import-colegios.mjs",
+              "scripts/import-colegios-v2.mjs",
+              "scripts/generate-colegio-dictionary.mjs",
+              "scripts/export-strapi-csv.mjs",
+              "scripts/export-colegios-v2.mjs",
+              "scripts/backfill-persona-trayectoria-location.mjs",
+              "scripts/analyze-field-usage.mjs"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [
+              "src/api/colegio/content-types/colegio/lifecycles.ts",
+              "src/api/colegio/content-types/colegio/lifecycles.js"
+            ],
+            "totalMatches": 159
+          },
+          "isUsed": true,
+          "usageCount": 159
+        },
+        {
+          "name": "cartera_asignaciones",
+          "type": "relation",
+          "required": false,
+          "unique": false,
+          "usage": {
+            "inControllers": [],
+            "inServices": [],
+            "inScripts": [
+              "scripts/import-cartera.ts",
+              "scripts/generate-colegio-dictionary.mjs",
+              "scripts/export-colegios-v2.mjs"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [],
+            "totalMatches": 13
+          },
+          "isUsed": true,
+          "usageCount": 13
+        },
+        {
+          "name": "persona_trayectorias",
+          "type": "relation",
+          "required": false,
+          "unique": false,
+          "usage": {
+            "inControllers": [],
+            "inServices": [],
+            "inScripts": [],
+            "inRoutes": [],
+            "inLifecycles": [],
+            "totalMatches": 0
+          },
+          "isUsed": false,
+          "usageCount": 0
+        },
+        {
+          "name": "telefonos",
+          "type": "component",
+          "required": false,
+          "unique": false,
+          "usage": {
+            "inControllers": [
+              "src/api/colegio/controllers/colegio.ts"
+            ],
+            "inServices": [],
+            "inScripts": [
+              "scripts/run-maintenance-tasks.cjs",
+              "scripts/import-personas-v2.mjs",
+              "scripts/import-colegios-v2.mjs",
+              "scripts/import-colegios-contacto.mjs",
+              "scripts/generate-colegio-dictionary.mjs",
+              "scripts/export-personas.mjs",
+              "scripts/export-colegios-v2.mjs"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [],
+            "totalMatches": 56
+          },
+          "isUsed": true,
+          "usageCount": 56
+        },
+        {
+          "name": "emails",
+          "type": "component",
+          "required": false,
+          "unique": false,
+          "usage": {
+            "inControllers": [
+              "src/api/colegio/controllers/colegio.ts"
+            ],
+            "inServices": [],
+            "inScripts": [
+              "scripts/seed-portal-personas.cjs",
+              "scripts/import-personas-v2.mjs",
+              "scripts/import-personas-simple.mjs",
+              "scripts/import-colegios-v2.mjs",
+              "scripts/import-base-data.ts",
+              "scripts/generate-colegio-dictionary.mjs",
+              "scripts/export-personas.mjs",
+              "scripts/export-colegios-v2.mjs"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [],
+            "totalMatches": 67
+          },
+          "isUsed": true,
+          "usageCount": 67
+        },
+        {
+          "name": "direcciones",
+          "type": "component",
+          "required": false,
+          "unique": false,
+          "usage": {
+            "inControllers": [],
+            "inServices": [],
+            "inScripts": [
+              "scripts/import-colegios-v2.mjs",
+              "scripts/import-colegios-contacto.mjs",
+              "scripts/generate-colegio-dictionary.mjs",
+              "scripts/export-colegios-v2.mjs"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [],
+            "totalMatches": 31
+          },
+          "isUsed": true,
+          "usageCount": 31
+        },
+        {
+          "name": "Website",
+          "type": "component",
+          "required": false,
+          "unique": false,
+          "usage": {
+            "inControllers": [],
+            "inServices": [],
+            "inScripts": [
+              "scripts/import-colegios-v2.mjs",
+              "scripts/import-colegios-contacto.mjs",
+              "scripts/generate-colegio-dictionary.mjs",
+              "scripts/export-colegios-v2.mjs"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [],
+            "totalMatches": 55
+          },
+          "isUsed": true,
+          "usageCount": 55
+        },
+        {
+          "name": "logo",
+          "type": "component",
+          "required": false,
+          "unique": false,
+          "usage": {
+            "inControllers": [
+              "src/api/colegio/controllers/colegio.ts"
+            ],
+            "inServices": [],
+            "inScripts": [
+              "scripts/seed-media-home-demo.cjs",
+              "scripts/migrate-colegio-logo-to-component.mjs",
+              "scripts/import-colegios.mjs",
+              "scripts/import-colegios-v2.mjs",
+              "scripts/generate-colegio-dictionary.mjs",
+              "scripts/fix-colegio-logos.js",
+              "scripts/export-personas.mjs",
+              "scripts/export-colegios-v2.mjs"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [],
+            "totalMatches": 107
+          },
+          "isUsed": true,
+          "usageCount": 107
+        },
+        {
+          "name": "sostenedor",
+          "type": "relation",
+          "required": false,
+          "unique": false,
+          "usage": {
+            "inControllers": [],
+            "inServices": [],
+            "inScripts": [
+              "scripts/import-colegio-sostenedores.mjs",
+              "scripts/generate-colegio-dictionary.mjs",
+              "scripts/export-colegios-v2.mjs"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [],
+            "totalMatches": 28
+          },
+          "isUsed": true,
+          "usageCount": 28
+        },
+        {
+          "name": "listas_utiles",
+          "type": "relation",
+          "required": false,
+          "unique": false,
+          "usage": {
+            "inControllers": [],
+            "inServices": [],
+            "inScripts": [
+              "scripts/generate-colegio-dictionary.mjs",
+              "scripts/export-colegios-v2.mjs"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [],
+            "totalMatches": 15
+          },
+          "isUsed": true,
+          "usageCount": 15
+        }
+      ],
+      "relations": [
+        {
+          "field": "region",
+          "relation": "manyToOne",
+          "target": "api::region.region",
+          "inversedBy": "colegios"
+        },
+        {
+          "field": "provincia",
+          "relation": "manyToOne",
+          "target": "api::provincia.provincia",
+          "inversedBy": "colegios"
+        },
+        {
+          "field": "zona",
+          "relation": "manyToOne",
+          "target": "api::zona.zona",
+          "inversedBy": "colegios"
+        },
+        {
+          "field": "comuna",
+          "relation": "manyToOne",
+          "target": "api::comuna.comuna",
+          "inversedBy": "colegios"
+        },
+        {
+          "field": "cartera_asignaciones",
+          "relation": "oneToMany",
+          "target": "api::cartera-asignacion.cartera-asignacion",
+          "mappedBy": "colegio"
+        },
+        {
+          "field": "persona_trayectorias",
+          "relation": "oneToMany",
+          "target": "api::persona-trayectoria.persona-trayectoria",
+          "mappedBy": "colegio"
+        },
+        {
+          "field": "sostenedor",
+          "relation": "manyToOne",
+          "target": "api::colegio-sostenedor.colegio-sostenedor",
+          "inversedBy": "colegios"
+        },
+        {
+          "field": "listas_utiles",
+          "relation": "oneToMany",
+          "target": "api::colegio-list.colegio-list",
+          "mappedBy": "colegio"
+        }
+      ],
+      "components": [
+        {
+          "field": "estado_nombre",
+          "component": "contacto.nombre",
+          "repeatable": true
+        },
+        {
+          "field": "telefonos",
+          "component": "contacto.telefono",
+          "repeatable": true
+        },
+        {
+          "field": "emails",
+          "component": "contacto.email",
+          "repeatable": true
+        },
+        {
+          "field": "direcciones",
+          "component": "contacto.direccion",
+          "repeatable": true
+        },
+        {
+          "field": "Website",
+          "component": "contacto.website",
+          "repeatable": true
+        },
+        {
+          "field": "logo",
+          "component": "contacto.logo-o-avatar",
+          "repeatable": false
+        }
+      ],
+      "redundancies": [
+        {
+          "type": "geographic_redundancy",
+          "fields": [
+            "region",
+            "provincia",
+            "comuna"
+          ],
+          "recommendation": "Si comuna siempre tiene provincia y región, considerar derivar desde comuna"
+        }
+      ],
+      "unusedFields": [],
+      "lowUsageFields": []
+    },
+    {
+      "contentType": "Persona",
+      "uid": "api::persona.persona",
+      "totalFields": 26,
+      "fields": [
+        {
+          "name": "rut",
+          "type": "string",
+          "required": false,
+          "unique": true,
+          "usage": {
+            "inControllers": [],
+            "inServices": [],
+            "inScripts": [
+              "scripts/seed-portal-personas.cjs",
+              "scripts/seed-demo-academico.js",
+              "scripts/import-promocion-contactos.mjs",
+              "scripts/import-personas-v2.mjs",
+              "scripts/import-personas-simple.mjs",
+              "scripts/import-colegio-sostenedores.mjs",
+              "scripts/import-colaboradores.mjs",
+              "scripts/import-cartera.ts",
+              "scripts/import-base-data.ts",
+              "scripts/import-assignments-team.mjs",
+              "scripts/import-affiliations.mjs",
+              "scripts/generate-colegio-dictionary.mjs",
+              "scripts/export-personas.mjs",
+              "scripts/export-colegios-v2.mjs"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [
+              "src/api/persona/content-types/persona/lifecycles.ts"
+            ],
+            "totalMatches": 119
+          },
+          "isUsed": true,
+          "usageCount": 119
+        },
+        {
+          "name": "nombres",
+          "type": "string",
+          "required": false,
+          "unique": false,
+          "usage": {
+            "inControllers": [
+              "src/api/persona/controllers/persona.ts"
+            ],
+            "inServices": [],
+            "inScripts": [
+              "scripts/seed-demo-academico.js",
+              "scripts/import-personas-v2.mjs",
+              "scripts/import-personas-simple.mjs",
+              "scripts/import-data.mjs",
+              "scripts/import-colaboradores.mjs",
+              "scripts/import-base-data.ts",
+              "scripts/import-assignments-team.mjs",
+              "scripts/import-affiliations.mjs",
+              "scripts/generate-colegio-dictionary.mjs",
+              "scripts/export-personas.mjs",
+              "scripts/analyze-field-usage.mjs"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [
+              "src/api/persona/content-types/persona/lifecycles.ts"
+            ],
+            "totalMatches": 56
+          },
+          "isUsed": true,
+          "usageCount": 56
+        },
+        {
+          "name": "primer_apellido",
+          "type": "string",
+          "required": false,
+          "unique": false,
+          "usage": {
+            "inControllers": [
+              "src/api/persona/controllers/persona.ts"
+            ],
+            "inServices": [],
+            "inScripts": [
+              "scripts/seed-demo-academico.js",
+              "scripts/import-personas-v2.mjs",
+              "scripts/import-personas-simple.mjs",
+              "scripts/import-colaboradores.mjs",
+              "scripts/import-base-data.ts",
+              "scripts/import-assignments-team.mjs",
+              "scripts/export-personas.mjs",
+              "scripts/analyze-field-usage.mjs"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [
+              "src/api/persona/content-types/persona/lifecycles.ts"
+            ],
+            "totalMatches": 46
+          },
+          "isUsed": true,
+          "usageCount": 46
+        },
+        {
+          "name": "segundo_apellido",
+          "type": "string",
+          "required": false,
+          "unique": false,
+          "usage": {
+            "inControllers": [
+              "src/api/persona/controllers/persona.ts"
+            ],
+            "inServices": [],
+            "inScripts": [
+              "scripts/import-personas-v2.mjs",
+              "scripts/import-personas-simple.mjs",
+              "scripts/import-colaboradores.mjs",
+              "scripts/import-base-data.ts",
+              "scripts/import-assignments-team.mjs",
+              "scripts/export-personas.mjs",
+              "scripts/analyze-field-usage.mjs"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [
+              "src/api/persona/content-types/persona/lifecycles.ts"
+            ],
+            "totalMatches": 42
+          },
+          "isUsed": true,
+          "usageCount": 42
+        },
+        {
+          "name": "nombre_apellidos",
+          "type": "string",
+          "required": false,
+          "unique": false,
+          "usage": {
+            "inControllers": [
+              "src/api/persona/controllers/persona.ts"
+            ],
+            "inServices": [],
+            "inScripts": [
+              "scripts/analyze-field-usage.mjs"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [],
+            "totalMatches": 9
+          },
+          "isUsed": true,
+          "usageCount": 9
+        },
+        {
+          "name": "iniciales",
+          "type": "string",
+          "required": false,
+          "unique": false,
+          "usage": {
+            "inControllers": [],
+            "inServices": [],
+            "inScripts": [
+              "scripts/analyze-field-usage.mjs"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [],
+            "totalMatches": 2
+          },
+          "isUsed": true,
+          "usageCount": 2
+        },
+        {
+          "name": "nombre_completo",
+          "type": "string",
+          "required": false,
+          "unique": false,
+          "usage": {
+            "inControllers": [
+              "src/api/persona/controllers/persona.ts"
+            ],
+            "inServices": [],
+            "inScripts": [
+              "scripts/seed-portal-personas.cjs",
+              "scripts/import-personas-v2.mjs",
+              "scripts/import-personas-simple.mjs",
+              "scripts/import-colaboradores.mjs",
+              "scripts/import-assignments-team.mjs",
+              "scripts/import-affiliations.mjs",
+              "scripts/export-personas.mjs",
+              "scripts/export-colegios-v2.mjs",
+              "scripts/analyze-field-usage.mjs"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [
+              "src/api/persona/content-types/persona/lifecycles.ts"
+            ],
+            "totalMatches": 57
+          },
+          "isUsed": true,
+          "usageCount": 57
+        },
+        {
+          "name": "status_nombres",
+          "type": "enumeration",
+          "required": false,
+          "unique": false,
+          "usage": {
+            "inControllers": [],
+            "inServices": [],
+            "inScripts": [
+              "scripts/import-personas-v2.mjs",
+              "scripts/export-personas.mjs"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [],
+            "totalMatches": 12
+          },
+          "isUsed": true,
+          "usageCount": 12
+        },
+        {
+          "name": "nivel_confianza",
+          "type": "enumeration",
+          "required": false,
+          "unique": false,
+          "usage": {
+            "inControllers": [],
+            "inServices": [],
+            "inScripts": [
+              "scripts/import-personas-v2.mjs",
+              "scripts/export-personas.mjs"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [],
+            "totalMatches": 12
+          },
+          "isUsed": true,
+          "usageCount": 12
+        },
+        {
+          "name": "origen",
+          "type": "enumeration",
+          "required": false,
+          "unique": false,
+          "usage": {
+            "inControllers": [],
+            "inServices": [],
+            "inScripts": [
+              "scripts/import-personas-v2.mjs",
+              "scripts/import-personas-simple.mjs",
+              "scripts/import-base-data.ts",
+              "scripts/export-personas.mjs"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [],
+            "totalMatches": 23
+          },
+          "isUsed": true,
+          "usageCount": 23
+        },
+        {
+          "name": "activo",
+          "type": "boolean",
+          "required": false,
+          "unique": false,
+          "usage": {
+            "inControllers": [],
+            "inServices": [],
+            "inScripts": [
+              "scripts/import-personas-v2.mjs",
+              "scripts/import-personas-simple.mjs",
+              "scripts/import-colegios.mjs",
+              "scripts/import-colegios-v2.mjs",
+              "scripts/import-colaboradores.mjs",
+              "scripts/import-base-data.ts",
+              "scripts/import-affiliations.mjs",
+              "scripts/export-personas.mjs"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [],
+            "totalMatches": 41
+          },
+          "isUsed": true,
+          "usageCount": 41
+        },
+        {
+          "name": "notas",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "usage": {
+            "inControllers": [],
+            "inServices": [],
+            "inScripts": [
+              "scripts/migrate-assignments-rol-orden.mjs",
+              "scripts/import-personas-v2.mjs",
+              "scripts/import-cartera.ts",
+              "scripts/import-base-data.ts",
+              "scripts/import-assignments-team.mjs",
+              "scripts/generate-colegio-dictionary.mjs",
+              "scripts/export-personas.mjs",
+              "scripts/export-colegios-v2.mjs"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [],
+            "totalMatches": 50
+          },
+          "isUsed": true,
+          "usageCount": 50
+        },
+        {
+          "name": "tags",
+          "type": "relation",
+          "required": false,
+          "unique": false,
+          "usage": {
+            "inControllers": [
+              "src/api/persona/controllers/persona.ts"
+            ],
+            "inServices": [],
+            "inScripts": [
+              "scripts/seed-news-sample.cjs",
+              "scripts/seed-media-home-demo.cjs",
+              "scripts/import-personas-v2.mjs",
+              "scripts/export-personas.mjs"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [],
+            "totalMatches": 47
+          },
+          "isUsed": true,
+          "usageCount": 47
+        },
+        {
+          "name": "genero",
+          "type": "enumeration",
+          "required": false,
+          "unique": false,
+          "usage": {
+            "inControllers": [],
+            "inServices": [],
+            "inScripts": [
+              "scripts/import-personas-v2.mjs",
+              "scripts/import-personas-simple.mjs",
+              "scripts/import-base-data.ts",
+              "scripts/export-personas.mjs"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [],
+            "totalMatches": 28
+          },
+          "isUsed": true,
+          "usageCount": 28
+        },
+        {
+          "name": "cumpleagno",
+          "type": "date",
+          "required": false,
+          "unique": false,
+          "usage": {
+            "inControllers": [],
+            "inServices": [],
+            "inScripts": [
+              "scripts/import-personas-v2.mjs",
+              "scripts/export-personas.mjs"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [],
+            "totalMatches": 15
+          },
+          "isUsed": true,
+          "usageCount": 15
+        },
+        {
+          "name": "cartera_asignaciones",
+          "type": "relation",
+          "required": false,
+          "unique": false,
+          "usage": {
+            "inControllers": [],
+            "inServices": [],
+            "inScripts": [
+              "scripts/import-cartera.ts",
+              "scripts/generate-colegio-dictionary.mjs",
+              "scripts/export-colegios-v2.mjs"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [],
+            "totalMatches": 13
+          },
+          "isUsed": true,
+          "usageCount": 13
+        },
+        {
+          "name": "identificadores_externos",
+          "type": "json",
+          "required": false,
+          "unique": false,
+          "usage": {
+            "inControllers": [],
+            "inServices": [],
+            "inScripts": [
+              "scripts/import-personas-v2.mjs",
+              "scripts/import-base-data.ts",
+              "scripts/import-affiliations.mjs",
+              "scripts/export-personas.mjs"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [],
+            "totalMatches": 23
+          },
+          "isUsed": true,
+          "usageCount": 23
+        },
+        {
+          "name": "emails",
+          "type": "component",
+          "required": false,
+          "unique": false,
+          "usage": {
+            "inControllers": [
+              "src/api/persona/controllers/persona.ts"
+            ],
+            "inServices": [],
+            "inScripts": [
+              "scripts/seed-portal-personas.cjs",
+              "scripts/import-personas-v2.mjs",
+              "scripts/import-personas-simple.mjs",
+              "scripts/import-colegios-v2.mjs",
+              "scripts/import-base-data.ts",
+              "scripts/generate-colegio-dictionary.mjs",
+              "scripts/export-personas.mjs",
+              "scripts/export-colegios-v2.mjs"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [],
+            "totalMatches": 67
+          },
+          "isUsed": true,
+          "usageCount": 67
+        },
+        {
+          "name": "telefonos",
+          "type": "component",
+          "required": false,
+          "unique": false,
+          "usage": {
+            "inControllers": [
+              "src/api/persona/controllers/persona.ts"
+            ],
+            "inServices": [],
+            "inScripts": [
+              "scripts/run-maintenance-tasks.cjs",
+              "scripts/import-personas-v2.mjs",
+              "scripts/import-colegios-v2.mjs",
+              "scripts/import-colegios-contacto.mjs",
+              "scripts/generate-colegio-dictionary.mjs",
+              "scripts/export-personas.mjs",
+              "scripts/export-colegios-v2.mjs"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [
+              "src/api/persona/content-types/persona/lifecycles.ts"
+            ],
+            "totalMatches": 62
+          },
+          "isUsed": true,
+          "usageCount": 62
+        },
+        {
+          "name": "imagen",
+          "type": "component",
+          "required": false,
+          "unique": false,
+          "usage": {
+            "inControllers": [
+              "src/api/persona/controllers/persona.ts"
+            ],
+            "inServices": [],
+            "inScripts": [
+              "scripts/seed-media-home-demo.cjs",
+              "scripts/migrate-colegio-logo-to-component.mjs",
+              "scripts/import-personas-v2.mjs",
+              "scripts/import-colegios-v2.mjs",
+              "scripts/generate-ct-docs.mjs",
+              "scripts/generate-colegio-dictionary.mjs",
+              "scripts/fix-colegio-logos.js",
+              "scripts/export-personas.mjs",
+              "scripts/export-colegios-v2.mjs"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [],
+            "totalMatches": 107
+          },
+          "isUsed": true,
+          "usageCount": 107
+        },
+        {
+          "name": "portal_account",
+          "type": "component",
+          "required": false,
+          "unique": false,
+          "usage": {
+            "inControllers": [],
+            "inServices": [],
+            "inScripts": [
+              "scripts/seed-portal-personas.cjs"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [],
+            "totalMatches": 1
+          },
+          "isUsed": true,
+          "usageCount": 1
+        },
+        {
+          "name": "portal_roles",
+          "type": "component",
+          "required": false,
+          "unique": false,
+          "usage": {
+            "inControllers": [
+              "src/api/persona/controllers/persona.ts"
+            ],
+            "inServices": [],
+            "inScripts": [
+              "scripts/seed-portal-personas.cjs"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [],
+            "totalMatches": 7
+          },
+          "isUsed": true,
+          "usageCount": 7
+        },
+        {
+          "name": "portal_preferences",
+          "type": "component",
+          "required": false,
+          "unique": false,
+          "usage": {
+            "inControllers": [],
+            "inServices": [],
+            "inScripts": [
+              "scripts/seed-portal-personas.cjs"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [],
+            "totalMatches": 1
+          },
+          "isUsed": true,
+          "usageCount": 1
+        },
+        {
+          "name": "portal_snapshot",
+          "type": "json",
+          "required": false,
+          "unique": false,
+          "usage": {
+            "inControllers": [],
+            "inServices": [],
+            "inScripts": [
+              "scripts/seed-portal-personas.cjs"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [],
+            "totalMatches": 1
+          },
+          "isUsed": true,
+          "usageCount": 1
+        },
+        {
+          "name": "portal_last_synced_at",
+          "type": "datetime",
+          "required": false,
+          "unique": false,
+          "usage": {
+            "inControllers": [],
+            "inServices": [],
+            "inScripts": [
+              "scripts/seed-portal-personas.cjs"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [],
+            "totalMatches": 1
+          },
+          "isUsed": true,
+          "usageCount": 1
+        },
+        {
+          "name": "trayectorias",
+          "type": "relation",
+          "required": false,
+          "unique": false,
+          "usage": {
+            "inControllers": [],
+            "inServices": [],
+            "inScripts": [
+              "scripts/seed-demo-academico.js",
+              "scripts/import-affiliations.mjs",
+              "scripts/export-strapi-csv.mjs",
+              "scripts/backfill-persona-trayectoria-location.mjs"
+            ],
+            "inRoutes": [],
+            "inLifecycles": [],
+            "totalMatches": 12
+          },
+          "isUsed": true,
+          "usageCount": 12
+        }
+      ],
+      "relations": [
+        {
+          "field": "tags",
+          "relation": "manyToMany",
+          "target": "api::persona-tag.persona-tag"
+        },
+        {
+          "field": "cartera_asignaciones",
+          "relation": "oneToMany",
+          "target": "api::cartera-asignacion.cartera-asignacion",
+          "mappedBy": "ejecutivo"
+        },
+        {
+          "field": "trayectorias",
+          "relation": "oneToMany",
+          "target": "api::persona-trayectoria.persona-trayectoria",
+          "mappedBy": "persona"
+        }
+      ],
+      "components": [
+        {
+          "field": "emails",
+          "component": "contacto.email",
+          "repeatable": true
+        },
+        {
+          "field": "telefonos",
+          "component": "contacto.telefono",
+          "repeatable": true
+        },
+        {
+          "field": "imagen",
+          "component": "contacto.logo-o-avatar",
+          "repeatable": false
+        },
+        {
+          "field": "portal_account",
+          "component": "portal.account",
+          "repeatable": false
+        },
+        {
+          "field": "portal_roles",
+          "component": "portal.access-role",
+          "repeatable": true
+        },
+        {
+          "field": "portal_preferences",
+          "component": "portal.preferences",
+          "repeatable": false
+        }
+      ],
+      "redundancies": [
+        {
+          "type": "multiple_name_fields",
+          "fields": [
+            "nombres",
+            "primer_apellido",
+            "segundo_apellido",
+            "nombre_apellidos",
+            "nombre_completo",
+            "iniciales"
+          ],
+          "recommendation": "Considerar consolidar campos de nombre. nombre_completo puede calcularse desde nombres, primer_apellido, segundo_apellido"
+        }
+      ],
+      "unusedFields": [],
+      "lowUsageFields": [
+        "iniciales",
+        "portal_snapshot",
+        "portal_last_synced_at"
+      ]
+    }
+  ]
+}

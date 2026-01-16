@@ -1,0 +1,90 @@
+═══════════════════════════════════════════════════════
+  🚨 PROMPT URGENTE PARA INTRANET
+═══════════════════════════════════════════════════════
+
+# Fix: Cambios no se reflejan en WooCommerce al editar productos
+
+## 🔴 Problema
+Cuando editas un producto desde la Intranet, sale que todo salió bien
+pero los cambios NO aparecen en WooCommerce.
+
+## 🎯 Causa
+El API NO está enviando el campo `rawWooData` a Strapi cuando actualiza
+un producto. Por eso Strapi usa datos viejos al sincronizar con WooCommerce.
+
+## ✅ Solución (1 línea de código)
+
+### Archivo a modificar:
+```
+frontend-ubold/src/app/api/tienda/productos/[id]/route.ts
+```
+
+### Buscar esta sección (aproximadamente línea 150-170):
+
+```typescript
+const updateData: any = {
+  data: {
+    nombre_libro: body.nombre_libro,
+    descripcion: convertirHTMLaBlocks(body.descripcion),
+    subtitulo_libro: body.subtitulo_libro,
+    isbn_libro: body.isbn_libro,
+    precio: body.precio,
+    precio_oferta: body.precio_oferta,
+    stock_quantity: body.stock_quantity,
+    portada_libro: portadaLibroId,
+    canales: canalesIds,
+    estado_publicacion: estadoFinal
+  }
+};
+```
+
+### Agregar UNA línea:
+
+```typescript
+const updateData: any = {
+  data: {
+    nombre_libro: body.nombre_libro,
+    descripcion: convertirHTMLaBlocks(body.descripcion),
+    subtitulo_libro: body.subtitulo_libro,
+    isbn_libro: body.isbn_libro,
+    precio: body.precio,
+    precio_oferta: body.precio_oferta,
+    stock_quantity: body.stock_quantity,
+    portada_libro: portadaLibroId,
+    canales: canalesIds,
+    estado_publicacion: estadoFinal,
+    
+    // ✅ AGREGAR ESTA LÍNEA:
+    rawWooData: body.raw_woo_data || body.rawWooData || null
+  }
+};
+```
+
+## 🧪 Cómo probar
+
+1. Hacer el cambio
+2. Reiniciar el servidor frontend (si es necesario)
+3. Editar un producto desde la Intranet (cambiar descripción o precio)
+4. Guardar
+5. Ir a WooCommerce y verificar que el cambio aparezca
+
+## 📝 Explicación técnica (opcional)
+
+El frontend construye `rawWooData` con todos los campos de WooCommerce
+(description, short_description, price, stock, images, etc.).
+
+Pero el API NO lo estaba enviando a Strapi, solo enviaba los campos
+básicos de Strapi (descripcion, subtitulo_libro, precio, etc.).
+
+Resultado: Strapi actualizaba sus campos, pero cuando sincronizaba
+con WooCommerce, usaba el `rawWooData` viejo (o lo reconstruía 
+incompleto), por eso los cambios no se reflejaban.
+
+Con este fix, Strapi recibe el `rawWooData` actualizado y lo usa
+al sincronizar con WooCommerce, por lo que todos los cambios
+aparecen correctamente.
+
+═══════════════════════════════════════════════════════
+✅ FIN - Enviar este mensaje completo a Cursor (Intranet)
+═══════════════════════════════════════════════════════
+

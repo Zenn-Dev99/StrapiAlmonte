@@ -1,0 +1,41 @@
+{
+  "collectionName": "components_cotizaciones_items",
+  "info": {
+    "displayName": "Item",
+    "icon": "shopping-cart"
+  },
+  "options": {},
+  "attributes": {
+    "producto": {
+      "type": "string",
+      "required": true
+    },
+    "descripcion": {
+      "type": "text"
+    },
+    "categoria": {
+      "type": "string"
+    },
+    "cantidad": {
+      "type": "decimal",
+      "precision": 12,
+      "scale": 2,
+      "default": 1
+    },
+    "precio_unitario": {
+      "type": "decimal",
+      "precision": 12,
+      "scale": 2
+    },
+    "descuento": {
+      "type": "decimal",
+      "precision": 5,
+      "scale": 2
+    },
+    "subtotal": {
+      "type": "decimal",
+      "precision": 12,
+      "scale": 2
+    }
+  }
+}

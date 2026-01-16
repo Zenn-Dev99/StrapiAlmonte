@@ -1,0 +1,71 @@
+{
+  "kind": "collectionType",
+  "collectionName": "activity_logs",
+  "info": {
+    "singularName": "activity-log",
+    "pluralName": "activity-logs",
+    "displayName": "Log de Actividades",
+    "description": "Registro de todas las actividades y acciones realizadas en el sistema para auditoría"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "usuario": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::colaborador.colaborador"
+    },
+    "accion": {
+      "type": "enumeration",
+      "enum": [
+        "crear",
+        "actualizar",
+        "eliminar",
+        "ver",
+        "exportar",
+        "sincronizar",
+        "cambiar_estado",
+        "login",
+        "logout",
+        "descargar",
+        "imprimir",
+        "ocultar",
+        "mostrar"
+      ],
+      "required": true
+    },
+    "entidad": {
+      "type": "string",
+      "required": true
+    },
+    "entidad_id": {
+      "type": "string"
+    },
+    "descripcion": {
+      "type": "text",
+      "required": true
+    },
+    "datos_anteriores": {
+      "type": "json"
+    },
+    "datos_nuevos": {
+      "type": "json"
+    },
+    "ip_address": {
+      "type": "string"
+    },
+    "user_agent": {
+      "type": "text"
+    },
+    "fecha": {
+      "type": "datetime",
+      "required": true
+    },
+    "metadata": {
+      "type": "json"
+    }
+  }
+}
+

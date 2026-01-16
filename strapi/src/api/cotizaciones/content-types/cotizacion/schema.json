@@ -1,0 +1,95 @@
+{
+  "kind": "collectionType",
+  "collectionName": "cotizaciones",
+  "info": {
+    "singularName": "cotizacion",
+    "pluralName": "cotizaciones",
+    "displayName": "Documentos · Cotización",
+    "description": "Cotizaciones comerciales generadas en intranet"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "numero": {
+      "type": "uid",
+      "required": true
+    },
+    "anio": {
+      "type": "integer",
+      "required": true
+    },
+    "fecha": {
+      "type": "date"
+    },
+    "fecha_vencimiento": {
+      "type": "date"
+    },
+    "estado": {
+      "type": "enumeration",
+      "default": "borrador",
+      "enum": [
+        "borrador",
+        "enviada",
+        "aceptada",
+        "rechazada"
+      ]
+    },
+    "subtotal": {
+      "type": "decimal"
+    },
+    "total": {
+      "type": "decimal"
+    },
+    "descuento_total": {
+      "type": "decimal"
+    },
+    "condiciones": {
+      "type": "richtext"
+    },
+    "observaciones": {
+      "type": "richtext"
+    },
+    "beneficios": {
+      "type": "component",
+      "component": "cotizaciones.beneficio",
+      "repeatable": true
+    },
+    "metadata": {
+      "type": "json"
+    },
+    "cliente": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::colegio.colegio"
+    },
+    "contacto": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::persona.persona"
+    },
+    "ejecutiva": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "lista_descuento": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::lista-descuento.lista-descuento"
+    },
+    "items": {
+      "type": "component",
+      "component": "cotizaciones.item",
+      "repeatable": true
+    },
+    "pdf_url": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "files"
+      ]
+    }
+  }
+}

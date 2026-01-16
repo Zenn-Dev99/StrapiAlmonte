@@ -1,0 +1,61 @@
+{
+  "kind": "collectionType",
+  "collectionName": "colegio_list_item_audits",
+  "info": {
+    "singularName": "colegio-list-item-audit",
+    "pluralName": "colegio-list-item-audits",
+    "displayName": "Listas · Item Audit",
+    "description": "Historial de acciones realizadas sobre ítems de listas de útiles"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "item": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::colegio-list-item.colegio-list-item",
+      "inversedBy": "audits",
+      "required": true
+    },
+    "accion": {
+      "type": "enumeration",
+      "enum": [
+        "match",
+        "update",
+        "revert",
+        "marcar_no_comprar",
+        "comentario"
+      ],
+      "required": true
+    },
+    "descripcion": {
+      "type": "text"
+    },
+    "datos_previos": {
+      "type": "json"
+    },
+    "datos_nuevos": {
+      "type": "json"
+    },
+    "realizado_por": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "admin::user",
+      "required": true
+    },
+    "realizado_en": {
+      "type": "datetime"
+    },
+    "estado_version": {
+      "type": "enumeration",
+      "enum": [
+        "draft",
+        "in_review",
+        "ready_for_publish",
+        "published"
+      ]
+    }
+  }
+}

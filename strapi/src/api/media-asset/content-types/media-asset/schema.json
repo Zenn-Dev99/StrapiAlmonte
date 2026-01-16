@@ -1,0 +1,126 @@
+{
+  "kind": "collectionType",
+  "collectionName": "media_assets",
+  "info": {
+    "singularName": "media-asset",
+    "pluralName": "media-assets",
+    "displayName": "Media Asset",
+    "description": "Repositorio centralizado de archivos multimedia"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "maxLength": 200
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true,
+      "unique": true
+    },
+    "description": {
+      "type": "richtext"
+    },
+    "file": {
+      "type": "media",
+      "required": true,
+      "allowedTypes": [
+        "images",
+        "videos",
+        "files",
+        "audios"
+      ]
+    },
+    "thumbnail": {
+      "type": "media",
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "assetType": {
+      "type": "enumeration",
+      "enum": [
+        "image",
+        "video",
+        "audio",
+        "document",
+        "other"
+      ],
+      "default": "other"
+    },
+    "mimeType": {
+      "type": "string"
+    },
+    "fileSizeBytes": {
+      "type": "integer"
+    },
+    "width": {
+      "type": "integer"
+    },
+    "height": {
+      "type": "integer"
+    },
+    "durationSeconds": {
+      "type": "integer"
+    },
+    "uploadedAt": {
+      "type": "datetime"
+    },
+    "uploadedBy": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "admin::user"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "active",
+        "hidden"
+      ],
+      "default": "active",
+      "required": true
+    },
+    "tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::media-tag.media-tag",
+      "inversedBy": "assets"
+    },
+    "categories": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::media-category.media-category",
+      "inversedBy": "assets"
+    },
+    "usageNotes": {
+      "type": "text"
+    },
+    "externalUrl": {
+      "type": "string"
+    },
+    "source": {
+      "type": "enumeration",
+      "enum": [
+        "interno",
+        "proveedor",
+        "fotografo",
+        "campana",
+        "otro"
+      ]
+    },
+    "publicUrl": {
+      "type": "string"
+    },
+    "colorPalette": {
+      "type": "json"
+    },
+    "metadata": {
+      "type": "json"
+    }
+  }
+}

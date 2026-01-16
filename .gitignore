@@ -1,0 +1,175 @@
+############################
+# OS X
+############################
+
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+.Spotlight-V100
+.Trashes
+._*
+
+############################
+# Linux
+############################
+
+*~
+
+############################
+# Windows
+############################
+
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msm
+*.msp
+
+############################
+# Packages
+############################
+
+*.7z
+*.csv
+*.dat
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.seed
+*.so
+*.swo
+*.swp
+*.swn
+*.swm
+*.out
+*.pid
+
+############################
+# Logs and databases
+############################
+
+.tmp
+*.log
+*.sql
+*.sqlite
+*.sqlite3
+
+############################
+# Misc.
+############################
+
+*#
+ssl
+.idea
+nbproject
+.tsbuildinfo
+.eslintcache
+
+############################
+# Node.js
+############################
+
+lib-cov
+lcov.info
+pids
+logs
+results
+node_modules
+.node_history
+
+############################
+# Package managers
+############################
+
+.yarn/*
+!.yarn/cache
+!.yarn/unplugged
+!.yarn/patches
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
+yarn-error.log
+
+############################
+# Tests
+############################
+
+coverage
+
+############################
+# Strapi
+############################
+
+.env
+.env.*
+!.env.example
+
+# Credenciales (NO subir a Git)
+docs/CREDENCIALES_PRODUCCION.md
+license.txt
+exports
+.strapi
+dist
+build
+.strapi-updater.json
+.strapi-cloud.json
+
+############################
+# Excluir archivos grandes - NO incluir en repo
+############################
+
+# Datos y backups (NO incluir - son muy grandes)
+data/
+backups/
+*.backup
+
+# Uploads de Strapi (deben estar en S3/R2, NO en Git)
+strapi/public/uploads/
+strapi/public/**/*.jpg
+strapi/public/**/*.png
+strapi/public/**/*.pdf
+strapi/public/**/*.webp
+public/uploads/
+uploads/
+
+# Archivos temporales y de desarrollo
+*.tmp
+.cache/
+.temp/
+
+# Reportes de auditoría (NO subir - son grandes y temporales)
+auditoria-woocommerce-*.json
+auditoria-completa-woocommerce-*.json
+reports/
+*.report.json
+
+# Scripts de Google Sheets (credenciales)
+data/gsheets/credentials.json
+data/gsheets/token.json
+data/gsheets/config.json
+scripts/gsheet-apps-script-lectura-con-token.js
+
+# Logs y archivos de sistema
+*.log
+.DS_Store
+Thumbs.db
+
+# Mantener estructura pero sin contenido
+!strapi/public/.gitkeep
+
+# Archivos con credenciales y secretos
+RAILWAY_ENV_VARS_SENDGRID.txt

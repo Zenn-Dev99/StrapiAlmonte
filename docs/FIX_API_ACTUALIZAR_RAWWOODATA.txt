@@ -1,0 +1,254 @@
+═══════════════════════════════════════════════════════
+  🔧 FIX CRÍTICO: API DEBE ACTUALIZAR rawWooData
+═══════════════════════════════════════════════════════
+
+📅 Fecha: 29 de diciembre de 2025
+🎯 Problema: Cambios no se reflejan en WooCommerce al editar
+✅ Solución: API debe enviar rawWooData a Strapi
+
+═══════════════════════════════════════════════════════
+1. ❌ EL PROBLEMA
+═══════════════════════════════════════════════════════
+
+Actualmente el API hace esto al editar un producto:
+
+```typescript
+// ❌ CÓDIGO ACTUAL (INCORRECTO)
+const updateData = {
+  data: {
+    nombre_libro: body.nombre_libro,
+    descripcion: convertirHTMLaBlocks(body.descripcion),
+    subtitulo_libro: body.subtitulo_libro,
+    precio: body.precio,
+    precio_oferta: body.precio_oferta,
+    stock_quantity: body.stock_quantity,
+    portada_libro: body.portada_libro_id,
+    canales: body.canales,
+    estado_publicacion: 'Publicado'
+  }
+  // ❌ NO incluye rawWooData
+};
+
+await strapiClient.put(`/api/libros/${documentId}`, updateData);
+```
+
+**Resultado:**
+- Strapi actualiza descripcion, subtitulo_libro, precio, etc. ✅
+- Pero el campo `rawWooData` en la BD NO se actualiza ❌
+- Cuando Strapi sincroniza con WooCommerce, usa el rawWooData VIEJO
+- Los cambios NO se reflejan en WooCommerce ❌
+
+═══════════════════════════════════════════════════════
+2. ✅ LA SOLUCIÓN
+═══════════════════════════════════════════════════════
+
+El API DEBE incluir rawWooData en el payload a Strapi:
+
+```typescript
+// ✅ CÓDIGO CORRECTO
+const updateData = {
+  data: {
+    nombre_libro: body.nombre_libro,
+    descripcion: convertirHTMLaBlocks(body.descripcion),
+    subtitulo_libro: body.subtitulo_libro,
+    precio: body.precio,
+    precio_oferta: body.precio_oferta,
+    stock_quantity: body.stock_quantity,
+    portada_libro: body.portada_libro_id,
+    canales: body.canales,
+    estado_publicacion: 'Publicado',
+    
+    // ✅ INCLUIR rawWooData
+    rawWooData: body.raw_woo_data || body.rawWooData
+  }
+};
+
+await strapiClient.put(`/api/libros/${documentId}`, updateData);
+```
+
+**Resultado:**
+- Strapi actualiza TODOS los campos, incluyendo rawWooData ✅
+- El lifecycle detecta el cambio y sincroniza ✅
+- buildWooProduct() usa el rawWooData actualizado ✅
+- Los cambios SE REFLEJAN en WooCommerce ✅
+
+═══════════════════════════════════════════════════════
+3. 🔍 POR QUÉ FUNCIONA
+═══════════════════════════════════════════════════════
+
+El campo `rawWooData` existe en el schema de Strapi:
+
+```json
+// strapi/src/api/libro/content-types/libro/schema.json
+{
+  "attributes": {
+    "rawWooData": {
+      "type": "json",
+      "description": "Datos completos del producto en formato WooCommerce"
+    }
+  }
+}
+```
+
+**Strapi SÍ acepta este campo** en actualizaciones PUT.
+
+═══════════════════════════════════════════════════════
+4. 📝 CÓDIGO A CAMBIAR EN EL API
+═══════════════════════════════════════════════════════
+
+Archivo: `frontend-ubold/src/app/api/tienda/productos/[id]/route.ts`
+
+### ANTES (líneas ~150-170):
+
+```typescript
+const updateData: any = {
+  data: {
+    nombre_libro: body.nombre_libro,
+    descripcion: convertirHTMLaBlocks(body.descripcion),
+    subtitulo_libro: body.subtitulo_libro,
+    isbn_libro: body.isbn_libro,
+    precio: body.precio,
+    precio_oferta: body.precio_oferta,
+    stock_quantity: body.stock_quantity,
+    portada_libro: portadaLibroId,
+    canales: canalesIds,
+    estado_publicacion: estadoFinal
+  }
+};
+```
+
+### DESPUÉS:
+
+```typescript
+const updateData: any = {
+  data: {
+    nombre_libro: body.nombre_libro,
+    descripcion: convertirHTMLaBlocks(body.descripcion),
+    subtitulo_libro: body.subtitulo_libro,
+    isbn_libro: body.isbn_libro,
+    precio: body.precio,
+    precio_oferta: body.precio_oferta,
+    stock_quantity: body.stock_quantity,
+    portada_libro: portadaLibroId,
+    canales: canalesIds,
+    estado_publicacion: estadoFinal,
+    
+    // ✅ AGREGAR ESTA LÍNEA
+    rawWooData: body.raw_woo_data || body.rawWooData || null
+  }
+};
+```
+
+═══════════════════════════════════════════════════════
+5. ⚠️ NOTA IMPORTANTE: Normalización de Campos
+═══════════════════════════════════════════════════════
+
+El frontend envía `rawWooData` (camelCase).
+El API normaliza automáticamente a `raw_woo_data` (snake_case).
+
+Pero al enviar a Strapi, debe ser `rawWooData` (camelCase):
+
+```typescript
+// Frontend envía:
+{
+  rawWooData: { ... }  // camelCase
+}
+
+// API normaliza internamente:
+body.raw_woo_data = body.rawWooData
+
+// API envía a Strapi:
+{
+  data: {
+    rawWooData: body.raw_woo_data  // ✅ Strapi espera camelCase
+  }
+}
+```
+
+**Código correcto:**
+
+```typescript
+// Después de la normalización
+const updateData: any = {
+  data: {
+    // ... otros campos ...
+    
+    // ✅ Usar snake_case del body normalizado
+    rawWooData: body.raw_woo_data || body.rawWooData || null
+  }
+};
+```
+
+═══════════════════════════════════════════════════════
+6. 🧪 CÓMO PROBAR QUE FUNCIONA
+═══════════════════════════════════════════════════════
+
+### Prueba 1: Editar descripción
+
+1. Editar un producto desde la Intranet
+2. Cambiar solo la "Descripción del producto"
+3. Guardar
+4. Verificar en WooCommerce que el cambio aparezca
+
+Esperado: ✅ La descripción se actualiza en WooCommerce
+
+### Prueba 2: Editar precio
+
+1. Editar un producto desde la Intranet
+2. Cambiar solo el precio
+3. Guardar
+4. Verificar en WooCommerce que el precio se actualice
+
+Esperado: ✅ El precio se actualiza en WooCommerce
+
+### Prueba 3: Verificar logs de Strapi
+
+Después de editar, revisar logs:
+
+```
+[libro] 🔄 [LIBRO - afterUpdate ejecutado]
+[libro] Estado de publicación: "Publicado"
+[libro] ✅ Estado correcto para sincronizar
+[libro] 🚀 Llamando a syncToWooCommerce()...
+[woo-sync] ✅ Usando rawWooData desde Intranet
+[woo-sync] 📦 rawWooData: { description: "...", short_description: "...", ... }
+[libro] ✅ Sincronización completada exitosamente
+```
+
+Si ves "✅ Usando rawWooData desde Intranet" → ¡Funciona!
+
+Si ves "🔧 Construyendo producto de forma tradicional" → rawWooData NO llegó
+
+═══════════════════════════════════════════════════════
+7. 🎯 RESUMEN
+═══════════════════════════════════════════════════════
+
+**Cambio necesario:**
+- Agregar UNA LÍNEA en el API route: `rawWooData: body.raw_woo_data || null`
+
+**Dónde:**
+- `frontend-ubold/src/app/api/tienda/productos/[id]/route.ts`
+- Dentro de `updateData.data`
+
+**Por qué:**
+- Sin esto, Strapi usa rawWooData viejo o lo reconstruye
+- Con esto, Strapi usa el rawWooData actualizado del frontend
+- Resultado: Cambios se reflejan en WooCommerce
+
+═══════════════════════════════════════════════════════
+8. 📋 CHECKLIST
+═══════════════════════════════════════════════════════
+
+□ 1. Abrir `frontend-ubold/src/app/api/tienda/productos/[id]/route.ts`
+□ 2. Buscar `const updateData: any = { data: { ... } }`
+□ 3. Agregar línea: `rawWooData: body.raw_woo_data || body.rawWooData || null`
+□ 4. Guardar archivo
+□ 5. Reiniciar servidor frontend (si es necesario)
+□ 6. Probar editando un producto
+□ 7. Verificar que cambios aparezcan en WooCommerce
+□ 8. Revisar logs de Strapi para confirmar
+
+═══════════════════════════════════════════════════════
+✅ FIN DEL DOCUMENTO
+═══════════════════════════════════════════════════════
+

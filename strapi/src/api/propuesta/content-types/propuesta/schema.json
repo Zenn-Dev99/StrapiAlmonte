@@ -1,0 +1,77 @@
+{
+  "kind": "collectionType",
+  "collectionName": "propuestas_crm",
+  "info": {
+    "singularName": "propuesta",
+    "pluralName": "propuestas",
+    "displayName": "Propuesta",
+    "description": "Propuestas comerciales enviadas a clientes en el CRM"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "asunto": {
+      "type": "string",
+      "required": true
+    },
+    "enviado_a": {
+      "type": "string",
+      "required": false
+    },
+    "valor": {
+      "type": "decimal",
+      "required": false
+    },
+    "fecha_creacion": {
+      "type": "datetime",
+      "required": false
+    },
+    "fecha_vencimiento": {
+      "type": "datetime",
+      "required": false
+    },
+    "estado": {
+      "type": "enumeration",
+      "enum": [
+        "aprobada",
+        "pendiente",
+        "rechazada",
+        "enviada",
+        "en_revision"
+      ],
+      "default": "pendiente",
+      "required": true
+    },
+    "notas": {
+      "type": "text",
+      "required": false
+    },
+    "activo": {
+      "type": "boolean",
+      "default": true,
+      "required": true
+    },
+    "relacionado_con_contacto": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::persona.persona"
+    },
+    "relacionado_con_oportunidad": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::oportunidad.oportunidad"
+    },
+    "relacionado_con_colegio": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::colegio.colegio"
+    },
+    "creado_por": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::colaborador.colaborador"
+    }
+  }
+}

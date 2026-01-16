@@ -1,0 +1,23 @@
+{
+  "kind": "collectionType",
+  "collectionName": "persona_tags",
+  "info": {
+    "singularName": "persona-tag",
+    "pluralName": "persona-tags",
+    "displayName": "Persona · Persona Tag"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "description": {
+      "type": "text"
+    }
+  }
+}

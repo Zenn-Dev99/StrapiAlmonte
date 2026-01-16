@@ -1,0 +1,27 @@
+{
+  "collectionName": "components_portal_shortcuts",
+  "info": {
+    "displayName": "shortcut",
+    "description": "Accesos directos personalizados"
+  },
+  "options": {},
+  "attributes": {
+    "label": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "target_url": {
+      "type": "string"
+    },
+    "icon": {
+      "type": "string"
+    },
+    "order": {
+      "type": "integer",
+      "default": 0
+    }
+  }
+}

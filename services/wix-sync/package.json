@@ -1,0 +1,25 @@
+{
+  "name": "wix-sync",
+  "version": "1.0.0",
+  "description": "Servicio para sincronizar datos entre Wix CMS y Strapi",
+  "main": "src/server.ts",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "sync": "tsx src/cli/sync-all.ts",
+    "sync:autores": "tsx src/cli/sync-autores.ts",
+    "sync:libros": "tsx src/cli/sync-libros.ts"
+  },
+  "dependencies": {
+    "@wix/api-client": "^2.0.0",
+    "dotenv": "^16.3.1",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.6",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  }
+}
+

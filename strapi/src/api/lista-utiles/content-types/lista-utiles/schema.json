@@ -1,0 +1,52 @@
+{
+  "kind": "collectionType",
+  "collectionName": "listas_utiles",
+  "info": {
+    "singularName": "lista-utiles",
+    "pluralName": "listas-utiles",
+    "displayName": "Lista de Útiles",
+    "description": "Listas de útiles escolares predefinidas que se pueden asignar a cursos"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nombre": {
+      "type": "string",
+      "required": true
+    },
+    "nivel": {
+      "type": "enumeration",
+      "enum": [
+        "Basica",
+        "Media"
+      ],
+      "required": true
+    },
+    "grado": {
+      "type": "integer",
+      "required": true,
+      "min": 1,
+      "max": 8
+    },
+    "año": {
+      "type": "integer",
+      "required": true,
+      "min": 2000,
+      "max": 2100
+    },
+    "descripcion": {
+      "type": "text"
+    },
+    "materiales": {
+      "type": "component",
+      "repeatable": true,
+      "component": "curso.material"
+    },
+    "activo": {
+      "type": "boolean",
+      "default": true
+    }
+  }
+}

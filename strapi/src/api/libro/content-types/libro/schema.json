@@ -1,0 +1,263 @@
+{
+  "kind": "collectionType",
+  "collectionName": "libros",
+  "info": {
+    "singularName": "libro",
+    "pluralName": "libros",
+    "displayName": "Product · Libro · Edición",
+    "description": "Libros con los campos mínimos para catalogar"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "isbn_libro": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "nombre_libro": {
+      "type": "string",
+      "required": true
+    },
+    "subtitulo_libro": {
+      "type": "string"
+    },
+    "descripcion": {
+      "type": "blocks"
+    },
+    "portada_libro": {
+      "type": "media",
+      "multiple": false
+    },
+    "imagenes_interior": {
+      "type": "media",
+      "multiple": true
+    },
+    "obra": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::obra.obra",
+      "inversedBy": "ediciones"
+    },
+    "autor_relacion": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::autor.autor",
+      "inversedBy": "libros"
+    },
+    "editorial": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::editorial.editorial",
+      "inversedBy": "libros"
+    },
+    "sello": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::sello.sello",
+      "inversedBy": "libros"
+    },
+    "coleccion": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::coleccion.coleccion",
+      "inversedBy": "libros"
+    },
+    "precio": {
+      "type": "decimal",
+      "min": 0,
+      "description": "Precio principal del producto (se modifica desde la intranet)"
+    },
+    "precio_regular": {
+      "type": "decimal",
+      "min": 0,
+      "description": "Precio regular en WooCommerce"
+    },
+    "precio_oferta": {
+      "type": "decimal",
+      "min": 0,
+      "description": "Precio de oferta en WooCommerce"
+    },
+    "stock_quantity": {
+      "type": "integer",
+      "default": 0,
+      "min": 0,
+      "description": "Cantidad en stock (se modifica desde la intranet)"
+    },
+    "manage_stock": {
+      "type": "boolean",
+      "default": true,
+      "description": "Si se gestiona el stock del producto"
+    },
+    "stock_status": {
+      "type": "enumeration",
+      "default": "instock",
+      "enum": [
+        "instock",
+        "outofstock",
+        "onbackorder"
+      ],
+      "description": "Estado del stock en WooCommerce"
+    },
+    "canales": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::canal.canal"
+    },
+    "marcas": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::marca.marca",
+      "description": "Marcas (Brands) del producto en WooCommerce"
+    },
+    "etiquetas": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::etiqueta.etiqueta",
+      "description": "Etiquetas (Tags) del producto en WooCommerce"
+    },
+    "categorias_producto": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::categoria-producto.categoria-producto",
+      "description": "Categorías del producto en WooCommerce"
+    },
+    "libros_relacionados": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::libro.libro",
+      "description": "Libros relacionados, series, o ediciones relacionadas"
+    },
+    "ofertas": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::oferta-producto.oferta-producto",
+      "mappedBy": "libro"
+    },
+    "numero_edicion": {
+      "type": "integer"
+    },
+    "agno_edicion": {
+      "type": "integer"
+    },
+    "idioma": {
+      "type": "enumeration",
+      "enum": [
+        "Español",
+        "Inglés",
+        "Francés",
+        "Alemán",
+        "Otro"
+      ]
+    },
+    "tipo_libro": {
+      "type": "enumeration",
+      "enum": [
+        "Plan Lector",
+        "Texto Curricular",
+        "Texto PAES",
+        "Texto Complementario",
+        "Otro"
+      ]
+    },
+    "estado_edicion": {
+      "type": "enumeration",
+      "default": "Vigente",
+      "enum": [
+        "Vigente",
+        "Stock Limitado",
+        "Descatalogado"
+      ]
+    },
+    "externalIds": {
+      "type": "json",
+      "description": "IDs externos de WooCommerce: { woo_moraleja: 123, woo_escolar: 456 }"
+    },
+    "rawWooData": {
+      "type": "json",
+      "description": "Datos completos del producto en formato WooCommerce (enviado desde Intranet)"
+    },
+    "weight": {
+      "type": "decimal",
+      "min": 0,
+      "description": "Peso del producto en WooCommerce"
+    },
+    "length": {
+      "type": "decimal",
+      "min": 0,
+      "description": "Largo del producto en WooCommerce"
+    },
+    "width": {
+      "type": "decimal",
+      "min": 0,
+      "description": "Ancho del producto en WooCommerce"
+    },
+    "height": {
+      "type": "decimal",
+      "min": 0,
+      "description": "Alto del producto en WooCommerce"
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false,
+      "description": "Producto destacado en WooCommerce"
+    },
+    "catalog_visibility": {
+      "type": "enumeration",
+      "default": "visible",
+      "enum": [
+        "visible",
+        "catalog",
+        "search",
+        "hidden"
+      ],
+      "description": "Visibilidad del producto en el catálogo de WooCommerce"
+    },
+    "virtual": {
+      "type": "boolean",
+      "default": false,
+      "description": "Si el producto es virtual en WooCommerce"
+    },
+    "downloadable": {
+      "type": "boolean",
+      "default": false,
+      "description": "Si el producto es descargable en WooCommerce"
+    },
+    "tax_status": {
+      "type": "enumeration",
+      "default": "taxable",
+      "enum": [
+        "taxable",
+        "shipping",
+        "none"
+      ],
+      "description": "Estado de impuestos del producto en WooCommerce"
+    },
+    "tax_class": {
+      "type": "string",
+      "description": "Clase de impuesto del producto en WooCommerce"
+    },
+    "completitud_basica": {
+      "type": "json"
+    },
+    "completo": {
+      "type": "boolean",
+      "default": false
+    },
+    "faltantes": {
+      "type": "json"
+    },
+    "estado_publicacion": {
+      "type": "enumeration",
+      "default": "Pendiente",
+      "enum": [
+        "Publicado",
+        "Pendiente",
+        "Borrador"
+      ],
+      "description": "Estado de publicación del producto para aprobación"
+    }
+  }
+}

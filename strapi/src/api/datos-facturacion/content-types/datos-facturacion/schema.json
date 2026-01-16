@@ -1,0 +1,57 @@
+{
+  "kind": "collectionType",
+  "collectionName": "datos_facturacions",
+  "info": {
+    "singularName": "datos-facturacion",
+    "pluralName": "datos-facturacions",
+    "displayName": "Datos Facturación"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "rut": {
+      "type": "string",
+      "unique": true
+    },
+    "nombre_facturacion": {
+      "type": "string"
+    },
+    "direccion": {
+      "type": "component",
+      "component": "contacto.direccion",
+      "repeatable": false
+    },
+    "giro": {
+      "type": "string"
+    },
+    "tipo_empresa": {
+      "type": "enumeration",
+      "enum": [
+        "Empresa",
+        "Colegio",
+        "Librería",
+        "Editorial",
+        "Otro"
+      ]
+    },
+    "rbd": {
+      "type": "integer"
+    },
+    "nombre_colegio": {
+      "type": "string"
+    },
+    "comuna_colegio": {
+      "type": "string"
+    },
+    "dependencia": {
+      "type": "string"
+    },
+    "colegio": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::colegio.colegio"
+    }
+  }
+}

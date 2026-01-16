@@ -1,0 +1,260 @@
+═══════════════════════════════════════════════════════════════════
+🎨 IMPLEMENTAR: Interfaz de Edición de Productos
+═══════════════════════════════════════════════════════════════════
+
+OBJETIVO:
+Crear una página de "Editar Producto" con interfaz gráfica igual a "Agregar Producto",
+que precargue los datos del producto y permita modificarlos.
+
+═══════════════════════════════════════════════════════════════════
+REQUERIMIENTOS FUNCIONALES:
+═══════════════════════════════════════════════════════════════════
+
+1. PRECARGA DE DATOS
+   ✅ Al abrir /productos/editar/:id → cargar producto desde Strapi
+   ✅ Llenar todos los campos del formulario con los valores actuales
+   ✅ Mostrar spinner mientras carga
+   ✅ Manejar errores si el producto no existe
+
+2. INTERFAZ
+   ✅ Usar la MISMA estructura que "Agregar Producto"
+   ✅ Mismos componentes visuales
+   ✅ Todos los campos editables (excepto ISBN que es read-only)
+   ✅ Botón "Guardar Cambios" en lugar de "Crear"
+   ✅ Botón "Cancelar" que vuelva a la lista
+
+3. ACTUALIZACIÓN
+   ✅ Al guardar → PUT request a Strapi
+   ✅ Solo enviar los campos que se modificaron (optimización)
+   ✅ Mensaje de éxito/error
+   ✅ Redireccionar a lista después de guardar
+
+═══════════════════════════════════════════════════════════════════
+ESTRUCTURA DE ARCHIVOS:
+═══════════════════════════════════════════════════════════════════
+
+src/
+├── hooks/
+│   ├── useProducto.js              # Hook para GET producto
+│   └── useActualizarProducto.js    # Hook para PUT actualizar
+├── components/
+│   └── productos/
+│       └── FormularioProducto.jsx  # Componente reutilizable
+└── pages/
+    └── productos/
+        ├── agregar.jsx             # Ya existe
+        ├── editar/[id].jsx         # CREAR ESTA
+        └── index.jsx               # Lista
+
+═══════════════════════════════════════════════════════════════════
+IMPLEMENTACIÓN:
+═══════════════════════════════════════════════════════════════════
+
+1. HOOK: useProducto.js
+   Obtener producto desde Strapi con populate=*
+   
+   const { producto, loading, error } = useProducto(productoId);
+   
+   Endpoint: GET https://strapi.moraleja.cl/api/libros/:id?populate=*
+   
+   Normalizar datos para el formulario:
+   - isbn_libro, nombre_libro, descripcion
+   - precio, precio_oferta, stock
+   - canales (array de IDs: [1, 2])
+   - estado_publicacion
+   - peso, dimensiones
+   - rawWooData (si existe)
+
+2. HOOK: useActualizarProducto.js
+   Actualizar producto en Strapi
+   
+   const { actualizarProducto, loading, error } = useActualizarProducto();
+   
+   Endpoint: PUT https://strapi.moraleja.cl/api/libros/:id
+   
+   Payload:
+   {
+     "data": {
+       "nombre_libro": "...",
+       "precio": 49990,
+       "canales": [1, 2],
+       "rawWooData": {
+         "name": "...",
+         "description": "...",
+         "regular_price": "49990.00",
+         ...
+       }
+       // ✅ NO incluir externalIds (Strapi los preserva automáticamente)
+     }
+   }
+
+3. COMPONENTE: FormularioProducto.jsx
+   Componente reutilizable para crear/editar
+   
+   Props:
+   - valoresIniciales: {} // Para editar, llenar con datos del producto
+   - onSubmit: (datos) => {}
+   - loading: boolean
+   - textoBoton: "Guardar" o "Guardar Cambios"
+   - onCancelar: () => {}
+   
+   Campos:
+   - ISBN (disabled si es edición)
+   - Nombre del producto *
+   - Descripción
+   - Precio * / Precio oferta
+   - Stock
+   - Peso, Largo, Ancho, Alto
+   - Clase de envío
+   - Estado de publicación *
+   - Canales (checkboxes: Moraleja, Escolar) *
+
+4. PÁGINA: editar/[id].jsx
+   
+   import { useProducto } from '@/hooks/useProducto';
+   import { useActualizarProducto } from '@/hooks/useActualizarProducto';
+   import { FormularioProducto } from '@/components/productos/FormularioProducto';
+   
+   const { id } = useRouter().query; // O useParams() en React Router
+   const { producto, loading, error } = useProducto(id);
+   const { actualizarProducto, loading: actualizando } = useActualizarProducto();
+   
+   if (loading) return <Spinner />;
+   if (error) return <Error />;
+   
+   return (
+     <FormularioProducto
+       valoresIniciales={producto}
+       onSubmit={handleActualizar}
+       loading={actualizando}
+       textoBoton="Guardar Cambios"
+       onCancelar={handleCancelar}
+     />
+   );
+
+═══════════════════════════════════════════════════════════════════
+FLUJO COMPLETO:
+═══════════════════════════════════════════════════════════════════
+
+Usuario → Clic en "Editar" en producto
+    ↓
+Navegar a /productos/editar/123
+    ↓
+useProducto(123) → GET /api/libros/123?populate=*
+    ↓
+Mostrar spinner mientras carga
+    ↓
+Llenar FormularioProducto con datos
+    ↓
+Usuario modifica campos
+    ↓
+Usuario clic "Guardar Cambios"
+    ↓
+Validar formulario
+    ↓
+actualizarProducto(123, datos) → PUT /api/libros/123
+    ↓
+Mostrar "✅ Guardado exitosamente"
+    ↓
+Redireccionar a /productos
+
+═══════════════════════════════════════════════════════════════════
+ESTILOS CSS:
+═══════════════════════════════════════════════════════════════════
+
+Usar los MISMOS estilos que "Agregar Producto":
+- Formulario con secciones
+- Campos con labels
+- Grid de 2 y 4 columnas para dimensiones
+- Checkboxes para canales
+- Botones primario/secundario
+- Estados de loading y error
+- Responsive
+
+═══════════════════════════════════════════════════════════════════
+VALIDACIONES:
+═══════════════════════════════════════════════════════════════════
+
+✅ Nombre del producto: requerido
+✅ Precio: requerido, > 0
+✅ Canales: al menos 1 seleccionado
+✅ Estado de publicación: requerido
+
+Mostrar errores en rojo debajo de cada campo
+
+═══════════════════════════════════════════════════════════════════
+IMPORTANTE:
+═══════════════════════════════════════════════════════════════════
+
+1. ✅ ISBN debe ser READ-ONLY (disabled) en edición
+2. ✅ NO enviar externalIds → Strapi los preserva automáticamente
+3. ✅ SÍ enviar rawWooData para sincronización completa con WooCommerce
+4. ✅ Mostrar indicadores de carga (spinners)
+5. ✅ Mantener la misma UX que "Agregar Producto"
+
+═══════════════════════════════════════════════════════════════════
+EJEMPLO DE PAYLOAD DE ACTUALIZACIÓN:
+═══════════════════════════════════════════════════════════════════
+
+{
+  "data": {
+    "nombre_libro": "Cálculo I - Editado",
+    "precio": 59990,
+    "descripcion": "Nueva descripción",
+    "estado_publicacion": "Publicado",
+    "canales": [1, 2],
+    "stock": 50,
+    "rawWooData": {
+      "name": "Cálculo I - Editado",
+      "description": "Nueva descripción completa en HTML",
+      "short_description": "Nueva descripción",
+      "regular_price": "59990.00",
+      "sale_price": "49990.00",
+      "weight": "0.8",
+      "dimensions": {
+        "length": "25",
+        "width": "18",
+        "height": "3"
+      },
+      "shipping_class": "envio-rapido",
+      "manage_stock": true,
+      "stock_quantity": 50
+    }
+    // ✅ NO incluir externalIds
+  }
+}
+
+═══════════════════════════════════════════════════════════════════
+PRUEBAS:
+═══════════════════════════════════════════════════════════════════
+
+1. ✅ Abrir producto existente → campos precargados correctamente
+2. ✅ Modificar nombre → guardar → verificar actualización en Strapi
+3. ✅ Modificar precio → guardar → verificar sincronización en WooCommerce
+4. ✅ Cambiar canales → guardar → verificar que se sincroniza a ambos
+5. ✅ Intentar guardar sin nombre → ver error de validación
+6. ✅ Cancelar → volver a lista sin guardar
+7. ✅ Producto no existe (ID inválido) → mostrar error
+
+═══════════════════════════════════════════════════════════════════
+CÓDIGO DE REFERENCIA COMPLETO:
+═══════════════════════════════════════════════════════════════════
+
+Ver archivo: docs/PROMPT_EDITAR_PRODUCTOS_UI.md
+Contiene código completo de:
+- useProducto hook
+- useActualizarProducto hook
+- FormularioProducto component
+- Página de edición
+- Estilos CSS
+
+═══════════════════════════════════════════════════════════════════
+
+POR FAVOR IMPLEMENTA ESTA FUNCIONALIDAD USANDO LA MISMA ESTRUCTURA
+VISUAL Y COMPONENTES QUE "AGREGAR PRODUCTO".
+
+El formulario debe verse IDÉNTICO, pero con los datos precargados y
+el botón que diga "Guardar Cambios" en lugar de "Crear Producto".
+
+═══════════════════════════════════════════════════════════════════
+

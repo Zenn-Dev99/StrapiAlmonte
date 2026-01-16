@@ -1,0 +1,142 @@
+{
+  "kind": "collectionType",
+  "collectionName": "wo_pedidos",
+  "info": {
+    "singularName": "wo-pedido",
+    "pluralName": "wo-pedidos",
+    "displayName": "WO-Pedidos",
+    "description": "Pedidos de WooCommerce (Moraleja/Escolar) con todos los datos necesarios"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "numero_pedido": {
+      "type": "string",
+      "required": true
+    },
+    "fecha_pedido": {
+      "type": "datetime"
+    },
+    "estado": {
+      "type": "enumeration",
+      "enum": [
+        "auto-draft",
+        "pending",
+        "processing",
+        "on-hold",
+        "completed",
+        "cancelled",
+        "refunded",
+        "failed",
+        "checkout-draft"
+      ],
+      "default": "pending",
+      "description": "Estado del pedido (valores válidos de WooCommerce)"
+    },
+    "total": {
+      "type": "decimal"
+    },
+    "subtotal": {
+      "type": "decimal"
+    },
+    "impuestos": {
+      "type": "decimal"
+    },
+    "envio": {
+      "type": "decimal"
+    },
+    "descuento": {
+      "type": "decimal"
+    },
+    "moneda": {
+      "type": "string",
+      "default": "CLP"
+    },
+    "origen": {
+      "type": "enumeration",
+      "enum": [
+        "web",
+        "checkout",
+        "rest-api",
+        "admin",
+        "mobile",
+        "directo",
+        "otro"
+      ],
+      "default": "web",
+      "description": "Origen del pedido (created_via en WooCommerce)"
+    },
+    "cliente": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::wo-cliente.wo-cliente",
+      "description": "Cliente que realizó el pedido"
+    },
+    "items": {
+      "type": "component",
+      "component": "pedido.item",
+      "repeatable": true,
+      "required": false,
+      "description": "Productos del pedido (line_items)"
+    },
+    "libros_para_agregar": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::libro.libro",
+      "private": true,
+      "description": "Campo temporal: Selecciona libros para agregar automáticamente como items (se elimina después de procesar)"
+    },
+    "billing": {
+      "type": "json",
+      "description": "Datos de facturación (igual estructura que WooCommerce)"
+    },
+    "shipping": {
+      "type": "json",
+      "description": "Datos de envío (igual estructura que WooCommerce)"
+    },
+    "metodo_pago": {
+      "type": "enumeration",
+      "enum": [
+        "bacs",
+        "cheque",
+        "cod",
+        "paypal",
+        "stripe",
+        "transferencia",
+        "otro"
+      ],
+      "default": "bacs",
+      "description": "ID del método de pago (valores comunes de WooCommerce)"
+    },
+    "metodo_pago_titulo": {
+      "type": "string",
+      "description": "Título del método de pago (ej: 'Transferencia bancaria', 'PayPal', etc.)"
+    },
+    "nota_cliente": {
+      "type": "text",
+      "description": "Nota del cliente en el pedido"
+    },
+    "originPlatform": {
+      "type": "enumeration",
+      "enum": [
+        "woo_moraleja",
+        "woo_escolar",
+        "otros"
+      ]
+    },
+    "externalIds": {
+      "type": "json"
+    },
+    "wooId": {
+      "type": "biginteger",
+      "description": "ID único del pedido en WooCommerce (bigint para soportar valores grandes)"
+    },
+    "rawWooData": {
+      "type": "json"
+    }
+  }
+}
+
+

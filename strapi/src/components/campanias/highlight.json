@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_campanias_highlights",
+  "info": {
+    "displayName": "Highlight",
+    "icon": "star"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "icon": {
+      "type": "enumeration",
+      "enum": [
+        "curriculum",
+        "analytics",
+        "support",
+        "custom"
+      ]
+    }
+  }
+}

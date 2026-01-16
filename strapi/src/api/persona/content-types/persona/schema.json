@@ -1,0 +1,166 @@
+{
+  "kind": "collectionType",
+  "collectionName": "personas",
+  "info": {
+    "singularName": "persona",
+    "pluralName": "personas",
+    "displayName": "Persona",
+    "description": "Contacto académico y general",
+    "mainField": "rut"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "rut": {
+      "type": "string",
+      "unique": true
+    },
+    "nombres": {
+      "type": "string"
+    },
+    "primer_apellido": {
+      "type": "string"
+    },
+    "segundo_apellido": {
+      "type": "string"
+    },
+    "nombre_apellidos": {
+      "type": "string"
+    },
+    "iniciales": {
+      "type": "string"
+    },
+    "nombre_completo": {
+      "type": "string"
+    },
+    "status_nombres": {
+      "type": "enumeration",
+      "enum": [
+        "Por Verificar",
+        "Verificado",
+        "Aprobado",
+        "Eliminado",
+        "Rechazado"
+      ]
+    },
+    "nivel_confianza": {
+      "type": "enumeration",
+      "default": "baja",
+      "enum": [
+        "baja",
+        "media",
+        "alta"
+      ]
+    },
+    "origen": {
+      "type": "enumeration",
+      "default": "manual",
+      "enum": [
+        "mineduc",
+        "csv",
+        "manual",
+        "crm",
+        "web",
+        "otro"
+      ]
+    },
+    "activo": {
+      "type": "boolean",
+      "default": true
+    },
+    "notas": {
+      "type": "text"
+    },
+    "tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::persona-tag.persona-tag"
+    },
+    "genero": {
+      "type": "enumeration",
+      "enum": [
+        "Mujer",
+        "Hombre"
+      ]
+    },
+    "cumpleagno": {
+      "type": "date"
+    },
+    "cartera_asignaciones": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::cartera-asignacion.cartera-asignacion",
+      "mappedBy": "ejecutivo"
+    },
+    "identificadores_externos": {
+      "type": "json"
+    },
+    "emails": {
+      "type": "component",
+      "component": "contacto.email",
+      "repeatable": true
+    },
+    "telefonos": {
+      "type": "component",
+      "component": "contacto.telefono",
+      "repeatable": true
+    },
+    "imagen": {
+      "type": "component",
+      "component": "contacto.logo-o-avatar",
+      "repeatable": false
+    },
+    "portada": {
+      "type": "component",
+      "component": "contacto.logo-o-avatar",
+      "repeatable": false
+    },
+    "portal_account": {
+      "type": "component",
+      "component": "portal.account",
+      "repeatable": false
+    },
+    "portal_roles": {
+      "type": "component",
+      "component": "portal.access-role",
+      "repeatable": true
+    },
+    "portal_preferences": {
+      "type": "component",
+      "component": "portal.preferences",
+      "repeatable": false
+    },
+    "portal_snapshot": {
+      "type": "json"
+    },
+    "portal_last_synced_at": {
+      "type": "datetime"
+    },
+    "trayectorias": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::persona-trayectoria.persona-trayectoria",
+      "mappedBy": "persona"
+    },
+    "bio": {
+      "type": "text"
+    },
+    "job_title": {
+      "type": "string"
+    },
+    "telefono_principal": {
+      "type": "string"
+    },
+    "direccion": {
+      "type": "json"
+    },
+    "redes_sociales": {
+      "type": "json"
+    },
+    "skills": {
+      "type": "json"
+    }
+  }
+}

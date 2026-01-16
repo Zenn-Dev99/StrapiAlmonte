@@ -1,0 +1,60 @@
+{
+  "kind": "collectionType",
+  "collectionName": "evaluaciones",
+  "info": {
+    "singularName": "evaluacion",
+    "pluralName": "evaluaciones",
+    "displayName": "MIRA · Evaluación (Pauta Maestra)",
+    "description": "Pautas maestras de evaluaciones asociadas a libros MIRA"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nombre": {
+      "type": "string",
+      "required": true,
+      "description": "Nombre de la prueba (Ej: 'Ensayo Simce 1')"
+    },
+    "categoria": {
+      "type": "enumeration",
+      "enum": [
+        "Básica",
+        "Media",
+        "Simce",
+        "Paes",
+        "Universitaria"
+      ],
+      "description": "Categoría de la evaluación"
+    },
+    "cantidad_preguntas": {
+      "type": "integer",
+      "required": true,
+      "description": "Cantidad total de preguntas de la evaluación"
+    },
+    "libro_mira": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::libro-mira.libro-mira",
+      "required": true,
+      "description": "Libro MIRA al que pertenece esta evaluación"
+    },
+    "pauta_respuestas": {
+      "type": "json",
+      "description": "Respuestas correctas de la evaluación (Ej: {\"1\":\"A\", \"2\":\"C\"})"
+    },
+    "hoja_maestra_imagen": {
+      "type": "media",
+      "multiple": false,
+      "description": "Imagen de referencia de la hoja maestra subida por el profesor/admin"
+    },
+    "activo": {
+      "type": "boolean",
+      "default": true,
+      "description": "Si la evaluación está activa y disponible para uso"
+    }
+  }
+}
+
+

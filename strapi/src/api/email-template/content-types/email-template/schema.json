@@ -1,0 +1,109 @@
+{
+  "kind": "collectionType",
+  "collectionName": "email_templates",
+  "info": {
+    "singularName": "email-template",
+    "pluralName": "email-templates",
+    "displayName": "Email · Template",
+    "description": "Plantillas parametrizables para los envíos automáticos"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "key": {
+      "type": "uid",
+      "targetField": "name",
+      "required": true
+    },
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "subject": {
+      "type": "string",
+      "required": true
+    },
+    "preheader": {
+      "type": "string"
+    },
+    "from_name": {
+      "type": "string"
+    },
+    "from_email": {
+      "type": "email"
+    },
+    "reply_to": {
+      "type": "email"
+    },
+    "cc": {
+      "type": "json"
+    },
+    "bcc": {
+      "type": "json"
+    },
+    "etapa": {
+      "type": "enumeration",
+      "enum": [
+        "Inicio",
+        "Curso",
+        "Cierre",
+        "Fin"
+      ]
+    },
+    "Ciclo": {
+      "type": "string"
+    },
+    "fecha_sugerida": {
+      "type": "date"
+    },
+    "segmentos_asignaturas": {
+      "type": "json"
+    },
+    "segmentos_niveles": {
+      "type": "json"
+    },
+    "body_text": {
+      "type": "text"
+    },
+    "body_html": {
+      "type": "richtext"
+    },
+    "notes": {
+      "type": "text"
+    },
+    "estado": {
+      "type": "enumeration",
+      "default": "Borrador",
+      "enum": [
+        "Borrador",
+        "En revisión",
+        "Aprobado",
+        "Archivado"
+      ]
+    },
+    "aprobado_por": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "aprobado_en": {
+      "type": "datetime"
+    },
+    "autores": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "plugin::users-permissions.user"
+    },
+    "meta": {
+      "type": "json"
+    },
+    "logs": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::email-log.email-log",
+      "mappedBy": "template"
+    }
+  }
+}

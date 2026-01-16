@@ -1,0 +1,327 @@
+═══════════════════════════════════════════════════════════════════
+🔧 FIX: Descripción Corta muestra el MISMO texto que Descripción
+═══════════════════════════════════════════════════════════════════
+
+PROBLEMA ACTUAL:
+✅ Descripción del producto → Se llena correctamente
+❌ Descripción corta → Muestra TODO el texto completo (igual que descripción)
+
+CAUSA:
+Estás enviando el MISMO texto para ambos campos:
+
+rawWooData: {
+  description: formData.descripcion,        // Texto completo
+  short_description: formData.descripcion   // ❌ MISMO texto completo
+}
+
+RESULTADO:
+Ambos campos tienen el mismo contenido largo en WooCommerce.
+
+═══════════════════════════════════════════════════════════════════
+SOLUCIÓN: Acortar la descripción corta
+═══════════════════════════════════════════════════════════════════
+
+DESCRIPCIÓN COMPLETA:
+- Texto completo sin límite
+- Formato HTML con párrafos
+
+DESCRIPCIÓN CORTA:
+- Máximo 150-200 caracteres
+- Solo texto resumido
+- Formato HTML simple
+
+═══════════════════════════════════════════════════════════════════
+FUNCIONES HELPER CORREGIDAS
+═══════════════════════════════════════════════════════════════════
+
+// 1. Convierte texto plano a HTML (para description)
+function textoAHTML(texto) {
+  if (!texto) return '';
+  
+  // Convertir saltos de línea dobles en párrafos
+  const parrafos = texto.split('\n\n')
+    .filter(p => p.trim())
+    .map(p => `<p>${p.trim().replace(/\n/g, '<br>')}</p>`)
+    .join('');
+  
+  return parrafos || `<p>${texto}</p>`;
+}
+
+// 2. Genera descripción CORTA limitada (para short_description)
+function generarDescripcionCorta(texto, maxCaracteres = 150) {
+  if (!texto) return '';
+  
+  // Limpiar saltos de línea y convertir a una sola línea
+  const textoLimpio = texto.replace(/\n/g, ' ').trim();
+  
+  // Limitar a X caracteres
+  let textoCorto;
+  if (textoLimpio.length > maxCaracteres) {
+    // Cortar en la última palabra completa antes del límite
+    textoCorto = textoLimpio.substring(0, maxCaracteres);
+    const ultimoEspacio = textoCorto.lastIndexOf(' ');
+    if (ultimoEspacio > 0) {
+      textoCorto = textoCorto.substring(0, ultimoEspacio);
+    }
+    textoCorto += '...';
+  } else {
+    textoCorto = textoLimpio;
+  }
+  
+  return `<p>${textoCorto}</p>`;
+}
+
+═══════════════════════════════════════════════════════════════════
+USO CORRECTO EN EL PAYLOAD
+═══════════════════════════════════════════════════════════════════
+
+ANTES (INCORRECTO):
+────────────────────────────────────────────────────────────────
+
+const payload = {
+  data: {
+    rawWooData: {
+      description: formData.descripcion,       // ❌ Texto plano
+      short_description: formData.descripcion  // ❌ MISMO texto completo
+    }
+  }
+};
+
+DESPUÉS (CORRECTO):
+────────────────────────────────────────────────────────────────
+
+const payload = {
+  data: {
+    rawWooData: {
+      // ✅ Descripción completa en HTML
+      description: textoAHTML(formData.descripcion),
+      
+      // ✅ Descripción corta LIMITADA a 150 caracteres
+      short_description: generarDescripcionCorta(formData.descripcion, 150)
+    }
+  }
+};
+
+═══════════════════════════════════════════════════════════════════
+EJEMPLO COMPLETO
+═══════════════════════════════════════════════════════════════════
+
+// Supongamos que formData.descripcion tiene:
+const descripcionLarga = `Cálculo I es un libro fundamental para estudiantes de ingeniería y ciencias.
+
+Incluye más de 500 ejercicios resueltos paso a paso, con explicaciones detalladas de cada concepto matemático.
+
+Los temas cubiertos incluyen límites, derivadas, integrales y sus aplicaciones prácticas en problemas de ingeniería.`;
+
+// Al procesar:
+
+// description (completa con HTML):
+const description = textoAHTML(descripcionLarga);
+// Resultado: 
+// "<p>Cálculo I es un libro fundamental para estudiantes de ingeniería y ciencias.</p>
+//  <p>Incluye más de 500 ejercicios resueltos paso a paso, con explicaciones detalladas de cada concepto matemático.</p>
+//  <p>Los temas cubiertos incluyen límites, derivadas, integrales y sus aplicaciones prácticas en problemas de ingeniería.</p>"
+
+// short_description (solo primeras 150 caracteres):
+const shortDescription = generarDescripcionCorta(descripcionLarga, 150);
+// Resultado:
+// "<p>Cálculo I es un libro fundamental para estudiantes de ingeniería y ciencias. Incluye más de 500 ejercicios resueltos paso a paso, con...</p>"
+
+═══════════════════════════════════════════════════════════════════
+IMPLEMENTACIÓN COMPLETA
+═══════════════════════════════════════════════════════════════════
+
+// 1. Agregar funciones helper al inicio del archivo
+function textoAHTML(texto) {
+  if (!texto) return '';
+  const parrafos = texto.split('\n\n')
+    .filter(p => p.trim())
+    .map(p => `<p>${p.trim().replace(/\n/g, '<br>')}</p>`)
+    .join('');
+  return parrafos || `<p>${texto}</p>`;
+}
+
+function generarDescripcionCorta(texto, maxCaracteres = 150) {
+  if (!texto) return '';
+  const textoLimpio = texto.replace(/\n/g, ' ').trim();
+  let textoCorto;
+  if (textoLimpio.length > maxCaracteres) {
+    textoCorto = textoLimpio.substring(0, maxCaracteres);
+    const ultimoEspacio = textoCorto.lastIndexOf(' ');
+    if (ultimoEspacio > 0) {
+      textoCorto = textoCorto.substring(0, ultimoEspacio);
+    }
+    textoCorto += '...';
+  } else {
+    textoCorto = textoLimpio;
+  }
+  return `<p>${textoCorto}</p>`;
+}
+
+// 2. En tu función de crear/actualizar producto
+const handleSubmit = async (formData) => {
+  try {
+    // ✅ Procesar descripciones correctamente
+    const descripcionCompleta = textoAHTML(formData.descripcion);
+    const descripcionCorta = generarDescripcionCorta(formData.descripcion, 150);
+    
+    // Verificar en consola (para debugging)
+    console.log('Descripción completa:', descripcionCompleta);
+    console.log('Descripción corta:', descripcionCorta);
+    
+    const payload = {
+      data: {
+        nombre_libro: formData.nombre,
+        isbn_libro: formData.isbn,
+        precio: parseFloat(formData.precio),
+        stock_quantity: parseInt(formData.stock) || 0,
+        estado_publicacion: "Publicado",
+        canales: [1, 2],
+        
+        rawWooData: {
+          name: formData.nombre,
+          type: "simple",
+          status: "publish",
+          sku: formData.isbn,
+          
+          // ✅ Descripciones DIFERENTES
+          description: descripcionCompleta,      // HTML completo
+          short_description: descripcionCorta,   // Solo 150 caracteres
+          
+          regular_price: formData.precio.toString(),
+          manage_stock: true,
+          stock_quantity: parseInt(formData.stock) || 0,
+          stock_status: parseInt(formData.stock) > 0 ? 'instock' : 'outofstock',
+          backorders: 'no'
+        }
+      }
+    };
+    
+    const response = await fetch(
+      'https://strapi.moraleja.cl/api/libros',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }
+    );
+    
+    if (!response.ok) {
+      throw new Error('Error al guardar producto');
+    }
+    
+    console.log('✅ Producto guardado con descripciones diferentes');
+    
+  } catch (error) {
+    console.error('❌ Error:', error);
+  }
+};
+
+═══════════════════════════════════════════════════════════════════
+VERIFICAR QUE FUNCIONA
+═══════════════════════════════════════════════════════════════════
+
+1. ANTES DE ENVIAR - Ver en consola:
+   console.log('Description length:', descripcionCompleta.length);
+   console.log('Short description length:', descripcionCorta.length);
+   
+   DEBE MOSTRAR:
+   Description length: 500+ caracteres (o más)
+   Short description length: ~150-180 caracteres
+
+2. DESPUÉS DE CREAR - Ver en WooCommerce Admin:
+   - Tab "Descripción" → Texto completo con múltiples párrafos
+   - Tab "Descripción corta" → Solo las primeras líneas (~150 caracteres)
+
+3. VER EN EL FRONTEND:
+   - Página del producto → Descripción completa en tab "Descripción"
+   - Página de listado → Solo descripción corta
+
+═══════════════════════════════════════════════════════════════════
+AJUSTAR LONGITUD DE DESCRIPCIÓN CORTA
+═══════════════════════════════════════════════════════════════════
+
+Puedes cambiar el límite de caracteres según tus necesidades:
+
+// Más corta (100 caracteres)
+short_description: generarDescripcionCorta(formData.descripcion, 100)
+
+// Normal (150 caracteres) - RECOMENDADO
+short_description: generarDescripcionCorta(formData.descripcion, 150)
+
+// Más larga (200 caracteres)
+short_description: generarDescripcionCorta(formData.descripcion, 200)
+
+═══════════════════════════════════════════════════════════════════
+CASO ESPECIAL: Si tienes campo separado para descripción corta
+═══════════════════════════════════════════════════════════════════
+
+Si en tu formulario tienes DOS campos de texto:
+- formData.descripcion (descripción completa)
+- formData.descripcionCorta (descripción corta específica)
+
+Entonces usa:
+
+rawWooData: {
+  // Descripción completa
+  description: textoAHTML(formData.descripcion),
+  
+  // Descripción corta desde campo específico
+  short_description: formData.descripcionCorta 
+    ? textoAHTML(formData.descripcionCorta)
+    : generarDescripcionCorta(formData.descripcion, 150)
+}
+
+═══════════════════════════════════════════════════════════════════
+DEBUGGING
+═══════════════════════════════════════════════════════════════════
+
+Si después de implementar SIGUE mostrando el mismo texto:
+
+1. Verificar que las funciones helper están definidas:
+   console.log(typeof textoAHTML); // Debe mostrar: "function"
+   console.log(typeof generarDescripcionCorta); // Debe mostrar: "function"
+
+2. Verificar que se están llamando correctamente:
+   console.log('Description:', descripcionCompleta);
+   console.log('Short description:', descripcionCorta);
+   
+3. Verificar que son DIFERENTES:
+   console.log('¿Son diferentes?', descripcionCompleta !== descripcionCorta);
+   // Debe mostrar: true
+
+4. Ver el payload completo antes de enviar:
+   console.log('Payload:', JSON.stringify(payload, null, 2));
+
+═══════════════════════════════════════════════════════════════════
+RESUMEN
+═══════════════════════════════════════════════════════════════════
+
+PROBLEMA:
+description y short_description tienen el MISMO texto completo
+
+CAUSA:
+rawWooData: {
+  description: formData.descripcion,       // Texto completo
+  short_description: formData.descripcion  // MISMO texto completo
+}
+
+SOLUCIÓN:
+rawWooData: {
+  description: textoAHTML(formData.descripcion),              // HTML completo
+  short_description: generarDescripcionCorta(formData.descripcion, 150)  // Solo 150 chars
+}
+
+RESULTADO:
+✅ Description: Texto completo con formato
+✅ Short description: Solo primeras 150 caracteres
+
+═══════════════════════════════════════════════════════════════════
+
+IMPLEMENTA LAS FUNCIONES HELPER Y USA generarDescripcionCorta()
+PARA LIMITAR LA DESCRIPCIÓN CORTA A 150 CARACTERES.
+
+DESPUÉS DE IMPLEMENTAR, LAS DESCRIPCIONES SERÁN DIFERENTES.
+
+═══════════════════════════════════════════════════════════════════
+

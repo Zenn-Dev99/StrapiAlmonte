@@ -1,0 +1,42 @@
+{
+  "kind": "collectionType",
+  "collectionName": "lista_descuentos",
+  "info": {
+    "singularName": "lista-descuento",
+    "pluralName": "lista-descuentos",
+    "displayName": "Documentos · Lista de descuento",
+    "description": "Listas de descuento aplicables a cotizaciones"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nombre": {
+      "type": "string",
+      "required": true
+    },
+    "descripcion": {
+      "type": "text"
+    },
+    "vigencia_inicio": {
+      "type": "date"
+    },
+    "vigencia_fin": {
+      "type": "date"
+    },
+    "descuento_base": {
+      "type": "decimal"
+    },
+    "items": {
+      "type": "component",
+      "component": "lista-descuento.regla",
+      "repeatable": true
+    },
+    "ejecutivas_autorizadas": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "plugin::users-permissions.user"
+    }
+  }
+}

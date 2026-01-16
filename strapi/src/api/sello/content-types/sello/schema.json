@@ -1,0 +1,73 @@
+{
+  "kind": "collectionType",
+  "collectionName": "sellos",
+  "info": {
+    "singularName": "sello",
+    "pluralName": "sellos",
+    "displayName": "Product · Libro · Sello",
+    "description": "Sellos editoriales asociados a una editorial"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "id_sello": {
+      "type": "integer",
+      "required": true,
+      "unique": true,
+      "default": null
+    },
+    "nombre_sello": {
+      "type": "string",
+      "required": true
+    },
+    "acronimo": {
+      "type": "string"
+    },
+    "logo": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "website": {
+      "type": "string"
+    },
+    "editorial": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::editorial.editorial",
+      "inversedBy": "sellos"
+    },
+    "colecciones": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::coleccion.coleccion",
+      "mappedBy": "sello"
+    },
+    "libros": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::libro.libro",
+      "mappedBy": "sello"
+    },
+    "externalIds": {
+      "type": "json",
+      "description": "IDs externos de WooCommerce: { woo_moraleja: 123, woo_escolar: 456 }"
+    },
+    "estado_publicacion": {
+      "type": "enumeration",
+      "default": "pendiente",
+      "enum": [
+        "pendiente",
+        "publicado",
+        "borrador"
+      ]
+    }
+  }
+}

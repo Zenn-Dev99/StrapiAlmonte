@@ -1,0 +1,131 @@
+═══════════════════════════════════════════════════════════════════
+📢 ACTUALIZACIÓN IMPORTANTE DE STRAPI
+═══════════════════════════════════════════════════════════════════
+
+CAMBIOS IMPLEMENTADOS:
+
+1. ✅ PRESERVACIÓN AUTOMÁTICA DE externalIds
+   - Strapi ahora preserva automáticamente los IDs de WooCommerce
+   - YA NO necesitas incluir "externalIds" al actualizar productos
+   - No se crearán productos duplicados en WooCommerce
+
+2. ✅ ACTUALIZACIÓN SIMPLIFICADA DE PRODUCTOS
+   - Solo envía los campos que cambien
+   - NO necesitas obtener el producto completo antes de actualizar
+   - NO necesitas incluir externalIds en el payload
+
+3. ✅ rawWooData SIGUE FUNCIONANDO
+   - Sigue usando rawWooData para campos específicos de WooCommerce
+   - Funciona igual que antes, pero ahora no necesitas externalIds
+
+4. ✅ MANEJO AUTOMÁTICO DE ERRORES DE IMAGEN
+   - Si hay errores de permisos, Strapi reintenta sin imagen
+   - El producto se crea/actualiza correctamente de todas formas
+
+═══════════════════════════════════════════════════════════════════
+NUEVO MÉTODO PARA ACTUALIZAR PRODUCTOS (RECOMENDADO)
+═══════════════════════════════════════════════════════════════════
+
+MÉTODO SIMPLE (usa este):
+
+const payload = {
+  data: {
+    nombre_libro: "Título Editado",
+    precio: 59990,
+    descripcion: "Nueva descripción"
+    // ✅ NO incluir externalIds
+  }
+};
+
+await fetch(`https://strapi.moraleja.cl/api/libros/${productoId}`, {
+  method: 'PUT',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(payload)
+});
+
+═══════════════════════════════════════════════════════════════════
+MÉTODO CON rawWooData (para campos avanzados):
+
+const payload = {
+  data: {
+    nombre_libro: "Título Editado",
+    rawWooData: {
+      name: "Título Editado",
+      description: "Descripción HTML completa",
+      short_description: "Resumen breve",
+      regular_price: "59990.00",
+      sale_price: "49990.00",
+      weight: "0.8",
+      dimensions: {
+        length: "25",
+        width: "18",
+        height: "3"
+      },
+      shipping_class: "envio-rapido"
+    }
+    // ✅ NO incluir externalIds
+  }
+};
+
+await fetch(`https://strapi.moraleja.cl/api/libros/${productoId}`, {
+  method: 'PUT',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(payload)
+});
+
+═══════════════════════════════════════════════════════════════════
+CREAR PRODUCTOS (sin cambios)
+═══════════════════════════════════════════════════════════════════
+
+El método para CREAR sigue igual:
+
+const payload = {
+  data: {
+    isbn_libro: "123456789",
+    nombre_libro: "Nuevo Producto",
+    precio: 49990,
+    estado_publicacion: "Publicado",
+    canales: [1, 2], // 1 = moraleja, 2 = escolar
+    rawWooData: {
+      // ... datos completos de WooCommerce
+    }
+  }
+};
+
+await fetch('https://strapi.moraleja.cl/api/libros', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(payload)
+});
+
+═══════════════════════════════════════════════════════════════════
+RESUMEN
+═══════════════════════════════════════════════════════════════════
+
+ANTES:
+❌ Debías obtener el producto completo antes de actualizar
+❌ Debías incluir externalIds en cada actualización
+❌ Riesgo de crear productos duplicados
+
+AHORA:
+✅ Solo envías los campos que cambien
+✅ NO necesitas incluir externalIds (se preservan automáticamente)
+✅ Sin productos duplicados
+✅ Más simple, más rápido, más seguro
+
+BENEFICIOS:
+🚀 Menos código
+🚀 Actualizaciones más rápidas
+🚀 Sin errores de duplicados
+🚀 Manejo automático de errores de imagen
+
+═══════════════════════════════════════════════════════════════════
+
+POR FAVOR, ACTUALIZA TU CÓDIGO DE EDICIÓN DE PRODUCTOS PARA USAR 
+EL NUEVO MÉTODO SIMPLIFICADO.
+
+Ya no necesitas incluir externalIds al actualizar. Strapi los 
+preserva automáticamente.
+
+═══════════════════════════════════════════════════════════════════
+

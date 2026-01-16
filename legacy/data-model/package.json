@@ -1,0 +1,13 @@
+{
+  "name": "bd2025-data-model",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "model:sync": "node generators/generate-strapi.mjs && node generators/generate-types.mjs && node generators/generate-sql.mjs",
+    "model:validate": "node generators/validate-imports.mjs"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0"
+  }
+}

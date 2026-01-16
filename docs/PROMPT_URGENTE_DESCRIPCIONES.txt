@@ -1,0 +1,291 @@
+═══════════════════════════════════════════════════════════════════
+🚨 URGENTE: Las descripciones NO aparecen en WooCommerce
+═══════════════════════════════════════════════════════════════════
+
+PROBLEMA ACTUAL:
+❌ Los productos se crean en WooCommerce
+❌ PERO las descripciones están VACÍAS
+❌ description: vacío
+❌ short_description: vacío
+
+CAUSA:
+Estás enviando rawWooData PERO SIN incluir description y short_description
+
+═══════════════════════════════════════════════════════════════════
+SOLUCIÓN INMEDIATA (2 OPCIONES)
+═══════════════════════════════════════════════════════════════════
+
+OPCIÓN 1: INCLUIR DESCRIPCIONES EN rawWooData (RECOMENDADO)
+────────────────────────────────────────────────────────────────
+
+{
+  data: {
+    nombre_libro: "Cálculo I",
+    precio: 49990,
+    canales: [1, 2],
+    
+    rawWooData: {
+      name: "Cálculo I",
+      regular_price: "49990.00",
+      manage_stock: true,
+      stock_quantity: 100,
+      
+      // ✅ AGREGAR ESTOS CAMPOS:
+      description: "<p>Descripción completa del producto</p>",
+      short_description: "<p>Resumen breve del producto</p>"
+    }
+  }
+}
+
+OPCIÓN 2: ENVIAR DESCRIPCIÓN EN CAMPO DE STRAPI (AUTOMÁTICO)
+────────────────────────────────────────────────────────────────
+
+Si no quieres incluir descripciones en rawWooData, Strapi las completará
+automáticamente DESDE el campo "descripcion" de Strapi.
+
+{
+  data: {
+    nombre_libro: "Cálculo I",
+    precio: 49990,
+    canales: [1, 2],
+    
+    // ✅ Enviar descripción en formato blocks
+    descripcion: [
+      {
+        type: "paragraph",
+        children: [
+          { type: "text", text: "Descripción completa del producto" }
+        ]
+      }
+    ],
+    
+    // ✅ Enviar descripción corta en subtitulo_libro
+    subtitulo_libro: "Resumen breve del producto",
+    
+    rawWooData: {
+      name: "Cálculo I",
+      regular_price: "49990.00",
+      manage_stock: true,
+      stock_quantity: 100
+      // ✅ NO necesitas description/short_description aquí
+      // Strapi los agregará automáticamente desde descripcion/subtitulo_libro
+    }
+  }
+}
+
+═══════════════════════════════════════════════════════════════════
+FUNCIONES HELPER PARA OPCIÓN 1 (RECOMENDADO)
+═══════════════════════════════════════════════════════════════════
+
+// Convierte texto plano a HTML con párrafos
+function textoAHTML(texto) {
+  if (!texto) return '';
+  
+  // Convertir saltos de línea dobles en párrafos
+  const parrafos = texto.split('\n\n')
+    .filter(p => p.trim())
+    .map(p => `<p>${p.trim().replace(/\n/g, '<br>')}</p>`)
+    .join('');
+  
+  return parrafos || `<p>${texto}</p>`;
+}
+
+// Genera descripción corta (máximo X caracteres)
+function generarDescripcionCorta(texto, maxCaracteres = 150) {
+  if (!texto) return '';
+  
+  const textoLimpio = texto.replace(/\n/g, ' ').trim();
+  const textoCorto = textoLimpio.length > maxCaracteres
+    ? textoLimpio.substring(0, maxCaracteres) + '...'
+    : textoLimpio;
+  
+  return `<p>${textoCorto}</p>`;
+}
+
+// Uso en el formulario:
+const descripcionHTML = textoAHTML(formData.descripcion);
+const descripcionCortaHTML = generarDescripcionCorta(formData.descripcion, 150);
+
+const payload = {
+  data: {
+    nombre_libro: formData.nombre,
+    precio: parseFloat(formData.precio),
+    canales: [1, 2],
+    
+    rawWooData: {
+      name: formData.nombre,
+      regular_price: formData.precio.toString(),
+      
+      // ✅ Usar las funciones helper
+      description: descripcionHTML,
+      short_description: descripcionCortaHTML,
+      
+      manage_stock: true,
+      stock_quantity: parseInt(formData.stock) || 0
+    }
+  }
+};
+
+═══════════════════════════════════════════════════════════════════
+IMPLEMENTACIÓN COMPLETA
+═══════════════════════════════════════════════════════════════════
+
+// 1. Agregar funciones helper al inicio del archivo
+function textoAHTML(texto) {
+  if (!texto) return '';
+  const parrafos = texto.split('\n\n')
+    .filter(p => p.trim())
+    .map(p => `<p>${p.trim().replace(/\n/g, '<br>')}</p>`)
+    .join('');
+  return parrafos || `<p>${texto}</p>`;
+}
+
+function generarDescripcionCorta(texto, max = 150) {
+  if (!texto) return '';
+  const limpio = texto.replace(/\n/g, ' ').trim();
+  const corto = limpio.length > max ? limpio.substring(0, max) + '...' : limpio;
+  return `<p>${corto}</p>`;
+}
+
+// 2. En tu función de crear/actualizar producto
+const handleSubmit = async (formData) => {
+  try {
+    const payload = {
+      data: {
+        nombre_libro: formData.nombre,
+        isbn_libro: formData.isbn,
+        precio: parseFloat(formData.precio),
+        stock_quantity: parseInt(formData.stock) || 0,
+        estado_publicacion: "Publicado",
+        canales: [1, 2],
+        
+        rawWooData: {
+          name: formData.nombre,
+          type: "simple",
+          status: "publish",
+          sku: formData.isbn,
+          
+          // ✅ CRÍTICO: Incluir descripciones en HTML
+          description: textoAHTML(formData.descripcion),
+          short_description: generarDescripcionCorta(formData.descripcion),
+          
+          regular_price: formData.precio.toString(),
+          sale_price: formData.precio_oferta?.toString() || '',
+          
+          manage_stock: true,
+          stock_quantity: parseInt(formData.stock) || 0,
+          stock_status: parseInt(formData.stock) > 0 ? 'instock' : 'outofstock',
+          backorders: 'no',
+          backorders_allowed: false,
+          
+          weight: formData.peso || '',
+          dimensions: {
+            length: formData.largo || '',
+            width: formData.ancho || '',
+            height: formData.alto || ''
+          },
+          shipping_class: formData.clase_envio || '',
+          
+          images: formData.imagenUrl ? [
+            {
+              src: formData.imagenUrl,
+              name: formData.nombre,
+              alt: formData.nombre
+            }
+          ] : []
+        }
+      }
+    };
+    
+    const endpoint = modoEdicion
+      ? `https://strapi.moraleja.cl/api/libros/${productoId}`
+      : 'https://strapi.moraleja.cl/api/libros';
+    
+    const response = await fetch(endpoint, {
+      method: modoEdicion ? 'PUT' : 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error?.message || 'Error al guardar');
+    }
+    
+    console.log('✅ Producto guardado con descripciones');
+    
+  } catch (error) {
+    console.error('❌ Error:', error);
+  }
+};
+
+═══════════════════════════════════════════════════════════════════
+VERIFICAR QUE FUNCIONA
+═══════════════════════════════════════════════════════════════════
+
+1. Ver el payload en consola ANTES de enviar:
+   console.log('Payload:', JSON.stringify(payload, null, 2));
+   
+2. Verificar que rawWooData tiene:
+   ✅ description: "<p>..."
+   ✅ short_description: "<p>..."
+
+3. Después de crear, ir a WooCommerce Admin:
+   https://moraleja.cl/wp-admin/post.php?post=XXX&action=edit
+   
+4. Verificar que las descripciones aparecen:
+   ✅ Tab "Descripción" → debe tener contenido
+   ✅ Tab "Descripción corta" → debe tener contenido
+
+5. Ver en el frontend:
+   https://moraleja.cl/producto/nombre-producto/
+   ✅ Debe mostrar la descripción completa
+
+═══════════════════════════════════════════════════════════════════
+DEBUGGING
+═══════════════════════════════════════════════════════════════════
+
+Si después de implementar esto SIGUE sin funcionar:
+
+1. Ver el payload completo en consola:
+   console.log('rawWooData:', payload.data.rawWooData);
+
+2. Verificar que description NO esté vacío:
+   console.log('description:', payload.data.rawWooData.description);
+   // Debe mostrar: "<p>Texto aquí</p>"
+
+3. Verificar que short_description NO esté vacío:
+   console.log('short_description:', payload.data.rawWooData.short_description);
+   // Debe mostrar: "<p>Texto aquí</p>"
+
+4. Si están vacíos:
+   - Verificar que formData.descripcion tiene valor
+   - Verificar que las funciones helper están definidas
+   - Verificar que estás llamando a las funciones correctamente
+
+═══════════════════════════════════════════════════════════════════
+RESUMEN RÁPIDO
+═══════════════════════════════════════════════════════════════════
+
+EL PROBLEMA:
+rawWooData NO incluye description ni short_description
+
+LA SOLUCIÓN:
+rawWooData: {
+  description: textoAHTML(formData.descripcion),
+  short_description: generarDescripcionCorta(formData.descripcion)
+}
+
+PRIORIDAD:
+🔴 URGENTE - Implementar AHORA para que las descripciones aparezcan
+
+═══════════════════════════════════════════════════════════════════
+
+IMPLEMENTA LAS FUNCIONES HELPER Y ACTUALIZA EL PAYLOAD PARA INCLUIR
+DESCRIPTION Y SHORT_DESCRIPTION EN rawWooData.
+
+DESPUÉS DE IMPLEMENTAR, PRUEBA CREANDO UN PRODUCTO Y VERIFICA QUE
+LAS DESCRIPCIONES APAREZCAN EN WOOCOMMERCE.
+
+═══════════════════════════════════════════════════════════════════
+

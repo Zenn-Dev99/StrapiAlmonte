@@ -1,0 +1,28 @@
+{
+  "collectionName": "components_campanias_supports",
+  "info": {
+    "displayName": "Support",
+    "icon": "life-ring"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "contactEmail": {
+      "type": "email"
+    },
+    "contactPhone": {
+      "type": "string"
+    },
+    "contactWhatsapp": {
+      "type": "string"
+    },
+    "officeHours": {
+      "type": "string"
+    }
+  }
+}

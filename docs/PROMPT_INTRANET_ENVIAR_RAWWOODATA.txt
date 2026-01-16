@@ -1,0 +1,315 @@
+═══════════════════════════════════════════════════════════════════
+🔧 FIX CRÍTICO: Enviar rawWooData a Strapi
+═══════════════════════════════════════════════════════════════════
+
+PROBLEMA IDENTIFICADO:
+Ya estás construyendo rawWooData correctamente con las descripciones,
+pero NO lo estás enviando en el payload a Strapi.
+
+CAUSA:
+En tu código actual:
+- ✅ CONSTRUYES rawWooData con description y short_description
+- ❌ NO ENVÍAS rawWooData en el payload a Strapi
+
+RESULTADO:
+Las descripciones quedan vacías en WooCommerce porque Strapi no recibe
+la información en rawWooData.
+
+═══════════════════════════════════════════════════════════════════
+SOLUCIÓN: Incluir rawWooData en el payload
+═══════════════════════════════════════════════════════════════════
+
+ANTES (ACTUAL - INCORRECTO):
+────────────────────────────────────────────────────────────────
+
+const rawWooData = {
+  description: formData.descripcion?.trim()
+    ? textoAHTML(formData.descripcion)
+    : '<p>Sin descripción</p>',
+  
+  short_description: formData.descripcion_corta?.trim()
+    ? textoAHTML(formData.descripcion_corta)
+    : (formData.descripcion?.trim()
+        ? generarDescripcionCorta(formData.descripcion, 150)
+        : '<p>Sin descripción</p>'),
+  
+  // ... otros campos de WooCommerce
+};
+
+// Payload a Strapi
+const payload = {
+  data: {
+    descripcion: formData.descripcion?.trim() || '',
+    subtitulo_libro: formData.descripcion_corta?.trim() || 
+                     formData.descripcion?.substring(0, 255) || '',
+    nombre_libro: formData.nombre,
+    precio: formData.precio,
+    // ❌ rawWooData NO SE ENVÍA
+  }
+};
+
+DESPUÉS (CORRECTO):
+────────────────────────────────────────────────────────────────
+
+const rawWooData = {
+  name: formData.nombre,
+  type: 'simple',
+  status: 'publish',
+  sku: formData.isbn,
+  
+  // ✅ Descripciones
+  description: formData.descripcion?.trim()
+    ? textoAHTML(formData.descripcion)
+    : '<p>Sin descripción</p>',
+  
+  short_description: formData.descripcion_corta?.trim()
+    ? textoAHTML(formData.descripcion_corta)
+    : (formData.descripcion?.trim()
+        ? generarDescripcionCorta(formData.descripcion, 150)
+        : '<p>Sin descripción</p>'),
+  
+  // Precio
+  regular_price: formData.precio?.toString() || '0',
+  sale_price: formData.precio_oferta?.toString() || '',
+  
+  // Stock
+  manage_stock: true,
+  stock_quantity: parseInt(formData.stock) || 0,
+  stock_status: parseInt(formData.stock) > 0 ? 'instock' : 'outofstock',
+  backorders: 'no',
+  backorders_allowed: false,
+  
+  // Dimensiones
+  weight: formData.peso?.toString() || '',
+  dimensions: {
+    length: formData.largo?.toString() || '',
+    width: formData.ancho?.toString() || '',
+    height: formData.alto?.toString() || ''
+  },
+  
+  shipping_class: formData.clase_envio || '',
+  
+  // Imágenes (si tienes)
+  images: formData.imagenUrl ? [
+    {
+      src: formData.imagenUrl,
+      name: formData.nombre,
+      alt: formData.nombre
+    }
+  ] : []
+};
+
+// Payload a Strapi
+const payload = {
+  data: {
+    // Campos de Strapi
+    nombre_libro: formData.nombre,
+    isbn_libro: formData.isbn,
+    precio: parseFloat(formData.precio) || 0,
+    precio_oferta: formData.precio_oferta ? parseFloat(formData.precio_oferta) : null,
+    stock_quantity: parseInt(formData.stock) || 0,
+    estado_publicacion: 'Publicado',
+    canales: [1, 2], // 1 = moraleja, 2 = escolar
+    
+    // Descripciones en campos de Strapi
+    descripcion: formData.descripcion?.trim() || '',
+    subtitulo_libro: formData.descripcion_corta?.trim() || 
+                     formData.descripcion?.substring(0, 255) || '',
+    
+    // ✅ AGREGAR rawWooData
+    rawWooData: rawWooData,
+  }
+};
+
+═══════════════════════════════════════════════════════════════════
+CÓDIGO COMPLETO PARA CREAR/EDITAR PRODUCTO
+═══════════════════════════════════════════════════════════════════
+
+const handleSubmit = async (formData, modoEdicion = false, productoId = null) => {
+  try {
+    // 1. Construir rawWooData (ya lo haces)
+    const rawWooData = {
+      name: formData.nombre,
+      type: 'simple',
+      status: 'publish',
+      sku: formData.isbn,
+      
+      // Descripciones (tu lógica actual - está correcta)
+      description: formData.descripcion?.trim()
+        ? textoAHTML(formData.descripcion)
+        : '<p>Sin descripción</p>',
+      
+      short_description: formData.descripcion_corta?.trim()
+        ? textoAHTML(formData.descripcion_corta)
+        : (formData.descripcion?.trim()
+            ? generarDescripcionCorta(formData.descripcion, 150)
+            : '<p>Sin descripción</p>'),
+      
+      // Precio
+      regular_price: formData.precio?.toString() || '0',
+      sale_price: formData.precio_oferta?.toString() || '',
+      
+      // Stock
+      manage_stock: true,
+      stock_quantity: parseInt(formData.stock) || 0,
+      stock_status: parseInt(formData.stock) > 0 ? 'instock' : 'outofstock',
+      backorders: 'no',
+      backorders_allowed: false,
+      
+      // Dimensiones
+      weight: formData.peso?.toString() || '',
+      dimensions: {
+        length: formData.largo?.toString() || '',
+        width: formData.ancho?.toString() || '',
+        height: formData.alto?.toString() || ''
+      },
+      
+      shipping_class: formData.clase_envio || '',
+    };
+    
+    // 2. Construir payload a Strapi
+    const payload = {
+      data: {
+        // Campos de Strapi
+        nombre_libro: formData.nombre,
+        isbn_libro: formData.isbn,
+        precio: parseFloat(formData.precio) || 0,
+        precio_oferta: formData.precio_oferta ? parseFloat(formData.precio_oferta) : null,
+        stock_quantity: parseInt(formData.stock) || 0,
+        manage_stock: true,
+        stock_status: parseInt(formData.stock) > 0 ? 'instock' : 'outofstock',
+        estado_publicacion: 'Publicado',
+        canales: [1, 2],
+        
+        // Descripciones para Strapi
+        descripcion: formData.descripcion?.trim() || '',
+        subtitulo_libro: formData.descripcion_corta?.trim() || 
+                         formData.descripcion?.substring(0, 255) || '',
+        
+        // Dimensiones para Strapi
+        weight: formData.peso ? parseFloat(formData.peso) : null,
+        length: formData.largo ? parseFloat(formData.largo) : null,
+        width: formData.ancho ? parseFloat(formData.ancho) : null,
+        height: formData.alto ? parseFloat(formData.alto) : null,
+        
+        // ✅ CRÍTICO: Incluir rawWooData
+        rawWooData: rawWooData,
+      }
+    };
+    
+    // 3. Debug (verificar antes de enviar)
+    console.log('📦 Payload a Strapi:', JSON.stringify(payload, null, 2));
+    console.log('🔍 Verificación rawWooData:', {
+      tieneRawWooData: !!payload.data.rawWooData,
+      tieneDescription: !!payload.data.rawWooData?.description,
+      tieneShortDescription: !!payload.data.rawWooData?.short_description,
+      longitudDescription: payload.data.rawWooData?.description?.length,
+      longitudShortDescription: payload.data.rawWooData?.short_description?.length,
+    });
+    
+    // 4. Enviar a Strapi
+    const endpoint = modoEdicion
+      ? `https://strapi.moraleja.cl/api/libros/${productoId}`
+      : 'https://strapi.moraleja.cl/api/libros';
+    
+    const response = await fetch(endpoint, {
+      method: modoEdicion ? 'PUT' : 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload)
+    });
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error?.message || 'Error al guardar producto');
+    }
+    
+    const resultado = await response.json();
+    console.log('✅ Producto guardado exitosamente:', resultado);
+    
+    return resultado;
+    
+  } catch (error) {
+    console.error('❌ Error al guardar producto:', error);
+    throw error;
+  }
+};
+
+═══════════════════════════════════════════════════════════════════
+VERIFICAR QUE FUNCIONA
+═══════════════════════════════════════════════════════════════════
+
+1. VER EN CONSOLA ANTES DE ENVIAR:
+   Debe mostrar:
+   ✅ tieneRawWooData: true
+   ✅ tieneDescription: true
+   ✅ tieneShortDescription: true
+   ✅ longitudDescription: 200+ caracteres
+   ✅ longitudShortDescription: ~150 caracteres
+
+2. VERIFICAR PAYLOAD COMPLETO:
+   console.log('Payload:', JSON.stringify(payload, null, 2));
+   
+   Debe incluir:
+   {
+     "data": {
+       "nombre_libro": "...",
+       "descripcion": "...",
+       "subtitulo_libro": "...",
+       "rawWooData": {
+         "description": "<p>...</p>",
+         "short_description": "<p>...</p>"
+       }
+     }
+   }
+
+3. DESPUÉS DE CREAR, VERIFICAR EN WOOCOMMERCE:
+   - Ir a WooCommerce Admin
+   - Buscar el producto recién creado
+   - Tab "Descripción" → Debe tener contenido
+   - Tab "Descripción corta" → Debe tener contenido
+
+═══════════════════════════════════════════════════════════════════
+RESUMEN DEL CAMBIO
+═══════════════════════════════════════════════════════════════════
+
+CAMBIO NECESARIO:
+Solo agregar UNA línea al payload:
+
+const payload = {
+  data: {
+    nombre_libro: formData.nombre,
+    descripcion: formData.descripcion,
+    subtitulo_libro: formData.descripcion_corta,
+    // ... otros campos
+    
+    rawWooData: rawWooData,  // ✅ AGREGAR ESTA LÍNEA
+  }
+};
+
+RESULTADO:
+✅ Strapi recibe rawWooData con las descripciones
+✅ Strapi sincroniza a WooCommerce con las descripciones
+✅ Descripciones aparecen en WooCommerce
+✅ Descripción completa y corta son diferentes
+
+═══════════════════════════════════════════════════════════════════
+IMPORTANTE
+═══════════════════════════════════════════════════════════════════
+
+1. Ya estás construyendo rawWooData correctamente ✅
+2. Ya estás procesando las descripciones correctamente ✅
+3. Solo falta ENVIAR rawWooData en el payload a Strapi ❌
+
+SOLUCIÓN: Agregar 1 línea → rawWooData: rawWooData,
+
+TIEMPO: 2 minutos de implementación
+
+═══════════════════════════════════════════════════════════════════
+
+AGREGA rawWooData AL PAYLOAD Y LAS DESCRIPCIONES APARECERÁN
+CORRECTAMENTE EN WOOCOMMERCE.
+
+═══════════════════════════════════════════════════════════════════
+

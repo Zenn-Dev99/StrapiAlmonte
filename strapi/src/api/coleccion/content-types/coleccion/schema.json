@@ -1,0 +1,58 @@
+{
+  "kind": "collectionType",
+  "collectionName": "colecciones",
+  "info": {
+    "singularName": "coleccion",
+    "pluralName": "colecciones",
+    "displayName": "Product · Libro · Serie / Colección",
+    "description": "Series o colecciones de libros. Pueden estar asociadas a una editorial/sello o ser independientes"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "id_coleccion": {
+      "type": "integer",
+      "required": false,
+      "unique": true
+    },
+    "nombre_coleccion": {
+      "type": "string",
+      "required": false
+    },
+    "editorial": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::editorial.editorial",
+      "description": "Opcional: Editorial asociada (si aplica)",
+      "inversedBy": "colecciones"
+    },
+    "sello": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::sello.sello",
+      "inversedBy": "colecciones"
+    },
+    "libros": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::libro.libro",
+      "mappedBy": "coleccion"
+    },
+    "externalIds": {
+      "type": "json",
+      "description": "IDs externos de WooCommerce: { woo_moraleja: 123, woo_escolar: 456 }"
+    },
+    "estado_publicacion": {
+      "type": "enumeration",
+      "enum": [
+        "pendiente",
+        "publicado",
+        "borrador"
+      ],
+      "default": "pendiente",
+      "required": false
+    }
+  }
+}

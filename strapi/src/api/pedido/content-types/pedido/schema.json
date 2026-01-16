@@ -1,0 +1,158 @@
+{
+  "kind": "collectionType",
+  "collectionName": "pedidos",
+  "info": {
+    "singularName": "pedido",
+    "pluralName": "pedidos",
+    "displayName": "Ecommerce · Pedido",
+    "description": "Pedidos sincronizados desde WooCommerce (Moraleja y Librería Escolar)"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "woocommerce_id": {
+      "type": "string",
+      "description": "ID del pedido en WooCommerce (para match entre sistemas)"
+    },
+    "numero_pedido": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "description": "Número de pedido de WooCommerce"
+    },
+    "estado": {
+      "type": "enumeration",
+      "enum": [
+        "pending",
+        "processing",
+        "on-hold",
+        "completed",
+        "cancelled",
+        "refunded",
+        "failed"
+      ],
+      "default": "pending",
+      "description": "Estado del pedido (igual que WooCommerce)"
+    },
+    "fecha_creacion": {
+      "type": "datetime",
+      "required": true,
+      "description": "Fecha de creación del pedido"
+    },
+    "fecha_modificacion": {
+      "type": "datetime",
+      "description": "Fecha de última modificación"
+    },
+    "total": {
+      "type": "decimal",
+      "required": true,
+      "precision": 12,
+      "scale": 2,
+      "min": 0,
+      "description": "Total del pedido"
+    },
+    "subtotal": {
+      "type": "decimal",
+      "precision": 12,
+      "scale": 2,
+      "min": 0,
+      "description": "Subtotal sin impuestos ni envío"
+    },
+    "impuestos": {
+      "type": "decimal",
+      "precision": 12,
+      "scale": 2,
+      "min": 0,
+      "default": 0,
+      "description": "Total de impuestos"
+    },
+    "envio": {
+      "type": "decimal",
+      "precision": 12,
+      "scale": 2,
+      "min": 0,
+      "default": 0,
+      "description": "Costo de envío"
+    },
+    "descuento": {
+      "type": "decimal",
+      "precision": 12,
+      "scale": 2,
+      "min": 0,
+      "default": 0,
+      "description": "Total de descuentos"
+    },
+    "moneda": {
+      "type": "string",
+      "default": "CLP",
+      "description": "Código de moneda (CLP, USD, etc.)"
+    },
+    "metodo_pago": {
+      "type": "string",
+      "description": "ID del método de pago"
+    },
+    "metodo_pago_titulo": {
+      "type": "string",
+      "description": "Título del método de pago"
+    },
+    "metodo_envio": {
+      "type": "string",
+      "description": "Método de envío"
+    },
+    "nota_cliente": {
+      "type": "text",
+      "description": "Nota del cliente en el pedido"
+    },
+    "notas_privadas": {
+      "type": "text",
+      "description": "Notas privadas del administrador"
+    },
+    "customer": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::customer.customer",
+      "description": "Cliente que realizó el pedido"
+    },
+    "cupon": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::wo-cupon.wo-cupon",
+      "description": "Cupón aplicado al pedido"
+    },
+    "items": {
+      "type": "component",
+      "component": "pedido.item",
+      "repeatable": true,
+      "required": false,
+      "description": "Productos del pedido (line_items)"
+    },
+    "billing": {
+      "type": "json",
+      "description": "Datos de facturación (igual estructura que WooCommerce)"
+    },
+    "shipping": {
+      "type": "json",
+      "description": "Datos de envío (igual estructura que WooCommerce)"
+    },
+    "originPlatform": {
+      "type": "enumeration",
+      "enum": [
+        "woo_moraleja",
+        "woo_escolar"
+      ],
+      "required": true,
+      "description": "Plataforma de origen del pedido"
+    },
+    "externalIds": {
+      "type": "json",
+      "description": "IDs externos (woo_moraleja: 123, woo_escolar: 456)"
+    },
+    "metadata": {
+      "type": "json",
+      "description": "Metadata adicional de WooCommerce"
+    }
+  }
+}
+

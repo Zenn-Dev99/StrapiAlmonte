@@ -1,0 +1,35 @@
+{
+  "collectionName": "components_listas_utiles_bounding_boxes",
+  "info": {
+    "displayName": "Bounding Box",
+    "description": "Ubicación normalizada del elemento dentro de un PDF de lista de útiles"
+  },
+  "options": {},
+  "attributes": {
+    "page": {
+      "type": "integer",
+      "min": 1,
+      "required": true
+    },
+    "x": {
+      "type": "decimal",
+      "min": 0,
+      "max": 1
+    },
+    "y": {
+      "type": "decimal",
+      "min": 0,
+      "max": 1
+    },
+    "width": {
+      "type": "decimal",
+      "min": 0,
+      "max": 1
+    },
+    "height": {
+      "type": "decimal",
+      "min": 0,
+      "max": 1
+    }
+  }
+}

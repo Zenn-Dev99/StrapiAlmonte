@@ -1,0 +1,36 @@
+{
+  "kind": "collectionType",
+  "collectionName": "media_tags",
+  "info": {
+    "singularName": "media-tag",
+    "pluralName": "media-tags",
+    "displayName": "Media Tag"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "maxLength": 120
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name",
+      "required": true,
+      "unique": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "assets": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::media-asset.media-asset",
+      "mappedBy": "tags"
+    }
+  }
+}

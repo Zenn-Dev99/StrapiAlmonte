@@ -1,0 +1,15 @@
+{
+  "kind": "singleType",
+  "collectionName": "woo_webhooks",
+  "info": {
+    "singularName": "woo-webhook",
+    "pluralName": "woo-webhooks",
+    "displayName": "WooCommerce Webhook"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {}
+}
+

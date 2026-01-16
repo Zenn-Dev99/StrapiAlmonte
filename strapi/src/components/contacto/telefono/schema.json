@@ -1,0 +1,24 @@
+{
+  "collectionName": "components_contacto_telefonos",
+  "info": { "displayName": "Teléfono", "icon": "phone" },
+  "options": {},
+  "attributes": {
+    "telefono_norm": { "type": "string" },
+    "telefono_raw": { "type": "string" },
+    "fijo_o_movil": {
+      "type": "enumeration",
+      "enum": ["Fijo", "Móvil"]
+    },
+    "tipo": {
+      "type": "enumeration",
+      "enum": ["Personal", "Laboral", "Institucional"]
+    },
+    "estado": {
+      "type": "enumeration",
+      "enum": ["Por Verificar", "Verificado", "Aprobado"]
+    },
+    "principal": { "type": "boolean", "default": false },
+    "vigente_hasta": { "type": "date" },
+    "status": { "type": "boolean", "default": true }
+  }
+}

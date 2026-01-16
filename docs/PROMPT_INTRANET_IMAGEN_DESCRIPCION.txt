@@ -1,0 +1,452 @@
+═══════════════════════════════════════════════════════════════════
+🖼️ PROBLEMA: Imagen y Descripciones NO se cargan a WooCommerce
+═══════════════════════════════════════════════════════════════════
+
+CAMPOS AFECTADOS:
+❌ Imagen del producto (images)
+❌ Descripción completa (description)
+❌ Descripción corta (short_description)
+
+CAUSA:
+Estos campos NO se están enviando correctamente en el payload o están
+en formato incorrecto.
+
+═══════════════════════════════════════════════════════════════════
+SOLUCIÓN COMPLETA
+═══════════════════════════════════════════════════════════════════
+
+1. IMAGEN
+═══════════════════════════════════════════════════════════════════
+
+La imagen debe ir en rawWooData.images como un array de objetos con:
+- src: URL completa de la imagen
+- name: Nombre descriptivo
+- alt: Texto alternativo
+
+FORMATO CORRECTO:
+
+rawWooData: {
+  images: [
+    {
+      src: "https://cdn.moraleja.cl/productos/imagen-producto.jpg",
+      name: "Portada del libro",
+      alt: "Cálculo I - 10ª Edición"
+    }
+  ]
+}
+
+IMPORTANTE:
+✅ La URL debe ser accesible públicamente
+✅ Debe estar en formato HTTPS
+✅ Debe ser un array, aunque sea una sola imagen
+✅ Si tienes múltiples imágenes, agrega más objetos al array
+
+EJEMPLO CON MÚLTIPLES IMÁGENES:
+
+rawWooData: {
+  images: [
+    {
+      src: "https://cdn.moraleja.cl/productos/portada.jpg",
+      name: "Portada",
+      alt: "Portada del libro"
+    },
+    {
+      src: "https://cdn.moraleja.cl/productos/contraportada.jpg",
+      name: "Contraportada",
+      alt: "Contraportada del libro"
+    }
+  ]
+}
+
+═══════════════════════════════════════════════════════════════════
+
+2. DESCRIPCIÓN COMPLETA
+═══════════════════════════════════════════════════════════════════
+
+La descripción debe ir en rawWooData.description como HTML string.
+
+FORMATO CORRECTO:
+
+rawWooData: {
+  description: "<p>Esta es la descripción <strong>completa</strong> del producto.</p><p>Puede incluir múltiples párrafos, listas, etc.</p>"
+}
+
+OPCIONES:
+
+Opción A - HTML Simple:
+description: "<p>Descripción del producto en formato HTML</p>"
+
+Opción B - HTML Completo con formato:
+description: `
+  <div>
+    <h3>Sobre este libro</h3>
+    <p>Cálculo I es un libro fundamental para estudiantes de ingeniería.</p>
+    
+    <h4>Características:</h4>
+    <ul>
+      <li>10ª Edición actualizada</li>
+      <li>Más de 500 ejercicios</li>
+      <li>Soluciones paso a paso</li>
+    </ul>
+    
+    <h4>Contenido:</h4>
+    <ol>
+      <li>Límites y continuidad</li>
+      <li>Derivadas</li>
+      <li>Integrales</li>
+    </ol>
+  </div>
+`
+
+Opción C - Convertir texto plano a HTML:
+// Si tienes texto plano, conviértelo a HTML
+const textoPlano = formData.descripcion;
+const descripcionHTML = `<p>${textoPlano.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>')}</p>`;
+
+rawWooData: {
+  description: descripcionHTML
+}
+
+═══════════════════════════════════════════════════════════════════
+
+3. DESCRIPCIÓN CORTA
+═══════════════════════════════════════════════════════════════════
+
+La descripción corta debe ir en rawWooData.short_description como HTML string.
+
+FORMATO CORRECTO:
+
+rawWooData: {
+  short_description: "<p>Resumen breve del producto en 1-2 líneas.</p>"
+}
+
+RECOMENDACIÓN:
+- Máximo 150-200 caracteres
+- Debe ser un resumen atractivo del producto
+- Puede generarse automáticamente desde la descripción completa
+
+EJEMPLO:
+
+// Opción 1: Campo específico del formulario
+rawWooData: {
+  short_description: `<p>${formData.resumen}</p>`
+}
+
+// Opción 2: Auto-generado desde descripción (primeros 150 caracteres)
+const descripcionCorta = formData.descripcion
+  ? formData.descripcion.substring(0, 150) + '...'
+  : '';
+
+rawWooData: {
+  short_description: `<p>${descripcionCorta}</p>`
+}
+
+═══════════════════════════════════════════════════════════════════
+PAYLOAD COMPLETO CORRECTO
+═══════════════════════════════════════════════════════════════════
+
+En tu función de crear/actualizar producto, construye el payload así:
+
+const payload = {
+  data: {
+    nombre_libro: formData.nombre_libro,
+    isbn_libro: formData.isbn,
+    precio: parseFloat(formData.precio),
+    stock_quantity: parseInt(formData.stock) || 0,
+    estado_publicacion: "Publicado",
+    canales: [1, 2], // 1 = moraleja, 2 = escolar
+    
+    rawWooData: {
+      // Información básica
+      name: formData.nombre_libro,
+      type: "simple",
+      status: "publish",
+      
+      // ✅ DESCRIPCIÓN COMPLETA (HTML)
+      description: formData.descripcion 
+        ? `<p>${formData.descripcion.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>')}</p>`
+        : '',
+      
+      // ✅ DESCRIPCIÓN CORTA (HTML, máximo 150 caracteres)
+      short_description: formData.descripcion
+        ? `<p>${formData.descripcion.substring(0, 150)}...</p>`
+        : '',
+      
+      // Precio
+      regular_price: formData.precio.toString(),
+      sale_price: formData.precio_oferta?.toString() || '',
+      
+      // Stock
+      manage_stock: true,
+      stock_quantity: parseInt(formData.stock) || 0,
+      stock_status: parseInt(formData.stock) > 0 ? 'instock' : 'outofstock',
+      backorders: 'no',
+      
+      // Dimensiones
+      weight: formData.peso || '',
+      dimensions: {
+        length: formData.largo || '',
+        width: formData.ancho || '',
+        height: formData.alto || ''
+      },
+      
+      // ✅ IMÁGENES (array de objetos)
+      images: formData.imagenUrl ? [
+        {
+          src: formData.imagenUrl,
+          name: formData.nombre_libro,
+          alt: formData.nombre_libro
+        }
+      ] : []
+    }
+  }
+};
+
+═══════════════════════════════════════════════════════════════════
+CASOS ESPECÍFICOS
+═══════════════════════════════════════════════════════════════════
+
+CASO 1: Si subes imagen a Strapi primero
+──────────────────────────────────────────────────────────────────
+
+// 1. Subir imagen a Strapi
+const formDataImagen = new FormData();
+formDataImagen.append('files', archivoImagen);
+
+const responseImagen = await fetch('https://strapi.moraleja.cl/api/upload', {
+  method: 'POST',
+  body: formDataImagen
+});
+
+const imagenSubida = await responseImagen.json();
+const urlImagen = `https://strapi.moraleja.cl${imagenSubida[0].url}`;
+
+// 2. Usar esa URL en rawWooData
+rawWooData: {
+  images: [
+    {
+      src: urlImagen,
+      name: formData.nombre_libro,
+      alt: formData.nombre_libro
+    }
+  ]
+}
+
+═══════════════════════════════════════════════════════════════════
+
+CASO 2: Si la imagen ya está en un CDN/servidor
+──────────────────────────────────────────────────────────────────
+
+// Usar directamente la URL del CDN
+rawWooData: {
+  images: [
+    {
+      src: formData.urlImagenCDN, // URL desde input del formulario
+      name: formData.nombre_libro,
+      alt: formData.nombre_libro
+    }
+  ]
+}
+
+═══════════════════════════════════════════════════════════════════
+
+CASO 3: Si usas un selector de imágenes de Strapi
+──────────────────────────────────────────────────────────────────
+
+// Obtener URL de la imagen seleccionada de Strapi
+const imagenStrapi = formData.portada_libro; // ID o URL
+
+// Si es ID, obtener la URL:
+const responseImg = await fetch(`https://strapi.moraleja.cl/api/upload/files/${imagenStrapi}`);
+const imgData = await responseImg.json();
+const urlImagen = `https://strapi.moraleja.cl${imgData.url}`;
+
+rawWooData: {
+  images: [
+    {
+      src: urlImagen,
+      name: formData.nombre_libro,
+      alt: formData.nombre_libro
+    }
+  ]
+}
+
+═══════════════════════════════════════════════════════════════════
+EJEMPLO COMPLETO EN EL FORMULARIO
+═══════════════════════════════════════════════════════════════════
+
+// En tu componente de formulario (agregar/editar producto)
+
+const handleSubmit = async (formData) => {
+  try {
+    // 1. Subir imagen si existe (opcional)
+    let urlImagen = formData.imagenExistente || '';
+    
+    if (formData.nuevaImagen) {
+      const formDataImg = new FormData();
+      formDataImg.append('files', formData.nuevaImagen);
+      
+      const resImg = await fetch('https://strapi.moraleja.cl/api/upload', {
+        method: 'POST',
+        body: formDataImg
+      });
+      
+      const imgSubida = await resImg.json();
+      urlImagen = `https://strapi.moraleja.cl${imgSubida[0].url}`;
+    }
+    
+    // 2. Construir payload completo
+    const payload = {
+      data: {
+        nombre_libro: formData.nombre,
+        isbn_libro: formData.isbn,
+        precio: parseFloat(formData.precio),
+        estado_publicacion: "Publicado",
+        canales: [1, 2],
+        
+        rawWooData: {
+          name: formData.nombre,
+          
+          // ✅ Descripción en HTML
+          description: formData.descripcion
+            ? `<p>${formData.descripcion.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>')}</p>`
+            : '<p>Sin descripción</p>',
+          
+          // ✅ Descripción corta en HTML
+          short_description: formData.descripcion
+            ? `<p>${formData.descripcion.substring(0, 150)}...</p>`
+            : '<p>Sin descripción</p>',
+          
+          regular_price: formData.precio.toString(),
+          manage_stock: true,
+          stock_quantity: parseInt(formData.stock) || 0,
+          
+          // ✅ Imágenes
+          images: urlImagen ? [
+            {
+              src: urlImagen,
+              name: formData.nombre,
+              alt: formData.nombre
+            }
+          ] : []
+        }
+      }
+    };
+    
+    // 3. Enviar a Strapi
+    const endpoint = modoEdicion
+      ? `https://strapi.moraleja.cl/api/libros/${productoId}`
+      : 'https://strapi.moraleja.cl/api/libros';
+    
+    const response = await fetch(endpoint, {
+      method: modoEdicion ? 'PUT' : 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+    
+    if (!response.ok) {
+      throw new Error('Error al guardar producto');
+    }
+    
+    console.log('✅ Producto guardado con imagen y descripciones');
+    
+  } catch (error) {
+    console.error('❌ Error:', error);
+  }
+};
+
+═══════════════════════════════════════════════════════════════════
+VALIDACIONES RECOMENDADAS
+═══════════════════════════════════════════════════════════════════
+
+Antes de enviar el payload, valida:
+
+1. IMAGEN:
+   - Verifica que la URL sea válida
+   - Verifica que sea HTTPS
+   - Verifica que el formato sea .jpg, .png, .webp
+
+2. DESCRIPCIÓN:
+   - Mínimo 10 caracteres
+   - Convertir a HTML si es texto plano
+
+3. DESCRIPCIÓN CORTA:
+   - Máximo 200 caracteres
+   - Auto-generar si no existe
+
+Ejemplo de validación:
+
+const validarYPrepararDatos = (formData) => {
+  // Validar imagen
+  const imagenUrl = formData.imagenUrl || '';
+  if (imagenUrl && !imagenUrl.startsWith('https://')) {
+    console.warn('⚠️ La URL de la imagen debe ser HTTPS');
+  }
+  
+  // Validar descripción
+  if (!formData.descripcion || formData.descripcion.length < 10) {
+    throw new Error('La descripción debe tener al menos 10 caracteres');
+  }
+  
+  // Preparar descripción HTML
+  const descripcionHTML = `<p>${formData.descripcion.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>')}</p>`;
+  
+  // Preparar descripción corta
+  const descripcionCorta = formData.descripcion.substring(0, 150) + '...';
+  const descripcionCortaHTML = `<p>${descripcionCorta}</p>`;
+  
+  return {
+    descripcionHTML,
+    descripcionCortaHTML,
+    imagenUrl
+  };
+};
+
+═══════════════════════════════════════════════════════════════════
+VERIFICAR QUE FUNCIONA
+═══════════════════════════════════════════════════════════════════
+
+Después de crear/actualizar un producto:
+
+1. Ver en consola del navegador:
+   console.log('Payload enviado:', payload);
+
+2. Ver en WooCommerce Admin:
+   - Ir a Productos → Editar producto
+   - Verificar que aparece la imagen
+   - Verificar que aparece la descripción completa
+   - Verificar que aparece la descripción corta
+
+3. Ver en el frontend de WooCommerce:
+   - Ir a la página del producto
+   - Verificar que se ve la imagen
+   - Verificar que se ve la descripción
+
+═══════════════════════════════════════════════════════════════════
+RESUMEN
+═══════════════════════════════════════════════════════════════════
+
+✅ IMAGEN:
+   rawWooData.images = [{ src: "url", name: "nombre", alt: "alt" }]
+
+✅ DESCRIPCIÓN COMPLETA:
+   rawWooData.description = "<p>HTML con formato</p>"
+
+✅ DESCRIPCIÓN CORTA:
+   rawWooData.short_description = "<p>Resumen breve</p>"
+
+❌ NO enviar como:
+   - data.descripcion (no existe en Strapi para este propósito)
+   - data.images (no existe en Strapi)
+   - rawWooData.description sin HTML (debe tener <p> tags)
+
+═══════════════════════════════════════════════════════════════════
+
+POR FAVOR IMPLEMENTA ESTOS CAMBIOS EN TU CÓDIGO DE CREAR/EDITAR
+PRODUCTOS PARA QUE LAS IMÁGENES Y DESCRIPCIONES SE SINCRONICEN
+CORRECTAMENTE CON WOOCOMMERCE.
+
+═══════════════════════════════════════════════════════════════════
+

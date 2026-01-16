@@ -1,0 +1,81 @@
+{
+  "kind": "collectionType",
+  "collectionName": "actividades",
+  "info": {
+    "singularName": "actividad",
+    "pluralName": "actividades",
+    "displayName": "Actividad",
+    "description": "Actividades del CRM: llamadas, emails, reuniones, notas, etc."
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "tipo": {
+      "type": "enumeration",
+      "enum": [
+        "llamada",
+        "email",
+        "reunion",
+        "nota",
+        "cambio_estado",
+        "tarea",
+        "recordatorio",
+        "otro"
+      ],
+      "default": "nota",
+      "required": true
+    },
+    "titulo": {
+      "type": "string",
+      "required": true
+    },
+    "descripcion": {
+      "type": "text"
+    },
+    "fecha": {
+      "type": "datetime",
+      "required": true
+    },
+    "estado": {
+      "type": "enumeration",
+      "enum": [
+        "completada",
+        "pendiente",
+        "cancelada",
+        "en_progreso"
+      ],
+      "default": "pendiente",
+      "required": true
+    },
+    "notas": {
+      "type": "text"
+    },
+    "relacionado_con_contacto": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::persona.persona"
+    },
+    "relacionado_con_lead": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::lead.lead"
+    },
+    "relacionado_con_oportunidad": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::oportunidad.oportunidad"
+    },
+    "relacionado_con_colegio": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::colegio.colegio"
+    },
+    "creado_por": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::colaborador.colaborador"
+    }
+  }
+}

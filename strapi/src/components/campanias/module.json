@@ -1,0 +1,33 @@
+{
+  "collectionName": "components_campanias_modules",
+  "info": {
+    "displayName": "Module",
+    "icon": "layers"
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "audience": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "richtext"
+    },
+    "outcomes": {
+      "type": "component",
+      "repeatable": true,
+      "component": "campanias.module-outcome"
+    },
+    "duration": {
+      "type": "string"
+    },
+    "ctaLabel": {
+      "type": "string"
+    },
+    "ctaHref": {
+      "type": "string"
+    }
+  }
+}

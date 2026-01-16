@@ -1,0 +1,110 @@
+{
+  "kind": "collectionType",
+  "collectionName": "promocion_contactos",
+  "info": {
+    "singularName": "promocion-contacto",
+    "pluralName": "promocion-contactos",
+    "displayName": "Promoción Contactos",
+    "description": "Listado temporal para campañas de correo."
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {
+    "content-manager": {
+      "visible": true
+    },
+    "content-type-builder": {
+      "visible": true
+    }
+  },
+  "attributes": {
+    "id_rut": {
+      "type": "string",
+      "minLength": 3,
+      "required": true,
+      "unique": true
+    },
+    "nombre": {
+      "type": "string",
+      "required": true
+    },
+    "apellido": {
+      "type": "string"
+    },
+    "email": {
+      "type": "email"
+    },
+    "cargo": {
+      "type": "string"
+    },
+    "ciclo": {
+      "type": "json"
+    },
+    "asignaturas": {
+      "type": "text"
+    },
+    "departamento": {
+      "type": "json"
+    },
+    "rbd": {
+      "type": "string",
+      "required": true
+    },
+    "colegio_nombre": {
+      "type": "string",
+      "required": true
+    },
+    "dependencia": {
+      "type": "enumeration",
+      "enumName": "promocion_contacto_dependencia",
+      "enum": [
+        "Particular Pagado",
+        "Particular Subvencionado",
+        "Municipal",
+        "Administración Delegada",
+        "Corporación Municipal",
+        "Preuniversitario"
+      ]
+    },
+    "comuna_nombre": {
+      "type": "string",
+      "required": true
+    },
+    "region_nombre": {
+      "type": "string",
+      "required": true
+    },
+    "email_1_email": {
+      "type": "email"
+    },
+    "website_1_website": {
+      "type": "string"
+    },
+    "orden": {
+      "type": "integer"
+    },
+    "cartera_comercial_prioridad": {
+      "type": "enumeration",
+      "enumName": "promocion_contacto_prioridad",
+      "enum": [
+        "Alta",
+        "Media",
+        "Baja"
+      ]
+    },
+    "cartera_comercial_ejecutivo_nombre": {
+      "type": "enumeration",
+      "enumName": "promocion_contacto_ejecutivo",
+      "enum": [
+        "Ana Dolores De la Hoz",
+        "Margarita Salcedo",
+        "Sin Asignar"
+      ]
+    },
+    "promocion_2025": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

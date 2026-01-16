@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_cotizaciones_beneficios",
+  "info": {
+    "displayName": "Beneficio",
+    "icon": "gift"
+  },
+  "options": {},
+  "attributes": {
+    "titulo": {
+      "type": "string",
+      "required": true
+    },
+    "descripcion": {
+      "type": "text"
+    }
+  }
+}

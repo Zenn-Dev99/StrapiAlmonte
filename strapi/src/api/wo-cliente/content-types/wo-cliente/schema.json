@@ -1,0 +1,74 @@
+{
+  "kind": "collectionType",
+  "collectionName": "wo_clientes",
+  "info": {
+    "singularName": "wo-cliente",
+    "pluralName": "wo-clientes",
+    "displayName": "WO-Clientes",
+    "description": "Clientes crudos sincronizados desde WooCommerce (Moraleja/Escolar)"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nombre": {
+      "type": "string"
+    },
+    "ultima_actividad": {
+      "type": "datetime"
+    },
+    "fecha_registro": {
+      "type": "datetime"
+    },
+    "correo_electronico": {
+      "type": "string",
+      "required": true
+    },
+    "pedidos": {
+      "type": "integer"
+    },
+    "gasto_total": {
+      "type": "decimal"
+    },
+    "aov": {
+      "type": "decimal"
+    },
+    "pais_region": {
+      "type": "string"
+    },
+    "ciudad": {
+      "type": "string"
+    },
+    "region": {
+      "type": "string"
+    },
+    "codigo_postal": {
+      "type": "string"
+    },
+    "originPlatform": {
+      "type": "enumeration",
+      "enum": [
+        "woo_moraleja",
+        "woo_escolar",
+        "otros"
+      ]
+    },
+    "externalIds": {
+      "type": "json"
+    },
+    "wooId": {
+      "type": "integer"
+    },
+    "rawWooData": {
+      "type": "json"
+    },
+    "persona": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::persona.persona",
+      "description": "Persona asociada al cliente (con RUT, fecha nacimiento, etc.)"
+    }
+  }
+}
+

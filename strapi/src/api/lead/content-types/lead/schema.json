@@ -1,0 +1,89 @@
+{
+  "kind": "collectionType",
+  "collectionName": "leads",
+  "info": {
+    "singularName": "lead",
+    "pluralName": "leads",
+    "displayName": "Lead",
+    "description": "Leads del CRM - Contactos potenciales"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nombre": {
+      "type": "string",
+      "required": true
+    },
+    "email": {
+      "type": "email"
+    },
+    "telefono": {
+      "type": "string"
+    },
+    "empresa": {
+      "type": "string"
+    },
+    "monto_estimado": {
+      "type": "decimal",
+      "min": 0
+    },
+    "etiqueta": {
+      "type": "enumeration",
+      "enum": [
+        "baja",
+        "media",
+        "alta"
+      ],
+      "required": true,
+      "default": "baja"
+    },
+    "estado": {
+      "type": "enumeration",
+      "enum": [
+        "in-progress",
+        "proposal-sent",
+        "follow-up",
+        "pending",
+        "negotiation",
+        "rejected"
+      ],
+      "required": true,
+      "default": "in-progress"
+    },
+    "fuente": {
+      "type": "string",
+      "default": "Manual"
+    },
+    "fecha_creacion": {
+      "type": "date"
+    },
+    "activo": {
+      "type": "boolean",
+      "required": true,
+      "default": true
+    },
+    "notas": {
+      "type": "richtext"
+    },
+    "fecha_proximo_seguimiento": {
+      "type": "datetime"
+    },
+    "asignado_a": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::colaborador.colaborador"
+    },
+    "relacionado_con_persona": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::persona.persona"
+    },
+    "relacionado_con_colegio": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::colegio.colegio"
+    }
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "kind": "collectionType",
+  "collectionName": "turnos",
+  "info": {
+    "singularName": "turno",
+    "pluralName": "turnos",
+    "displayName": "Turnos · Tienda",
+    "description": "Sistema de gestión de turnos para atención al cliente"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "numero": {
+      "type": "string",
+      "required": true,
+      "unique": false
+    },
+    "prefijo": {
+      "type": "string",
+      "default": "A",
+      "required": true
+    },
+    "estado": {
+      "type": "enumeration",
+      "required": true,
+      "default": "pendiente",
+      "enum": [
+        "pendiente",
+        "proximo",
+        "llamado",
+        "atendido",
+        "cancelado"
+      ]
+    },
+    "tipo": {
+      "type": "enumeration",
+      "required": true,
+      "enum": [
+        "caja",
+        "retiros"
+      ]
+    },
+    "ubicacion": {
+      "type": "enumeration",
+      "enum": [
+        "caja-1",
+        "caja-2",
+        "retiros-1",
+        "retiros-2"
+      ]
+    },
+    "telefono_cliente": {
+      "type": "string",
+      "required": true
+    },
+    "nombre_cliente": {
+      "type": "string"
+    },
+    "hora_creacion": {
+      "type": "datetime",
+      "required": true
+    },
+    "hora_llamado": {
+      "type": "datetime"
+    },
+    "hora_atencion": {
+      "type": "datetime"
+    },
+    "tiempo_espera_estimado": {
+      "type": "integer"
+    },
+    "notificacion_proximo_enviada": {
+      "type": "boolean",
+      "default": false
+    },
+    "notificacion_llamado_enviada": {
+      "type": "boolean",
+      "default": false
+    },
+    "metadata": {
+      "type": "json"
+    }
+  }
+}

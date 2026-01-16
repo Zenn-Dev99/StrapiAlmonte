@@ -1,0 +1,28 @@
+{
+  "collectionName": "components_listas_resaltados",
+  "info": {
+    "displayName": "Resaltado",
+    "description": "Coordenadas de un segmento identificado en el documento original"
+  },
+  "options": {},
+  "attributes": {
+    "pagina": {
+      "type": "integer"
+    },
+    "x": {
+      "type": "decimal"
+    },
+    "y": {
+      "type": "decimal"
+    },
+    "ancho": {
+      "type": "decimal"
+    },
+    "alto": {
+      "type": "decimal"
+    },
+    "texto": {
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,16 @@
+version: 1
+entity: comuna
+table: v2_comunas
+uid: comuna
+fields:
+  nombre:
+    type: string
+    required: true
+    maxLength: 120
+  region:
+    type: relation
+    target: region
+    kind: manyToOne
+  activo:
+    type: boolean
+    default: true

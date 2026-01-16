@@ -1,0 +1,150 @@
+═══════════════════════════════════════════════════════════════════
+🚨 FIX: Error "Invalid key backorders"
+═══════════════════════════════════════════════════════════════════
+
+PROBLEMA:
+Error 400 al actualizar producto: "Invalid key backorders"
+
+CAUSA:
+Estás enviando el campo "backorders" directamente en "data", pero ese campo
+NO existe en el esquema de Strapi. Solo debe ir dentro de "rawWooData".
+
+═══════════════════════════════════════════════════════════════════
+SOLUCIÓN:
+═══════════════════════════════════════════════════════════════════
+
+❌ INCORRECTO (tu código actual):
+```javascript
+{
+  data: {
+    precio: 59990,
+    backorders: "no"  // ❌ ERROR: Este campo no existe en el esquema
+  }
+}
+```
+
+✅ CORRECTO (usa este):
+```javascript
+{
+  data: {
+    precio: 59990,
+    rawWooData: {
+      name: "Nombre del producto",
+      regular_price: "59990.00",
+      description: "Descripción",
+      short_description: "Resumen",
+      backorders: "no"  // ✅ Aquí va backorders
+    }
+  }
+}
+```
+
+═══════════════════════════════════════════════════════════════════
+CAMPOS QUE VAN EN "data" (campos de Strapi):
+═══════════════════════════════════════════════════════════════════
+
+✅ nombre_libro
+✅ precio
+✅ precio_oferta
+✅ stock_quantity
+✅ manage_stock
+✅ stock_status
+✅ weight
+✅ length, width, height
+✅ estado_publicacion
+✅ canales
+
+═══════════════════════════════════════════════════════════════════
+CAMPOS QUE VAN EN "rawWooData" (campos de WooCommerce):
+═══════════════════════════════════════════════════════════════════
+
+✅ name
+✅ description
+✅ short_description
+✅ regular_price
+✅ sale_price
+✅ dimensions
+✅ shipping_class
+✅ backorders              ← Este es tu problema
+✅ backorders_allowed      ← Este también
+✅ sold_individually
+✅ reviews_allowed
+✅ featured
+✅ virtual
+✅ downloadable
+✅ tax_status
+✅ tax_class
+✅ categories
+✅ tags
+✅ images
+
+═══════════════════════════════════════════════════════════════════
+CÓDIGO CORREGIDO COMPLETO:
+═══════════════════════════════════════════════════════════════════
+
+En tu hook useActualizarProducto o en el handleSubmit del formulario,
+construye el payload así:
+
+```javascript
+const payload = {
+  data: {
+    // Campos directos de Strapi
+    nombre_libro: formData.nombre_libro,
+    precio: parseFloat(formData.precio),
+    precio_oferta: formData.precio_oferta ? parseFloat(formData.precio_oferta) : null,
+    stock_quantity: parseInt(formData.stock) || 0,
+    manage_stock: true,
+    stock_status: parseInt(formData.stock) > 0 ? 'instock' : 'outofstock',
+    estado_publicacion: formData.estado_publicacion,
+    canales: formData.canales,
+    
+    // Todos los campos de WooCommerce aquí
+    rawWooData: {
+      name: formData.nombre_libro,
+      description: formData.descripcion || '',
+      short_description: formData.descripcion?.substring(0, 150) || '',
+      regular_price: formData.precio.toString(),
+      sale_price: formData.precio_oferta?.toString() || '',
+      weight: formData.peso || '',
+      dimensions: {
+        length: formData.largo || '',
+        width: formData.ancho || '',
+        height: formData.alto || ''
+      },
+      shipping_class: formData.clase_envio || '',
+      manage_stock: true,
+      stock_quantity: parseInt(formData.stock) || 0,
+      stock_status: parseInt(formData.stock) > 0 ? 'instock' : 'outofstock',
+      
+      // ✅ Campos que estaban causando error
+      backorders: 'no',
+      backorders_allowed: false,
+      
+      // Otros campos opcionales
+      sold_individually: false,
+      reviews_allowed: true,
+      catalog_visibility: 'visible',
+      featured: false,
+      virtual: false,
+      downloadable: false
+    }
+  }
+};
+```
+
+═══════════════════════════════════════════════════════════════════
+REGLA SIMPLE:
+═══════════════════════════════════════════════════════════════════
+
+Si ves error "Invalid key XXXXX":
+→ Ese campo NO existe en el esquema de Strapi
+→ Muévelo a rawWooData
+
+═══════════════════════════════════════════════════════════════════
+
+APLICA ESTE FIX Y EL ERROR DESAPARECERÁ.
+
+Ver documentación completa en: docs/CAMPOS_PERMITIDOS_API_LIBROS.md
+
+═══════════════════════════════════════════════════════════════════
+

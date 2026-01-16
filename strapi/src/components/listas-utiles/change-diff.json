@@ -1,0 +1,46 @@
+{
+  "collectionName": "components_listas_utiles_change_diffs",
+  "info": {
+    "displayName": "Change Diff",
+    "description": "Resumen de cambios entre versiones de listas de útiles"
+  },
+  "options": {},
+  "attributes": {
+    "scope": {
+      "type": "enumeration",
+      "enum": [
+        "curso",
+        "item",
+        "nota"
+      ],
+      "required": true
+    },
+    "diff_type": {
+      "type": "enumeration",
+      "enum": [
+        "agregado",
+        "eliminado",
+        "modificado"
+      ],
+      "required": true
+    },
+    "reference": {
+      "type": "string",
+      "maxLength": 255
+    },
+    "previous_value": {
+      "type": "json"
+    },
+    "new_value": {
+      "type": "json"
+    },
+    "impact": {
+      "type": "enumeration",
+      "enum": [
+        "bajo",
+        "medio",
+        "alto"
+      ]
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "kind": "collectionType",
+  "collectionName": "ubicaciones",
+  "info": {
+    "singularName": "ubicacion",
+    "pluralName": "ubicaciones",
+    "displayName": "Product · Inventario · Ubicación",
+    "description": "Ubicaciones físicas donde se almacena el stock (bodegas, tiendas)"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nombre": {
+      "type": "string",
+      "required": true
+    },
+    "codigo": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "direccion": {
+      "type": "text"
+    },
+    "activo": {
+      "type": "boolean",
+      "default": true
+    }
+  }
+}

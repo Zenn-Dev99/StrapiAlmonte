@@ -1,0 +1,53 @@
+{
+  "kind": "collectionType",
+  "collectionName": "intranet_usuarios_clientes",
+  "info": {
+    "singularName": "intranet-usuario-cliente",
+    "pluralName": "intranet-usuarios-clientes",
+    "displayName": "Intranet · Usuarios Cliente",
+    "description": "Vincula usuarios de Strapi (users-permissions) con clientes de WO-Clientes para autenticación en la intranet"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "usuario": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user",
+      "required": true,
+      "unique": true
+    },
+    "cliente": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::wo-cliente.wo-cliente",
+      "required": true,
+      "unique": true
+    },
+    "fecha_registro": {
+      "type": "datetime",
+      "default": "now()"
+    },
+    "ultimo_acceso": {
+      "type": "datetime"
+    },
+    "activo": {
+      "type": "boolean",
+      "default": true
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+

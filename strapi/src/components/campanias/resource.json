@@ -1,0 +1,28 @@
+{
+  "collectionName": "components_campanias_resources",
+  "info": {
+    "displayName": "Resource",
+    "icon": "file"
+  },
+  "options": {},
+  "attributes": {
+    "label": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "href": {
+      "type": "string"
+    },
+    "format": {
+      "type": "enumeration",
+      "enum": [
+        "pdf",
+        "video",
+        "link",
+        "contact"
+      ]
+    }
+  }
+}

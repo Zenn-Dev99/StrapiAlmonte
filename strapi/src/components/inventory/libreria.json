@@ -1,0 +1,22 @@
+{
+  "collectionName": "components_inventory_libreria",
+  "info": {
+    "displayName": "Libreria Inventory",
+    "description": "Stock buckets for Libreria Escolar store"
+  },
+  "attributes": {
+    "tienda": {
+      "type": "integer",
+      "default": 0
+    },
+    "bodega": {
+      "type": "integer",
+      "default": 0
+    },
+    "operador_logistico": {
+      "type": "integer",
+      "default": 0
+    }
+  }
+}
+

@@ -1,0 +1,142 @@
+{
+  "kind": "collectionType",
+  "collectionName": "colegio_list_versions",
+  "info": {
+    "singularName": "colegio-list-version",
+    "pluralName": "colegio-list-versions",
+    "displayName": "Listas · Versión",
+    "description": "Versiones de listas de útiles procesadas por colegio y año"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "version_number": {
+      "type": "integer",
+      "required": true,
+      "min": 1
+    },
+    "etiqueta": {
+      "type": "string",
+      "maxLength": 120
+    },
+    "estado": {
+      "type": "enumeration",
+      "enum": [
+        "draft",
+        "in_review",
+        "ready_for_publish",
+        "published",
+        "archived"
+      ],
+      "default": "draft",
+      "required": true
+    },
+    "url_fuente": {
+      "type": "string"
+    },
+    "fecha_publicacion_fuente": {
+      "type": "date"
+    },
+    "fecha_actualizacion_fuente": {
+      "type": "date"
+    },
+    "mensaje_apoderados": {
+      "type": "richtext"
+    },
+    "estimated_value": {
+      "type": "decimal",
+      "min": 0
+    },
+    "match_score": {
+      "type": "decimal",
+      "min": 0,
+      "max": 100
+    },
+    "error_rate": {
+      "type": "decimal",
+      "min": 0,
+      "max": 100
+    },
+    "quality_flags": {
+      "type": "component",
+      "repeatable": true,
+      "component": "listas-utiles.quality-flag"
+    },
+    "change_summary": {
+      "type": "component",
+      "repeatable": true,
+      "component": "listas-utiles.change-diff"
+    },
+    "comparison_base": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::colegio-list-version.colegio-list-version",
+      "inversedBy": "derivatives"
+    },
+    "derivatives": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::colegio-list-version.colegio-list-version",
+      "mappedBy": "comparison_base",
+      "private": true
+    },
+    "hash_fuentes": {
+      "type": "string",
+      "maxLength": 191
+    },
+    "indexado_por": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "admin::user"
+    },
+    "indexado_en": {
+      "type": "datetime"
+    },
+    "verificado_por": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "admin::user"
+    },
+    "verificado_en": {
+      "type": "datetime"
+    },
+    "aprobado_por": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "admin::user"
+    },
+    "aprobado_en": {
+      "type": "datetime"
+    },
+    "comentario_aprobador": {
+      "type": "text"
+    },
+    "colegio_list": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::colegio-list.colegio-list",
+      "inversedBy": "versiones",
+      "required": true
+    },
+    "documentos": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::colegio-list-document.colegio-list-document",
+      "mappedBy": "version"
+    },
+    "items": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::colegio-list-item.colegio-list-item",
+      "mappedBy": "version"
+    },
+    "notas": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::colegio-list-note.colegio-list-note",
+      "mappedBy": "version"
+    }
+  }
+}

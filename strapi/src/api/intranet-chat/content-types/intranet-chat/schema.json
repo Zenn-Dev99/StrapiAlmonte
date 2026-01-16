@@ -1,0 +1,49 @@
+{
+  "kind": "collectionType",
+  "collectionName": "intranet_chats",
+  "info": {
+    "singularName": "intranet-chat",
+    "pluralName": "intranet-chats",
+    "displayName": "Intranet-Chats",
+    "description": "Mensajes del chat de la intranet con clientes de WO-Clientes"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "texto": {
+      "type": "text",
+      "required": true
+    },
+    "remitente_id": {
+      "type": "integer",
+      "required": true
+    },
+    "cliente_id": {
+      "type": "integer",
+      "required": true
+    },
+    "fecha": {
+      "type": "datetime",
+      "required": true
+    },
+    "leido": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

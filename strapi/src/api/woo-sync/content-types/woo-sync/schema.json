@@ -1,0 +1,30 @@
+{
+  "kind": "singleType",
+  "collectionName": "woo_syncs",
+  "info": {
+    "singularName": "woo-sync",
+    "pluralName": "woo-syncs",
+    "displayName": "WooCommerce Sync",
+    "description": "Configuración y estado de sincronización con WooCommerce. Este es un servicio técnico - la sincronización se maneja automáticamente cuando creas/editas libros."
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "status": {
+      "type": "string",
+      "default": "active",
+      "required": false
+    },
+    "lastSync": {
+      "type": "datetime",
+      "required": false
+    },
+    "notes": {
+      "type": "text",
+      "required": false
+    }
+  }
+}
+

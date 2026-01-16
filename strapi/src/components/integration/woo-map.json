@@ -1,0 +1,27 @@
+{
+  "collectionName": "components_integration_woo_map",
+  "info": {
+    "displayName": "Woo Mapping",
+    "description": "WooCommerce IDs and sync metadata per store"
+  },
+  "attributes": {
+    "storeKey": {
+      "type": "enumeration",
+      "enum": ["editorial", "libreria"],
+      "required": true
+    },
+    "wooProductId": {
+      "type": "integer"
+    },
+    "wooVariantIds": {
+      "type": "json"
+    },
+    "lastSyncedAt": {
+      "type": "datetime"
+    },
+    "contentHash": {
+      "type": "string"
+    }
+  }
+}
+

@@ -1,0 +1,49 @@
+{
+  "kind": "collectionType",
+  "collectionName": "colegio_events",
+  "info": {
+    "singularName": "colegio-event",
+    "pluralName": "colegio-events",
+    "displayName": "Colegio · Event",
+    "description": "Bitácora de acciones y cambios en un colegio"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "colegio": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::colegio.colegio"
+    },
+    "action": {
+      "type": "enumeration",
+      "required": true,
+      "default": "edit",
+      "enum": [
+        "create",
+        "edit",
+        "verify",
+        "approve",
+        "reject",
+        "note"
+      ]
+    },
+    "field": {
+      "type": "string"
+    },
+    "value": {
+      "type": "text"
+    },
+    "actor_email": {
+      "type": "email"
+    },
+    "actor_name": {
+      "type": "string"
+    },
+    "meta": {
+      "type": "json"
+    }
+  }
+}

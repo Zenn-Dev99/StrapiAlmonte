@@ -1,0 +1,77 @@
+{
+  "kind": "collectionType",
+  "collectionName": "cotizaciones_crm",
+  "info": {
+    "singularName": "cotizacioncrm",
+    "pluralName": "cotizacionescrm",
+    "displayName": "Cotizacion CRM",
+    "description": "Cotizaciones y estimaciones de proyectos en el CRM"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "proyecto": {
+      "type": "string",
+      "required": true
+    },
+    "cliente": {
+      "type": "string",
+      "required": false
+    },
+    "valor": {
+      "type": "decimal",
+      "required": false
+    },
+    "fecha_creacion": {
+      "type": "datetime",
+      "required": false
+    },
+    "fecha_cierre_esperada": {
+      "type": "datetime",
+      "required": false
+    },
+    "estado": {
+      "type": "enumeration",
+      "enum": [
+        "en_revision",
+        "aprobada",
+        "pendiente",
+        "rechazada",
+        "enviada"
+      ],
+      "default": "pendiente",
+      "required": true
+    },
+    "notas": {
+      "type": "text",
+      "required": false
+    },
+    "activo": {
+      "type": "boolean",
+      "default": true,
+      "required": true
+    },
+    "contacto_relacionado": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::persona.persona"
+    },
+    "oportunidad_relacionada": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::oportunidad.oportunidad"
+    },
+    "colegio_relacionado": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::colegio.colegio"
+    },
+    "cotizado_por_colaborador": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::colaborador.colaborador"
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_home_hero_stats",
+  "info": {
+    "displayName": "heroStat",
+    "description": "Indicadores destacados para el home hero"
+  },
+  "options": {},
+  "attributes": {
+    "value": {
+      "type": "string",
+      "required": true,
+      "maxLength": 40
+    },
+    "label": {
+      "type": "string",
+      "required": true,
+      "maxLength": 120
+    },
+    "order": {
+      "type": "integer"
+    }
+  }
+}

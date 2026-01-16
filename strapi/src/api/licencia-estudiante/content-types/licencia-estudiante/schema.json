@@ -1,0 +1,53 @@
+{
+  "kind": "collectionType",
+  "collectionName": "licencias_estudiantes",
+  "info": {
+    "singularName": "licencia-estudiante",
+    "pluralName": "licencias-estudiantes",
+    "displayName": "MIRA · Licencia Estudiante",
+    "description": "Licencias activadas de estudiantes para libros en MIRA.APP"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "estudiante": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::persona-mira.persona-mira",
+      "required": false,
+      "inversedBy": "licencias_activadas"
+    },
+    "libro_mira": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::libro-mira.libro-mira",
+      "required": true,
+      "inversedBy": "licencias"
+    },
+    "codigo_activacion": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "description": "Código único de activación ingresado por el estudiante"
+    },
+    "fecha_activacion": {
+      "type": "datetime"
+    },
+    "activa": {
+      "type": "boolean",
+      "default": true,
+      "description": "Si la licencia está activa"
+    },
+    "google_drive_folder_id": {
+      "type": "string",
+      "description": "ID de carpeta en Google Drive (puede ser personalizada o la del libro)"
+    },
+    "fecha_vencimiento": {
+      "type": "date",
+      "description": "Fecha de vencimiento de la licencia (opcional)"
+    }
+  }
+}
+

@@ -1,0 +1,81 @@
+{
+  "kind": "collectionType",
+  "collectionName": "cursos",
+  "info": {
+    "singularName": "curso",
+    "pluralName": "cursos",
+    "displayName": "Colegio · Cursos"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nombre_curso": {
+      "type": "string",
+      "required": true
+    },
+    "nivel": {
+      "type": "enumeration",
+      "enum": [
+        "Basica",
+        "Media"
+      ]
+    },
+    "grado": {
+      "type": "string"
+    },
+    "activo": {
+      "type": "boolean",
+      "default": true
+    },
+    "colegio": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::colegio.colegio",
+      "inversedBy": "cursos"
+    },
+    "materiales": {
+      "type": "component",
+      "repeatable": true,
+      "component": "curso.material"
+    },
+    "lista_utiles": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::lista-utiles.lista-utiles"
+    },
+    "paralelo": {
+      "type": "string"
+    },
+    "nivel_ref": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::nivel.nivel"
+    },
+    "titulo": {
+      "type": "string"
+    },
+    "letra": {
+      "type": "string"
+    },
+    "año": {
+      "type": "integer",
+      "required": false,
+      "min": 2000,
+      "max": 2100
+    },
+    "curso_letra_anio": {
+      "type": "string"
+    },
+    "matricula": {
+      "type": "integer"
+    },
+    "nota": {
+      "type": "text"
+    },
+    "versiones_materiales": {
+      "type": "json"
+    }
+  }
+}

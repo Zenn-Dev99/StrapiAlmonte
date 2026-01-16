@@ -1,0 +1,33 @@
+{
+  "kind": "collectionType",
+  "collectionName": "etiquetas_qr",
+  "info": {
+    "singularName": "etiqueta-qr",
+    "pluralName": "etiquetas-qr",
+    "displayName": "Etiquetas - QR",
+    "description": "Códigos QR asociados a alumnos y apoderados"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "hash": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "nombreAlumno": {
+      "type": "string"
+    },
+    "cursoAlumno": {
+      "type": "string"
+    },
+    "telefonoApoderado": {
+      "type": "string"
+    },
+    "nombreApoderado": {
+      "type": "string"
+    }
+  }
+}

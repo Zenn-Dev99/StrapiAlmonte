@@ -1,0 +1,45 @@
+{
+  "kind": "collectionType",
+  "collectionName": "precios",
+  "info": {
+    "singularName": "precio",
+    "pluralName": "precios",
+    "displayName": "Product · Precio",
+    "description": "Precios de venta y costo de los libros con fechas de vigencia"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "libro": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::libro.libro"
+    },
+    "precio_venta": {
+      "type": "decimal",
+      "required": true,
+      "min": 0,
+      "description": "Precio de venta al público"
+    },
+    "precio_costo": {
+      "type": "decimal",
+      "min": 0,
+      "description": "Precio de compra/costo"
+    },
+    "fecha_inicio": {
+      "type": "datetime",
+      "required": true,
+      "description": "Fecha desde la cual este precio es válido"
+    },
+    "fecha_fin": {
+      "type": "datetime",
+      "description": "Fecha hasta la cual este precio es válido. Si no se especifica, el precio es indefinido"
+    },
+    "activo": {
+      "type": "boolean",
+      "default": true
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "kind": "collectionType",
+  "collectionName": "curso_asignaturas",
+  "info": {
+    "singularName": "curso-asignatura",
+    "pluralName": "curso-asignaturas",
+    "displayName": "Colegio · Curso Asignatura",
+    "description": "Oferta de una asignatura en un curso y año, con matrícula"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "curso": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::curso.curso"
+    },
+    "asignatura": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::asignatura.asignatura"
+    },
+    "anio": {
+      "type": "integer"
+    },
+    "letra": {
+      "type": "string"
+    },
+    "curso_letra_anio": {
+      "type": "string"
+    },
+    "grupo": {
+      "type": "string"
+    },
+    "matricula": {
+      "type": "integer"
+    },
+    "nota": {
+      "type": "text"
+    },
+    "uniq_key": {
+      "type": "string",
+      "unique": true
+    }
+  }
+}

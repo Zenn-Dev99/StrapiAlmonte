@@ -1,0 +1,29 @@
+# Railway ignore - archivos que NO se copian al snapshot
+.git/
+node_modules/
+.tmp/
+dist/
+build/
+.cache/
+
+# Datos y backups (no necesarios en producción)
+data/
+backups/
+*.backup
+
+# Uploads (deben estar en S3/R2, no en el repo)
+public/uploads/
+strapi/public/uploads/
+uploads/
+
+# Archivos temporales
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+
+# Documentación (opcional - descomentar si no la necesitas)
+# docs/
+
+# Scripts de desarrollo (opcional - descomentar si no los necesitas)
+# scripts/

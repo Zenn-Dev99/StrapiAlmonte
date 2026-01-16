@@ -1,0 +1,36 @@
+{
+  "collectionName": "components_campanias_heroes",
+  "info": {
+    "displayName": "Hero",
+    "icon": "bullhorn"
+  },
+  "options": {},
+  "attributes": {
+    "eyebrow": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "subtitle": {
+      "type": "richtext"
+    },
+    "primaryCtaLabel": {
+      "type": "string"
+    },
+    "primaryCtaHref": {
+      "type": "string"
+    },
+    "secondaryCtaLabel": {
+      "type": "string"
+    },
+    "secondaryCtaHref": {
+      "type": "string"
+    },
+    "stats": {
+      "type": "component",
+      "repeatable": true,
+      "component": "campanias.hero-stat"
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_contacto_direcciones",
+  "info": { "displayName": "Dirección", "icon": "pin" },
+  "options": {},
+  "attributes": {
+    "direccion_principal_envio_facturacion": { "type": "enumeration", "enum": ["Principal", "Envío", "Facturación"] },
+    "region": { "type": "relation", "relation": "oneToOne", "target": "api::region.region" },
+    "comuna": { "type": "relation", "relation": "oneToOne", "target": "api::comuna.comuna" },
+    "nombre_calle": { "type": "string" },
+    "numero_calle": { "type": "string" },
+    "complemento_direccion": { "type": "string" },
+    "tipo_direccion": { "type": "enumeration", "enum": ["Comercial", "Particular", "Otro"] },
+    "verificada_por": { "type": "string" },
+    "fecha_verificacion": { "type": "date" },
+    "estado_verificacion": { "type": "enumeration", "enum": ["Por Verificar", "Verificado", "Aprobado"] }
+  }
+}

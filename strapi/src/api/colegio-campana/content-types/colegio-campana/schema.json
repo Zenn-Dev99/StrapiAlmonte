@@ -1,0 +1,78 @@
+{
+  "kind": "collectionType",
+  "collectionName": "colegio_campanas",
+  "info": {
+    "singularName": "colegio-campana",
+    "pluralName": "colegio-campanas",
+    "displayName": "Promoción · Colegios · Campañas",
+    "description": "Contenido de landing pages de campañas por colegio"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "periodo": {
+      "type": "string",
+      "required": true
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true
+    },
+    "tagline": {
+      "type": "text"
+    },
+    "updatedAt_manual": {
+      "type": "datetime"
+    },
+    "notes": {
+      "type": "component",
+      "component": "campanias.note",
+      "repeatable": true
+    },
+    "colegio": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::colegio.colegio"
+    },
+    "ejecutivo": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::persona.persona"
+    },
+    "hero": {
+      "type": "component",
+      "component": "campanias.hero"
+    },
+    "highlights": {
+      "type": "component",
+      "component": "campanias.highlight",
+      "repeatable": true
+    },
+    "modules": {
+      "type": "component",
+      "component": "campanias.module",
+      "repeatable": true
+    },
+    "timeline": {
+      "type": "component",
+      "component": "campanias.timeline-step",
+      "repeatable": true
+    },
+    "resources": {
+      "type": "component",
+      "component": "campanias.resource",
+      "repeatable": true
+    },
+    "support": {
+      "type": "component",
+      "component": "campanias.support"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "collectionName": "components_listas_documentos",
+  "info": {
+    "displayName": "Documento",
+    "description": "Archivo original asociado a una lista escolar"
+  },
+  "options": {},
+  "attributes": {
+    "archivo": {
+      "type": "media",
+      "required": true,
+      "multiple": false,
+      "allowedTypes": ["files"]
+    },
+    "formato": {
+      "type": "enumeration",
+      "enum": ["pdf", "docx", "xlsx", "csv", "otro"],
+      "default": "pdf"
+    },
+    "nombre_original": {
+      "type": "string"
+    },
+    "pagina_inicio": {
+      "type": "integer"
+    },
+    "metadatos": {
+      "type": "json"
+    },
+    "notas": {
+      "type": "text"
+    }
+  }
+}

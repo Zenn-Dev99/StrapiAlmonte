@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_campanias_hero_stats",
+  "info": {
+    "displayName": "Hero stat",
+    "icon": "chart-bar"
+  },
+  "options": {},
+  "attributes": {
+    "label": {
+      "type": "string"
+    },
+    "value": {
+      "type": "string"
+    }
+  }
+}

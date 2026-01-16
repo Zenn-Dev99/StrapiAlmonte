@@ -1,0 +1,12 @@
+{
+  "state": {
+    "user": {
+      "email": "colegios@moraleja.cl",
+      "smtp_account_key": "colegios",
+      "smtp_accounts_allowed": [
+        "default",
+        "colegios"
+      ]
+    }
+  }
+}

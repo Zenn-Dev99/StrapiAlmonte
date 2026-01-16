@@ -1,0 +1,71 @@
+{
+  "kind": "collectionType",
+  "collectionName": "oferta_productos",
+  "info": {
+    "singularName": "oferta-producto",
+    "pluralName": "oferta-productos",
+    "displayName": "Product · Precio · Oferta · Canal",
+    "description": "Registro de precios y stock observados para un producto"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "ean": {
+      "type": "string",
+      "required": true
+    },
+    "tipo_producto": {
+      "type": "enumeration",
+      "required": true,
+      "default": "libro",
+      "enum": [
+        "libro",
+        "material",
+        "otro"
+      ]
+    },
+    "vendedor": {
+      "type": "string"
+    },
+    "canal": {
+      "type": "string"
+    },
+    "precio": {
+      "type": "decimal",
+      "required": true,
+      "min": 0
+    },
+    "moneda": {
+      "type": "string",
+      "default": "CLP"
+    },
+    "stock": {
+      "type": "integer",
+      "default": 0,
+      "min": 0
+    },
+    "ubicacion": {
+      "type": "string"
+    },
+    "condicion": {
+      "type": "enumeration",
+      "default": "nuevo",
+      "enum": [
+        "nuevo",
+        "usado",
+        "reacondicionado"
+      ]
+    },
+    "notas": {
+      "type": "text"
+    },
+    "libro": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::libro.libro",
+      "inversedBy": "ofertas"
+    }
+  }
+}

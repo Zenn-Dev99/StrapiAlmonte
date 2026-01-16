@@ -1,0 +1,48 @@
+{
+  "kind": "collectionType",
+  "collectionName": "media_categories",
+  "info": {
+    "singularName": "media-category",
+    "pluralName": "media-categories",
+    "displayName": "Media Category"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "maxLength": 160
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name",
+      "required": true,
+      "unique": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "parent": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::media-category.media-category",
+      "inversedBy": "children"
+    },
+    "children": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::media-category.media-category",
+      "mappedBy": "parent"
+    },
+    "assets": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::media-asset.media-asset",
+      "mappedBy": "categories"
+    }
+  }
+}

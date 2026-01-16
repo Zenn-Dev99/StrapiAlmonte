@@ -1,0 +1,39 @@
+{
+  "kind": "collectionType",
+  "collectionName": "niveles",
+  "info": {
+    "singularName": "nivel",
+    "pluralName": "niveles",
+    "displayName": "Colegio · Niveles",
+    "description": "Catálogo de niveles educativos"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nombre": {
+      "type": "string",
+      "required": true
+    },
+    "clave": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "orden": {
+      "type": "integer"
+    },
+    "ensenanza": {
+      "type": "enumeration",
+      "enum": [
+        "Parvularia",
+        "Básica",
+        "Media"
+      ]
+    },
+    "ciclo": {
+      "type": "string"
+    }
+  }
+}

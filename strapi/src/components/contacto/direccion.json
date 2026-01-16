@@ -1,0 +1,43 @@
+{
+  "collectionName": "components_contacto_direccions",
+  "info": {
+    "displayName": "Dirección",
+    "icon": "house",
+    "description": "Dirección simplificada sin campos de verificación (las interacciones se registran en otras colecciones)"
+  },
+  "options": {},
+  "attributes": {
+    "direccion_principal_envio_facturacion": {
+      "type": "enumeration",
+      "enum": [
+        "Principal",
+        "Envío",
+        "Facturación"
+      ]
+    },
+    "comuna": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::comuna.comuna"
+    },
+    "nombre_calle": {
+      "type": "string"
+    },
+    "numero_calle": {
+      "type": "string"
+    },
+    "complemento_direccion": {
+      "type": "string"
+    },
+    "tipo_direccion": {
+      "type": "enumeration",
+      "enum": [
+        "Casa",
+        "Departamento",
+        "Colegio",
+        "Comercial"
+      ]
+    }
+  },
+  "config": {}
+}

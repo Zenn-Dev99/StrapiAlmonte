@@ -1,0 +1,79 @@
+{
+  "kind": "collectionType",
+  "collectionName": "cartera_asignaciones",
+  "info": {
+    "singularName": "cartera-asignacion",
+    "pluralName": "cartera-asignaciones",
+    "displayName": "Promoción · Colegios · Cartera Asignación",
+    "description": "Asignación de colegio a ejecutivo comercial en un periodo"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "periodo": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::cartera-periodo.cartera-periodo",
+      "inversedBy": "asignaciones"
+    },
+    "colegio": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::colegio.colegio",
+      "inversedBy": "cartera_asignaciones"
+    },
+    "ejecutivo": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::persona.persona",
+      "inversedBy": "cartera_asignaciones"
+    },
+    "estado": {
+      "type": "enumeration",
+      "default": "activa",
+      "enum": [
+        "activa",
+        "en_revision",
+        "cerrada"
+      ]
+    },
+    "fecha_inicio": {
+      "type": "date"
+    },
+    "fecha_fin": {
+      "type": "date"
+    },
+    "is_current": {
+      "type": "boolean",
+      "default": true
+    },
+    "prioridad": {
+      "type": "enumeration",
+      "enum": [
+        "alta",
+        "media",
+        "baja"
+      ]
+    },
+    "rol": {
+      "type": "enumeration",
+      "required": false,
+      "enum": [
+        "comercial",
+        "soporte1",
+        "soporte2"
+      ]
+    },
+    "orden": {
+      "type": "integer"
+    },
+    "meta_ingresos": {
+      "type": "decimal"
+    },
+    "notas": {
+      "type": "text"
+    }
+  }
+}

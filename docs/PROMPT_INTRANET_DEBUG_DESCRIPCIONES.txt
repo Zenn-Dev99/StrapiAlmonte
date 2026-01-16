@@ -1,0 +1,383 @@
+═══════════════════════════════════════════════════════════════════
+🔍 DEBUG COMPLETO: Descripciones siguen sin funcionar
+═══════════════════════════════════════════════════════════════════
+
+SITUACIÓN:
+Las descripciones siguen mostrando el mismo contenido o están vacías.
+
+NECESITAMOS VERIFICAR QUÉ ESTÁ PASANDO EXACTAMENTE.
+
+═══════════════════════════════════════════════════════════════════
+PASO 1: VERIFICACIÓN PRE-ENVÍO (AGREGAR ESTO)
+═══════════════════════════════════════════════════════════════════
+
+ANTES de enviar el payload a Strapi, agrega este código de debug:
+
+const handleSubmit = async (formData) => {
+  // 1. Ver los valores del formulario
+  console.log('═══════════════════════════════════════════════════════');
+  console.log('📝 VALORES DEL FORMULARIO:');
+  console.log('descripcion (campo completo):', formData.descripcion);
+  console.log('descripcion_corta (campo corto):', formData.descripcion_corta);
+  console.log('═══════════════════════════════════════════════════════');
+  
+  // 2. Construir rawWooData
+  const descripcionHTML = formData.descripcion?.trim()
+    ? textoAHTML(formData.descripcion)
+    : '<p>Sin descripción</p>';
+  
+  const descripcionCortaHTML = formData.descripcion_corta?.trim()
+    ? textoAHTML(formData.descripcion_corta)
+    : (formData.descripcion?.trim()
+        ? generarDescripcionCorta(formData.descripcion, 150)
+        : '<p>Sin descripción</p>');
+  
+  // 3. VERIFICAR QUE SON DIFERENTES
+  console.log('═══════════════════════════════════════════════════════');
+  console.log('🔍 DESCRIPCIONES PROCESADAS:');
+  console.log('description (HTML):', descripcionHTML);
+  console.log('short_description (HTML):', descripcionCortaHTML);
+  console.log('───────────────────────────────────────────────────────');
+  
+  // Extraer solo el texto (sin HTML) para comparar
+  const descripcionTexto = descripcionHTML.replace(/<[^>]+>/g, '').trim();
+  const descripcionCortaTexto = descripcionCortaHTML.replace(/<[^>]+>/g, '').trim();
+  
+  console.log('📊 COMPARACIÓN:');
+  console.log('Longitud description:', descripcionTexto.length, 'caracteres');
+  console.log('Longitud short_description:', descripcionCortaTexto.length, 'caracteres');
+  console.log('¿Son diferentes?', descripcionTexto !== descripcionCortaTexto);
+  console.log('¿Short es más corta?', descripcionCortaTexto.length < descripcionTexto.length);
+  
+  // ⚠️ ALERTA SI SON IGUALES
+  if (descripcionTexto === descripcionCortaTexto && descripcionTexto.length > 150) {
+    console.error('❌ ERROR: Las descripciones son IDÉNTICAS');
+    console.error('❌ Ambas tienen', descripcionTexto.length, 'caracteres');
+    console.error('❌ La descripción corta NO se está limitando correctamente');
+  }
+  
+  console.log('═══════════════════════════════════════════════════════');
+  
+  // 4. Construir rawWooData
+  const rawWooData = {
+    name: formData.nombre,
+    type: 'simple',
+    status: 'publish',
+    sku: formData.isbn,
+    
+    description: descripcionHTML,
+    short_description: descripcionCortaHTML,
+    
+    regular_price: formData.precio?.toString() || '0',
+    manage_stock: true,
+    stock_quantity: parseInt(formData.stock) || 0,
+    stock_status: parseInt(formData.stock) > 0 ? 'instock' : 'outofstock',
+  };
+  
+  // 5. VERIFICAR rawWooData antes de agregarlo al payload
+  console.log('═══════════════════════════════════════════════════════');
+  console.log('📦 rawWooData CONSTRUIDO:');
+  console.log(JSON.stringify(rawWooData, null, 2));
+  console.log('═══════════════════════════════════════════════════════');
+  
+  // 6. Construir payload
+  const payload = {
+    data: {
+      nombre_libro: formData.nombre,
+      isbn_libro: formData.isbn,
+      precio: parseFloat(formData.precio) || 0,
+      stock_quantity: parseInt(formData.stock) || 0,
+      estado_publicacion: 'Publicado',
+      canales: [1, 2],
+      
+      descripcion: formData.descripcion?.trim() || '',
+      subtitulo_libro: formData.descripcion_corta?.trim() || 
+                       formData.descripcion?.substring(0, 255) || '',
+      
+      // ✅ INCLUIR rawWooData
+      rawWooData: rawWooData,
+    }
+  };
+  
+  // 7. VERIFICAR PAYLOAD FINAL
+  console.log('═══════════════════════════════════════════════════════');
+  console.log('🚀 PAYLOAD FINAL A STRAPI:');
+  console.log(JSON.stringify(payload, null, 2));
+  console.log('═══════════════════════════════════════════════════════');
+  
+  // 8. VERIFICACIÓN FINAL
+  console.log('═══════════════════════════════════════════════════════');
+  console.log('✅ VERIFICACIÓN FINAL:');
+  console.log('¿Payload tiene rawWooData?', !!payload.data.rawWooData);
+  console.log('¿rawWooData tiene description?', !!payload.data.rawWooData?.description);
+  console.log('¿rawWooData tiene short_description?', !!payload.data.rawWooData?.short_description);
+  console.log('¿description está vacía?', payload.data.rawWooData?.description === '<p>Sin descripción</p>');
+  console.log('¿short_description está vacía?', payload.data.rawWooData?.short_description === '<p>Sin descripción</p>');
+  console.log('═══════════════════════════════════════════════════════');
+  
+  // 9. Enviar a Strapi
+  const response = await fetch('https://strapi.moraleja.cl/api/libros', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  
+  if (!response.ok) {
+    const error = await response.json();
+    console.error('❌ ERROR DE STRAPI:', error);
+    throw new Error(error.error?.message || 'Error al guardar');
+  }
+  
+  const resultado = await response.json();
+  console.log('✅ RESPUESTA DE STRAPI:', resultado);
+};
+
+═══════════════════════════════════════════════════════════════════
+PASO 2: EJECUTAR Y REPORTAR
+═══════════════════════════════════════════════════════════════════
+
+1. Abre la consola del navegador (F12)
+2. Llena el formulario con:
+   - Descripción completa: "Este es un libro completo de cálculo diferencial e integral que cubre todos los temas fundamentales para estudiantes de ingeniería y ciencias exactas."
+   - Descripción corta: "Libro de cálculo para ingeniería"
+3. Haz clic en "Guardar" o "Crear"
+4. Mira TODOS los logs en la consola
+
+REPORTA AQUÍ LOS RESULTADOS:
+
+¿Qué longitudes muestra?
+- Longitud description: _______
+- Longitud short_description: _______
+
+¿Son diferentes?
+- [ ] SÍ
+- [ ] NO
+
+¿Qué sale en la verificación final?
+- ¿Payload tiene rawWooData?: _______
+- ¿rawWooData tiene description?: _______
+- ¿rawWooData tiene short_description?: _______
+
+═══════════════════════════════════════════════════════════════════
+PASO 3: VERIFICAR FUNCIONES HELPER
+═══════════════════════════════════════════════════════════════════
+
+Agrega esto ANTES del handleSubmit para probar las funciones:
+
+// TEST DE FUNCIONES
+console.log('═══════════════════════════════════════════════════════');
+console.log('🧪 PROBANDO FUNCIONES HELPER:');
+
+const textoLargo = "Este es un libro completo de cálculo diferencial e integral que cubre todos los temas fundamentales para estudiantes de ingeniería y ciencias exactas. Incluye más de 500 ejercicios resueltos.";
+const textoCorto = "Libro de cálculo para ingeniería";
+
+console.log('Texto largo original:', textoLargo.length, 'caracteres');
+console.log('Texto corto original:', textoCorto.length, 'caracteres');
+
+const largoHTML = textoAHTML(textoLargo);
+const cortoHTML = textoAHTML(textoCorto);
+const cortoGenerado = generarDescripcionCorta(textoLargo, 150);
+
+console.log('───────────────────────────────────────────────────────');
+console.log('Resultado textoAHTML(largo):', largoHTML);
+console.log('Resultado textoAHTML(corto):', cortoHTML);
+console.log('Resultado generarDescripcionCorta(largo, 150):', cortoGenerado);
+console.log('───────────────────────────────────────────────────────');
+
+const largoTexto = largoHTML.replace(/<[^>]+>/g, '');
+const cortoTexto = cortoHTML.replace(/<[^>]+>/g, '');
+const cortoGeneradoTexto = cortoGenerado.replace(/<[^>]+>/g, '');
+
+console.log('Largo procesado:', largoTexto.length, 'caracteres');
+console.log('Corto procesado:', cortoTexto.length, 'caracteres');
+console.log('Corto generado procesado:', cortoGeneradoTexto.length, 'caracteres');
+
+console.log('¿Corto generado es más corto que largo?', cortoGeneradoTexto.length < largoTexto.length);
+console.log('═══════════════════════════════════════════════════════');
+
+═══════════════════════════════════════════════════════════════════
+ESCENARIOS POSIBLES Y SOLUCIONES
+═══════════════════════════════════════════════════════════════════
+
+ESCENARIO 1: Ambas descripciones son IDÉNTICAS
+────────────────────────────────────────────────────────────────
+
+CAUSA: La función generarDescripcionCorta() no está funcionando
+
+SOLUCIÓN: Reemplaza la función con esta versión GARANTIZADA:
+
+function generarDescripcionCorta(texto, maxCaracteres = 150) {
+  if (!texto || texto.trim() === '') {
+    return '';
+  }
+  
+  // Remover TODO el HTML primero
+  let textoLimpio = texto.replace(/<[^>]+>/g, '').trim();
+  
+  // Reemplazar múltiples espacios con uno solo
+  textoLimpio = textoLimpio.replace(/\s+/g, ' ');
+  
+  // Si ya es corto, devolverlo
+  if (textoLimpio.length <= maxCaracteres) {
+    return `<p>${textoLimpio}</p>`;
+  }
+  
+  // Cortar al límite
+  let textoCorto = textoLimpio.substring(0, maxCaracteres);
+  
+  // Buscar el último espacio para cortar en palabra completa
+  const ultimoEspacio = textoCorto.lastIndexOf(' ');
+  if (ultimoEspacio > maxCaracteres * 0.8) { // Solo si está cerca del final
+    textoCorto = textoCorto.substring(0, ultimoEspacio);
+  }
+  
+  // Agregar puntos suspensivos
+  textoCorto = textoCorto.trim() + '...';
+  
+  return `<p>${textoCorto}</p>`;
+}
+
+ESCENARIO 2: Las descripciones están VACÍAS
+────────────────────────────────────────────────────────────────
+
+CAUSA: formData.descripcion está vacío o no se está capturando
+
+SOLUCIÓN: Verifica que el textarea esté conectado correctamente:
+
+<textarea
+  value={formData.descripcion}
+  onChange={(e) => {
+    console.log('Descripción cambiada:', e.target.value);
+    setFormData({...formData, descripcion: e.target.value});
+  }}
+/>
+
+ESCENARIO 3: rawWooData NO llega a Strapi
+────────────────────────────────────────────────────────────────
+
+CAUSA: El campo rawWooData no está en el schema de Strapi
+
+SOLUCIÓN: Verificar en Railway logs si aparece:
+"[woo-sync] ✅ Usando rawWooData desde Intranet"
+
+Si NO aparece, Strapi no está recibiendo rawWooData.
+
+ESCENARIO 4: Ambas descripciones aparecen pero son IGUALES
+────────────────────────────────────────────────────────────────
+
+CAUSA: Estás usando formData.descripcion para ambas
+
+VERIFICA QUE TENGAS ESTO:
+
+const descripcionCortaHTML = formData.descripcion_corta?.trim()  // ← Campo SEPARADO
+  ? textoAHTML(formData.descripcion_corta)
+  : generarDescripcionCorta(formData.descripcion, 150);
+
+NO ESTO:
+
+const descripcionCortaHTML = textoAHTML(formData.descripcion);  // ❌ INCORRECTO
+
+═══════════════════════════════════════════════════════════════════
+CÓDIGO FINAL GARANTIZADO
+═══════════════════════════════════════════════════════════════════
+
+Si todo lo demás falla, usa este código completo:
+
+// Funciones helper
+function textoAHTML(texto) {
+  if (!texto || texto.trim() === '') return '';
+  
+  // Si ya tiene HTML, devolverlo
+  if (texto.includes('<p>') || texto.includes('<div>')) {
+    return texto;
+  }
+  
+  // Convertir texto plano a HTML
+  const parrafos = texto.split('\n\n')
+    .filter(p => p.trim())
+    .map(p => `<p>${p.trim().replace(/\n/g, '<br>')}</p>`)
+    .join('');
+  
+  return parrafos || `<p>${texto}</p>`;
+}
+
+function generarDescripcionCorta(texto, maxCaracteres = 150) {
+  if (!texto || texto.trim() === '') return '';
+  
+  // Remover HTML
+  let textoLimpio = texto.replace(/<[^>]+>/g, '').trim();
+  textoLimpio = textoLimpio.replace(/\s+/g, ' ');
+  
+  if (textoLimpio.length <= maxCaracteres) {
+    return `<p>${textoLimpio}</p>`;
+  }
+  
+  let textoCorto = textoLimpio.substring(0, maxCaracteres);
+  const ultimoEspacio = textoCorto.lastIndexOf(' ');
+  
+  if (ultimoEspacio > maxCaracteres * 0.8) {
+    textoCorto = textoCorto.substring(0, ultimoEspacio);
+  }
+  
+  return `<p>${textoCorto.trim()}...</p>`;
+}
+
+// En handleSubmit
+const handleSubmit = async (formData) => {
+  // Procesar descripciones
+  const descripcionHTML = textoAHTML(formData.descripcion || '');
+  
+  // ✅ CRÍTICO: Usar campo separado O generar desde la completa
+  const descripcionCortaHTML = formData.descripcion_corta?.trim()
+    ? textoAHTML(formData.descripcion_corta)
+    : generarDescripcionCorta(formData.descripcion || '', 150);
+  
+  // Construir rawWooData
+  const rawWooData = {
+    name: formData.nombre,
+    description: descripcionHTML || '<p>Sin descripción</p>',
+    short_description: descripcionCortaHTML || '<p>Sin descripción</p>',
+    regular_price: formData.precio?.toString() || '0',
+    manage_stock: true,
+    stock_quantity: parseInt(formData.stock) || 0,
+  };
+  
+  // Payload
+  const payload = {
+    data: {
+      nombre_libro: formData.nombre,
+      precio: parseFloat(formData.precio) || 0,
+      canales: [1, 2],
+      rawWooData: rawWooData,  // ✅ INCLUIR
+    }
+  };
+  
+  // Enviar
+  const response = await fetch('https://strapi.moraleja.cl/api/libros', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  
+  if (response.ok) {
+    alert('✅ Producto creado');
+  }
+};
+
+═══════════════════════════════════════════════════════════════════
+RESUMEN
+═══════════════════════════════════════════════════════════════════
+
+1. AGREGAR código de debug completo
+2. EJECUTAR y ver logs en consola
+3. REPORTAR qué longitudes muestra
+4. VERIFICAR que rawWooData tenga ambas descripciones
+5. VERIFICAR que sean DIFERENTES
+
+Si después de esto SIGUE sin funcionar:
+- Copia y pega TODOS los logs de la consola
+- Incluye el payload completo que se envía
+- Verifica en Railway logs si aparece rawWooData
+
+═══════════════════════════════════════════════════════════════════
+

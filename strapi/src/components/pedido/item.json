@@ -1,0 +1,63 @@
+{
+  "collectionName": "components_pedido_items",
+  "info": {
+    "displayName": "Pedido · Item",
+    "icon": "shopping-cart",
+    "description": "Item de producto en un pedido de WooCommerce"
+  },
+  "options": {},
+  "attributes": {
+    "item_id": {
+      "type": "integer",
+      "description": "ID del item en WooCommerce"
+    },
+    "producto_id": {
+      "type": "integer",
+      "description": "ID del producto en WooCommerce"
+    },
+    "sku": {
+      "type": "string",
+      "description": "SKU del producto (ISBN)"
+    },
+    "nombre": {
+      "type": "string",
+      "required": true,
+      "description": "Nombre del producto"
+    },
+    "cantidad": {
+      "type": "integer",
+      "required": true,
+      "default": 1,
+      "min": 1
+    },
+    "precio_unitario": {
+      "type": "decimal",
+      "required": true,
+      "precision": 12,
+      "scale": 2,
+      "min": 0
+    },
+    "total": {
+      "type": "decimal",
+      "required": true,
+      "precision": 12,
+      "scale": 2,
+      "min": 0
+    },
+    "libro": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::libro.libro",
+      "description": "Libro relacionado (si existe en Strapi)"
+    },
+    "libro_id": {
+      "type": "integer",
+      "description": "ID numérico del libro (se actualiza automáticamente desde la relación libro). Usado para búsquedas y evitar problemas con documentId."
+    },
+    "metadata": {
+      "type": "json",
+      "description": "Metadata adicional del item desde WooCommerce"
+    }
+  }
+}
+

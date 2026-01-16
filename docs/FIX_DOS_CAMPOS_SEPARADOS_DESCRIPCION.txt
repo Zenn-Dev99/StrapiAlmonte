@@ -1,0 +1,445 @@
+═══════════════════════════════════════════════════════════════════
+🔧 SOLUCIÓN: Dos Campos SEPARADOS para Descripciones
+═══════════════════════════════════════════════════════════════════
+
+SITUACIÓN ACTUAL:
+Tienes DOS campos en el formulario de Intranet:
+1. 📝 "Descripción del producto" (texto largo)
+2. 📝 "Descripción corta" (texto breve)
+
+PROBLEMA:
+Ambos campos se sobrescriben y muestran lo mismo en WooCommerce
+
+CAUSA:
+Estás usando la misma variable (formData.descripcion) para ambos campos
+
+SOLUCIÓN:
+Usar variables DIFERENTES para cada campo
+
+═══════════════════════════════════════════════════════════════════
+PASO 1: VERIFICAR QUE TENGAS DOS CAMPOS EN EL FORMULARIO
+═══════════════════════════════════════════════════════════════════
+
+Tu formulario debe tener DOS textareas/inputs separados:
+
+<form>
+  {/* Campo 1: Descripción completa */}
+  <label>Descripción del producto</label>
+  <textarea
+    value={formData.descripcion}
+    onChange={(e) => setFormData({...formData, descripcion: e.target.value})}
+    rows={10}
+    placeholder="Descripción completa del producto"
+  />
+  
+  {/* Campo 2: Descripción corta */}
+  <label>Descripción corta</label>
+  <textarea
+    value={formData.descripcionCorta}
+    onChange={(e) => setFormData({...formData, descripcionCorta: e.target.value})}
+    rows={3}
+    placeholder="Resumen breve (150 caracteres)"
+    maxLength={200}
+  />
+  
+  {/* Otros campos... */}
+</form>
+
+═══════════════════════════════════════════════════════════════════
+PASO 2: INICIALIZAR EL ESTADO CON DOS CAMPOS
+═══════════════════════════════════════════════════════════════════
+
+const [formData, setFormData] = useState({
+  nombre: '',
+  isbn: '',
+  precio: '',
+  stock: 0,
+  descripcion: '',          // ✅ Campo 1: Descripción completa
+  descripcionCorta: '',     // ✅ Campo 2: Descripción corta
+  peso: '',
+  largo: '',
+  ancho: '',
+  alto: ''
+});
+
+═══════════════════════════════════════════════════════════════════
+PASO 3: USAR AMBOS CAMPOS EN EL PAYLOAD
+═══════════════════════════════════════════════════════════════════
+
+En tu función handleSubmit:
+
+const handleSubmit = async (formData) => {
+  try {
+    // ✅ Procesar AMBOS campos por separado
+    
+    // Descripción completa desde el campo grande
+    const descripcionCompletaHTML = textoAHTML(formData.descripcion);
+    
+    // Descripción corta desde su propio campo
+    // Si el usuario escribió en el campo corto, usar ese
+    // Si no, auto-generar desde la descripción completa
+    const descripcionCortaHTML = formData.descripcionCorta 
+      ? textoAHTML(formData.descripcionCorta)  // ✅ Usar campo específico
+      : generarDescripcionCorta(formData.descripcion, 150);  // Fallback
+    
+    // Debug
+    console.log('📝 Descripción completa:', descripcionCompletaHTML);
+    console.log('📝 Descripción corta:', descripcionCortaHTML);
+    console.log('📝 ¿Son diferentes?', descripcionCompletaHTML !== descripcionCortaHTML);
+    
+    const payload = {
+      data: {
+        nombre_libro: formData.nombre,
+        isbn_libro: formData.isbn,
+        precio: parseFloat(formData.precio),
+        stock_quantity: parseInt(formData.stock) || 0,
+        estado_publicacion: "Publicado",
+        canales: [1, 2],
+        
+        rawWooData: {
+          name: formData.nombre,
+          type: "simple",
+          status: "publish",
+          sku: formData.isbn,
+          
+          // ✅ Usar descripciones de campos SEPARADOS
+          description: descripcionCompletaHTML,      // Desde formData.descripcion
+          short_description: descripcionCortaHTML,   // Desde formData.descripcionCorta
+          
+          regular_price: formData.precio.toString(),
+          manage_stock: true,
+          stock_quantity: parseInt(formData.stock) || 0,
+          stock_status: parseInt(formData.stock) > 0 ? 'instock' : 'outofstock',
+          backorders: 'no'
+        }
+      }
+    };
+    
+    // Enviar a Strapi
+    const response = await fetch('https://strapi.moraleja.cl/api/libros', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    
+    if (!response.ok) {
+      throw new Error('Error al guardar producto');
+    }
+    
+    console.log('✅ Producto guardado con descripciones separadas');
+    
+  } catch (error) {
+    console.error('❌ Error:', error);
+  }
+};
+
+═══════════════════════════════════════════════════════════════════
+PASO 4: FUNCIONES HELPER (MANTENER IGUAL)
+═══════════════════════════════════════════════════════════════════
+
+function textoAHTML(texto) {
+  if (!texto || texto.trim() === '') return '';
+  const parrafos = texto.split('\n\n')
+    .filter(p => p.trim())
+    .map(p => `<p>${p.trim().replace(/\n/g, '<br>')}</p>`)
+    .join('');
+  return parrafos || `<p>${texto}</p>`;
+}
+
+function generarDescripcionCorta(texto, maxCaracteres = 150) {
+  if (!texto || texto.trim() === '') return '';
+  const textoLimpio = texto.replace(/\n/g, ' ').trim();
+  let textoCorto;
+  if (textoLimpio.length > maxCaracteres) {
+    textoCorto = textoLimpio.substring(0, maxCaracteres);
+    const ultimoEspacio = textoCorto.lastIndexOf(' ');
+    if (ultimoEspacio > 0) {
+      textoCorto = textoCorto.substring(0, ultimoEspacio);
+    }
+    textoCorto += '...';
+  } else {
+    textoCorto = textoLimpio;
+  }
+  return `<p>${textoCorto}</p>`;
+}
+
+═══════════════════════════════════════════════════════════════════
+CÓDIGO COMPLETO DE EJEMPLO
+═══════════════════════════════════════════════════════════════════
+
+import React, { useState } from 'react';
+
+// Funciones helper
+function textoAHTML(texto) {
+  if (!texto || texto.trim() === '') return '';
+  const parrafos = texto.split('\n\n')
+    .filter(p => p.trim())
+    .map(p => `<p>${p.trim().replace(/\n/g, '<br>')}</p>`)
+    .join('');
+  return parrafos || `<p>${texto}</p>`;
+}
+
+function generarDescripcionCorta(texto, maxCaracteres = 150) {
+  if (!texto || texto.trim() === '') return '';
+  const textoLimpio = texto.replace(/\n/g, ' ').trim();
+  let textoCorto;
+  if (textoLimpio.length > maxCaracteres) {
+    textoCorto = textoLimpio.substring(0, maxCaracteres);
+    const ultimoEspacio = textoCorto.lastIndexOf(' ');
+    if (ultimoEspacio > 0) {
+      textoCorto = textoCorto.substring(0, ultimoEspacio);
+    }
+    textoCorto += '...';
+  } else {
+    textoCorto = textoLimpio;
+  }
+  return `<p>${textoCorto}</p>`;
+}
+
+// Componente del formulario
+export default function FormularioProducto() {
+  const [formData, setFormData] = useState({
+    nombre: '',
+    isbn: '',
+    precio: '',
+    stock: 0,
+    descripcion: '',          // ✅ Campo separado 1
+    descripcionCorta: '',     // ✅ Campo separado 2
+  });
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    // Procesar descripciones
+    const descripcionCompletaHTML = textoAHTML(formData.descripcion);
+    const descripcionCortaHTML = formData.descripcionCorta 
+      ? textoAHTML(formData.descripcionCorta)
+      : generarDescripcionCorta(formData.descripcion, 150);
+    
+    const payload = {
+      data: {
+        nombre_libro: formData.nombre,
+        isbn_libro: formData.isbn,
+        precio: parseFloat(formData.precio),
+        stock_quantity: parseInt(formData.stock) || 0,
+        estado_publicacion: "Publicado",
+        canales: [1, 2],
+        
+        rawWooData: {
+          name: formData.nombre,
+          
+          // ✅ Campos separados
+          description: descripcionCompletaHTML,
+          short_description: descripcionCortaHTML,
+          
+          regular_price: formData.precio.toString(),
+          manage_stock: true,
+          stock_quantity: parseInt(formData.stock) || 0
+        }
+      }
+    };
+    
+    const response = await fetch('https://strapi.moraleja.cl/api/libros', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    
+    if (response.ok) {
+      alert('✅ Producto creado con descripciones separadas');
+    }
+  };
+  
+  return (
+    <form onSubmit={handleSubmit}>
+      <div>
+        <label>Nombre del producto</label>
+        <input
+          type="text"
+          value={formData.nombre}
+          onChange={(e) => setFormData({...formData, nombre: e.target.value})}
+        />
+      </div>
+      
+      <div>
+        <label>ISBN</label>
+        <input
+          type="text"
+          value={formData.isbn}
+          onChange={(e) => setFormData({...formData, isbn: e.target.value})}
+        />
+      </div>
+      
+      <div>
+        <label>Precio</label>
+        <input
+          type="number"
+          value={formData.precio}
+          onChange={(e) => setFormData({...formData, precio: e.target.value})}
+        />
+      </div>
+      
+      <div>
+        <label>Stock</label>
+        <input
+          type="number"
+          value={formData.stock}
+          onChange={(e) => setFormData({...formData, stock: e.target.value})}
+        />
+      </div>
+      
+      {/* ✅ CAMPO 1: Descripción completa */}
+      <div>
+        <label>Descripción del producto (completa)</label>
+        <textarea
+          value={formData.descripcion}
+          onChange={(e) => setFormData({...formData, descripcion: e.target.value})}
+          rows={10}
+          placeholder="Descripción completa del producto con todos los detalles"
+        />
+      </div>
+      
+      {/* ✅ CAMPO 2: Descripción corta */}
+      <div>
+        <label>Descripción corta</label>
+        <textarea
+          value={formData.descripcionCorta}
+          onChange={(e) => setFormData({...formData, descripcionCorta: e.target.value})}
+          rows={3}
+          placeholder="Resumen breve del producto (150-200 caracteres)"
+          maxLength={200}
+        />
+        <small>Caracteres: {formData.descripcionCorta.length}/200</small>
+      </div>
+      
+      <button type="submit">Crear Producto</button>
+    </form>
+  );
+}
+
+═══════════════════════════════════════════════════════════════════
+AL EDITAR UN PRODUCTO
+═══════════════════════════════════════════════════════════════════
+
+Cuando cargas un producto para editar, debes llenar AMBOS campos:
+
+const cargarProducto = async (productoId) => {
+  const response = await fetch(
+    `https://strapi.moraleja.cl/api/libros/${productoId}?populate=*`
+  );
+  const data = await response.json();
+  const producto = data.data.attributes;
+  
+  // Convertir descripcion (blocks) a texto
+  let descripcionTexto = '';
+  if (producto.descripcion && Array.isArray(producto.descripcion)) {
+    descripcionTexto = producto.descripcion
+      .map(block => {
+        if (block.children && Array.isArray(block.children)) {
+          return block.children.map(child => child.text || '').join('');
+        }
+        return '';
+      })
+      .join('\n\n');
+  }
+  
+  // Llenar AMBOS campos
+  setFormData({
+    nombre: producto.nombre_libro,
+    isbn: producto.isbn_libro,
+    precio: producto.precio,
+    stock: producto.stock_quantity,
+    descripcion: descripcionTexto || '',           // ✅ Campo completo
+    descripcionCorta: producto.subtitulo_libro || '',  // ✅ Campo corto
+  });
+};
+
+═══════════════════════════════════════════════════════════════════
+VALIDACIONES RECOMENDADAS
+═══════════════════════════════════════════════════════════════════
+
+function validarFormulario(formData) {
+  const errores = {};
+  
+  // Descripción completa es requerida
+  if (!formData.descripcion || formData.descripcion.trim() === '') {
+    errores.descripcion = 'La descripción del producto es requerida';
+  }
+  
+  if (formData.descripcion && formData.descripcion.length < 20) {
+    errores.descripcion = 'La descripción debe tener al menos 20 caracteres';
+  }
+  
+  // Descripción corta es opcional, pero si existe debe ser razonable
+  if (formData.descripcionCorta && formData.descripcionCorta.length < 10) {
+    errores.descripcionCorta = 'La descripción corta debe tener al menos 10 caracteres';
+  }
+  
+  if (formData.descripcionCorta && formData.descripcionCorta.length > 250) {
+    errores.descripcionCorta = 'La descripción corta no debe exceder 250 caracteres';
+  }
+  
+  return errores;
+}
+
+// Usar antes de enviar
+const errores = validarFormulario(formData);
+if (Object.keys(errores).length > 0) {
+  alert(Object.values(errores).join('\n'));
+  return;
+}
+
+═══════════════════════════════════════════════════════════════════
+VERIFICAR QUE FUNCIONA
+═══════════════════════════════════════════════════════════════════
+
+1. LLENAR AMBOS CAMPOS EN EL FORMULARIO:
+   - Descripción del producto: "Este es un libro completo de cálculo..."
+   - Descripción corta: "Libro de cálculo para ingeniería"
+
+2. VER EN CONSOLA ANTES DE ENVIAR:
+   console.log('Description:', payload.data.rawWooData.description);
+   console.log('Short description:', payload.data.rawWooData.short_description);
+   
+   DEBE MOSTRAR TEXTOS DIFERENTES
+
+3. DESPUÉS DE CREAR, VERIFICAR EN WOOCOMMERCE:
+   - Tab "Descripción" → Debe tener el texto largo
+   - Tab "Descripción corta" → Debe tener el texto corto
+
+═══════════════════════════════════════════════════════════════════
+RESUMEN
+═══════════════════════════════════════════════════════════════════
+
+CAMBIOS NECESARIOS:
+
+1. ✅ Agregar campo "descripcionCorta" al estado:
+   const [formData, setFormData] = useState({
+     descripcion: '',
+     descripcionCorta: '',  // ← AGREGAR ESTE
+   });
+
+2. ✅ Agregar textarea para descripción corta en el formulario:
+   <textarea
+     value={formData.descripcionCorta}
+     onChange={(e) => setFormData({...formData, descripcionCorta: e.target.value})}
+   />
+
+3. ✅ Usar ambos campos en el payload:
+   description: textoAHTML(formData.descripcion),
+   short_description: formData.descripcionCorta 
+     ? textoAHTML(formData.descripcionCorta)
+     : generarDescripcionCorta(formData.descripcion, 150)
+
+RESULTADO:
+✅ Lo que escribes en "Descripción del producto" va a description
+✅ Lo que escribes en "Descripción corta" va a short_description
+✅ Ambos campos son INDEPENDIENTES
+
+═══════════════════════════════════════════════════════════════════
+
+IMPLEMENTA ESTOS CAMBIOS Y LOS DOS CAMPOS FUNCIONARÁN CORRECTAMENTE
+DE FORMA INDEPENDIENTE.
+
+═══════════════════════════════════════════════════════════════════
+

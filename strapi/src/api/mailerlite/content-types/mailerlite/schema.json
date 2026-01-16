@@ -1,0 +1,29 @@
+{
+  "kind": "singleType",
+  "collectionName": "mailerlite_config",
+  "info": {
+    "singularName": "mailerlite",
+    "pluralName": "mailerlites",
+    "displayName": "MailerLite",
+    "description": "Configuración de integración con MailerLite"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "enabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "default_groups": {
+      "type": "json",
+      "description": "Grupos por defecto (formato legacy: array de IDs). Usar group_mapping para mapeo avanzado."
+    },
+    "group_mapping": {
+      "type": "json",
+      "description": "Mapeo de origen/estado a grupos. Ejemplo: {\"web_validado\": [\"123\"], \"web_no_validado\": [\"456\"], \"origen_web\": [\"789\"]}"
+    }
+  }
+}
+

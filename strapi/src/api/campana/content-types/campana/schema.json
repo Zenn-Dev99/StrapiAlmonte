@@ -1,0 +1,76 @@
+{
+  "kind": "collectionType",
+  "collectionName": "campanas",
+  "info": {
+    "singularName": "campana",
+    "pluralName": "campanas",
+    "displayName": "Campaña",
+    "description": "Campañas de marketing del CRM"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nombre": {
+      "type": "string",
+      "required": true
+    },
+    "descripcion": {
+      "type": "text"
+    },
+    "presupuesto": {
+      "type": "decimal",
+      "required": true,
+      "default": 0
+    },
+    "objetivo": {
+      "type": "decimal",
+      "required": true,
+      "default": 0
+    },
+    "estado": {
+      "type": "enumeration",
+      "enum": [
+        "en_progreso",
+        "exitosa",
+        "programada",
+        "fallida",
+        "en_curso"
+      ],
+      "default": "programada",
+      "required": true
+    },
+    "tags": {
+      "type": "json"
+    },
+    "fecha_inicio": {
+      "type": "date",
+      "required": true
+    },
+    "fecha_fin": {
+      "type": "date"
+    },
+    "creado_por": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::colaborador.colaborador",
+      "required": true
+    },
+    "contactos": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::persona.persona"
+    },
+    "leads": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::lead.lead"
+    },
+    "colegios": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::colegio.colegio"
+    }
+  }
+}

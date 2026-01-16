@@ -1,0 +1,37 @@
+{
+  "collectionName": "components_curso_materials",
+  "info": {
+    "displayName": "Material",
+    "description": "Material necesario para el curso (útil, libro, cuaderno, etc.)"
+  },
+  "options": {},
+  "attributes": {
+    "material_nombre": {
+      "type": "string",
+      "required": true
+    },
+    "tipo": {
+      "type": "enumeration",
+      "enum": [
+        "util",
+        "libro",
+        "cuaderno",
+        "otro"
+      ],
+      "required": true,
+      "default": "util"
+    },
+    "cantidad": {
+      "type": "integer",
+      "default": 1,
+      "min": 1
+    },
+    "obligatorio": {
+      "type": "boolean",
+      "default": true
+    },
+    "descripcion": {
+      "type": "text"
+    }
+  }
+}

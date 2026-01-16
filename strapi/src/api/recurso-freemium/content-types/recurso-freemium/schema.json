@@ -1,0 +1,63 @@
+{
+  "kind": "collectionType",
+  "collectionName": "recursos_freemium",
+  "info": {
+    "singularName": "recurso-freemium",
+    "pluralName": "recursos-freemium",
+    "displayName": "MIRA · Recurso Freemium",
+    "description": "Contenido gratuito disponible para todos los estudiantes en MIRA.APP"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "titulo": {
+      "type": "string",
+      "required": true
+    },
+    "descripcion": {
+      "type": "text",
+      "description": "Descripción del recurso"
+    },
+    "tipo_contenido": {
+      "type": "enumeration",
+      "enum": [
+        "video",
+        "documento",
+        "imagen",
+        "enlace",
+        "otro"
+      ],
+      "default": "documento"
+    },
+    "url_recurso": {
+      "type": "string",
+      "description": "URL del recurso (puede ser externa o de Google Drive)"
+    },
+    "google_drive_file_id": {
+      "type": "string",
+      "description": "ID del archivo en Google Drive"
+    },
+    "imagen_preview": {
+      "type": "media",
+      "multiple": false,
+      "description": "Imagen de vista previa del recurso"
+    },
+    "activo": {
+      "type": "boolean",
+      "default": true
+    },
+    "orden": {
+      "type": "integer",
+      "default": 0,
+      "description": "Orden de visualización (menor número = primero)"
+    },
+    "fecha_publicacion": {
+      "type": "datetime",
+      "description": "Fecha de publicación del recurso"
+    }
+  }
+}
+
+

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Debug Endpoint - Pedidos Strapi</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        .section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f9f9f9;
+            border-left: 4px solid #2196F3;
+            border-radius: 4px;
+        }
+        .section h3 {
+            margin-top: 0;
+            color: #2196F3;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        button.danger {
+            background: #f44336;
+        }
+        button.danger:hover {
+            background: #da190b;
+        }
+        pre {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            max-height: 500px;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .status.warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        .field {
+            margin: 10px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Test Debug Endpoint - Pedidos Strapi</h1>
+        
+        <div class="section">
+            <h3>⚙️ Configuración</h3>
+            <div class="grid">
+                <div class="field">
+                    <label>Plataforma:</label>
+                    <select id="platform">
+                        <option value="woo_escolar">WooCommerce Escolar</option>
+                        <option value="woo_moraleja">WooCommerce Moraleja</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Cantidad de Items:</label>
+                    <input type="number" id="itemCount" value="2" min="0" max="10">
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>🧪 Tests Disponibles</h3>
+            <button onclick="testConItems()">✅ Test CON Items (correcto)</button>
+            <button onclick="testSinItems()" class="danger">❌ Test SIN Items (incorrecto)</button>
+            <button onclick="testItemsVacio()" class="danger">⚠️ Test Items Vacío</button>
+            <button onclick="testCampoProductos()">🔀 Test con "productos" en lugar de "items"</button>
+        </div>
+
+        <div id="status"></div>
+
+        <div class="section">
+            <h3>📤 Payload Enviado</h3>
+            <pre id="payloadSent">Ejecuta un test para ver el payload...</pre>
+        </div>
+
+        <div class="section">
+            <h3>📥 Respuesta del Debug Endpoint</h3>
+            <pre id="debugResponse">Ejecuta un test para ver la respuesta...</pre>
+        </div>
+
+        <div class="section">
+            <h3>📊 Análisis</h3>
+            <div id="analysis"></div>
+        </div>
+    </div>
+
+    <script>
+        const STRAPI_URL = 'https://strapi.moraleja.cl';
+        const DEBUG_ENDPOINT = `${STRAPI_URL}/api/pedidos/debug`;
+
+        function showStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('status');
+            statusDiv.className = `status ${type}`;
+            statusDiv.innerHTML = message;
+        }
+
+        function construirItems(count) {
+            const items = [];
+            for (let i = 1; i <= count; i++) {
+                items.push({
+                    nombre: `Libro de Prueba ${i}`,
+                    cantidad: i,
+                    precio_unitario: 10000 * i,
+                    total: 10000 * i * i,
+                    producto_id: 9160 + i,
+                    sku: `TEST-SKU-${i}`
+                });
+            }
+            return items;
+        }
+
+        function construirPayload(options = {}) {
+            const platform = document.getElementById('platform').value;
+            const itemCount = parseInt(document.getElementById('itemCount').value);
+            
+            const items = options.sinItems ? undefined : 
+                         options.itemsVacio ? [] : 
+                         construirItems(itemCount);
+
+            const payload = {
+                data: {
+                    numero_pedido: `TEST-${Date.now()}`,
+                    estado: 'pending',
+                    moneda: 'CLP',
+                    originPlatform: platform,
+                    billing: {
+                        first_name: 'Test',
+                        last_name: 'Usuario',
+                        email: 'test@example.com',
+                        phone: '+56912345678',
+                        address_1: 'Calle Test 123',
+                        city: 'Santiago',
+                        state: 'RM',
+                        postcode: '7500000',
+                        country: 'CL'
+                    },
+                    shipping: {
+                        first_name: 'Test',
+                        last_name: 'Usuario',
+                        address_1: 'Calle Test 123',
+                        city: 'Santiago',
+                        state: 'RM',
+                        postcode: '7500000',
+                        country: 'CL'
+                    }
+                }
+            };
+
+            // Agregar items según el test
+            if (options.usarProductos) {
+                payload.data.productos = items;
+            } else if (!options.sinItems) {
+                payload.data.items = items;
+            }
+
+            // Calcular totales
+            if (items && items.length > 0) {
+                payload.data.subtotal = items.reduce((sum, item) => sum + item.total, 0);
+                payload.data.total = payload.data.subtotal;
+            } else {
+                payload.data.subtotal = 0;
+                payload.data.total = 0;
+            }
+
+            return payload;
+        }
+
+        async function enviarTest(payload, testName) {
+            showStatus(`⏳ Enviando ${testName}...`, 'warning');
+            
+            // Mostrar payload enviado
+            document.getElementById('payloadSent').textContent = JSON.stringify(payload, null, 2);
+
+            try {
+                const response = await fetch(DEBUG_ENDPOINT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                
+                // Mostrar respuesta
+                document.getElementById('debugResponse').textContent = JSON.stringify(result, null, 2);
+
+                // Análisis
+                analizarResultado(result, testName);
+
+                if (response.ok) {
+                    showStatus(`✅ ${testName} completado`, 'success');
+                } else {
+                    showStatus(`❌ Error en ${testName}`, 'error');
+                }
+            } catch (error) {
+                showStatus(`❌ Error: ${error.message}`, 'error');
+                document.getElementById('debugResponse').textContent = error.stack;
+            }
+        }
+
+        function analizarResultado(result, testName) {
+            const analysisDiv = document.getElementById('analysis');
+            let html = `<h4>${testName}</h4>`;
+
+            if (result.received) {
+                const r = result.received;
+                
+                html += '<ul>';
+                html += `<li><strong>hasData:</strong> ${r.hasData ? '✅' : '❌'} ${r.hasData ? 'OK' : 'FALTA'}</li>`;
+                html += `<li><strong>hasItems:</strong> ${r.hasItems ? '✅' : '❌'} ${r.hasItems ? 'OK' : 'NO DETECTADO'}</li>`;
+                html += `<li><strong>hasProductos:</strong> ${r.hasProductos ? '✅' : '❌'} ${r.hasProductos ? 'OK' : 'NO DETECTADO'}</li>`;
+                html += `<li><strong>itemsLength:</strong> ${r.itemsLength} ${r.itemsLength > 0 ? '✅' : '❌'}</li>`;
+                html += `<li><strong>productosLength:</strong> ${r.productosLength} ${r.productosLength > 0 ? '✅' : '❌'}</li>`;
+                html += '</ul>';
+
+                // Diagnóstico
+                html += '<h4>🔍 Diagnóstico:</h4>';
+                if (r.hasItems && r.itemsLength > 0) {
+                    html += '<p class="status success">✅ CORRECTO: Items detectados y con contenido</p>';
+                } else if (r.hasProductos && r.productosLength > 0) {
+                    html += '<p class="status warning">⚠️ ADVERTENCIA: Usa "productos" en lugar de "items". Strapi lo acepta pero el estándar es "items".</p>';
+                } else if (r.hasItems && r.itemsLength === 0) {
+                    html += '<p class="status error">❌ ERROR: Campo "items" existe pero está VACÍO</p>';
+                } else {
+                    html += '<p class="status error">❌ ERROR CRÍTICO: NO hay campo "items" ni "productos" en el payload</p>';
+                }
+            }
+
+            analysisDiv.innerHTML = html;
+        }
+
+        // Tests
+        async function testConItems() {
+            const payload = construirPayload();
+            await enviarTest(payload, 'Test CON Items (Correcto)');
+        }
+
+        async function testSinItems() {
+            const payload = construirPayload({ sinItems: true });
+            await enviarTest(payload, 'Test SIN Items (Error)');
+        }
+
+        async function testItemsVacio() {
+            const payload = construirPayload({ itemsVacio: true });
+            await enviarTest(payload, 'Test Items Vacío (Error)');
+        }
+
+        async function testCampoProductos() {
+            const payload = construirPayload({ usarProductos: true });
+            await enviarTest(payload, 'Test con campo "productos"');
+        }
+    </script>
+</body>
+</html>
+

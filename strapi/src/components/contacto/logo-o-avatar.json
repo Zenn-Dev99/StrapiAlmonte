@@ -1,0 +1,56 @@
+{
+  "collectionName": "components_contacto_logo_o_avatars",
+  "info": {
+    "displayName": "Logo o Avatar",
+    "icon": "emotionHappy"
+  },
+  "options": {},
+  "attributes": {
+    "imagen": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "tipo": {
+      "type": "enumeration",
+      "enum": [
+        "Logo",
+        "Foto Perfíl",
+        "Otro"
+      ]
+    },
+    "formato": {
+      "type": "enumeration",
+      "enum": [
+        "Png",
+        "Jpg",
+        "WebP",
+        "SVG",
+        "Gif",
+        "Otro"
+      ]
+    },
+    "estado": {
+      "type": "enumeration",
+      "enum": [
+        "Por Verificar",
+        "Verificado",
+        "Aprobado"
+      ]
+    },
+    "vigente_hasta": {
+      "type": "date"
+    },
+    "status": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "config": {}
+}
+

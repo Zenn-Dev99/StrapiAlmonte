@@ -1,0 +1,52 @@
+{
+  "kind": "collectionType",
+  "collectionName": "marcas",
+  "info": {
+    "singularName": "marca",
+    "pluralName": "marcas",
+    "displayName": "Marca (Brand)",
+    "description": "Marcas de productos para WooCommerce (Brands)"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "descripcion": {
+      "type": "text"
+    },
+    "imagen": {
+      "type": "media",
+      "multiple": false
+    },
+    "marca_padre": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::marca.marca",
+      "inversedBy": "marcas_hijas"
+    },
+    "marcas_hijas": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::marca.marca",
+      "mappedBy": "marca_padre"
+    },
+    "externalIds": {
+      "type": "json",
+      "description": "IDs externos de WooCommerce: { woo_moraleja: 123, woo_escolar: 456 }"
+    },
+    "estado_publicacion": {
+      "type": "enumeration",
+      "default": "pendiente",
+      "enum": [
+        "pendiente",
+        "publicado",
+        "borrador"
+      ]
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_inventory_editorial",
+  "info": {
+    "displayName": "Editorial Inventory",
+    "description": "Stock buckets for Editorial store"
+  },
+  "attributes": {
+    "operador_logistico": {
+      "type": "integer",
+      "default": 0
+    },
+    "comodato_libreria": {
+      "type": "integer",
+      "default": 0
+    }
+  }
+}
+

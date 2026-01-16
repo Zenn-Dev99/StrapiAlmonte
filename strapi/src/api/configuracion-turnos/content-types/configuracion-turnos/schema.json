@@ -1,0 +1,55 @@
+{
+  "kind": "singleType",
+  "collectionName": "configuracion_turnos",
+  "info": {
+    "singularName": "configuracion-turnos",
+    "pluralName": "configuracion-turnos-settings",
+    "displayName": "Configuración Turnos",
+    "description": "Configuración general del sistema de turnos"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "tiempo_estimado_por_turno": {
+      "type": "integer",
+      "default": 5,
+      "description": "Tiempo estimado en minutos por turno"
+    },
+    "diferencia_notificacion_proximo": {
+      "type": "integer",
+      "default": 4,
+      "description": "Número de turnos antes del actual para notificar que está próximo"
+    },
+    "whatsapp_numero": {
+      "type": "string",
+      "description": "Número de WhatsApp para notificaciones"
+    },
+    "whatsapp_api_url": {
+      "type": "string",
+      "description": "URL de la API de WhatsApp"
+    },
+    "mensaje_bienvenida": {
+      "type": "text",
+      "default": "¡Hola! Bienvenido al sistema de turnos."
+    },
+    "mensaje_turno_asignado": {
+      "type": "text",
+      "default": "Tu número de atención es {numero}. Tiempo estimado: {tiempo} minutos."
+    },
+    "mensaje_proximo": {
+      "type": "text",
+      "default": "¡Estás próximo! Tu número {numero} será llamado pronto."
+    },
+    "mensaje_llamado": {
+      "type": "text",
+      "default": "¡Es tu turno! {numero} - Por favor dirígete a {ubicacion}"
+    },
+    "activo": {
+      "type": "boolean",
+      "default": true
+    }
+  }
+}
+

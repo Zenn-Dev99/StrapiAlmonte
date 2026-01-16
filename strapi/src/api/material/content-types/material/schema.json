@@ -1,0 +1,40 @@
+{
+  "kind": "collectionType",
+  "collectionName": "materials",
+  "info": {
+    "singularName": "material",
+    "pluralName": "materials",
+    "displayName": "Product · Material · Ficha",
+    "description": "Material o insumo básico"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nombre": {
+      "type": "string",
+      "required": true
+    },
+    "ean": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "categoria": {
+      "type": "string"
+    },
+    "subcategoria": {
+      "type": "string"
+    },
+    "marca": {
+      "type": "string"
+    },
+    "obra": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::obra.obra",
+      "inversedBy": "materiales"
+    }
+  }
+}

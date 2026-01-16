@@ -1,0 +1,48 @@
+{
+  "kind": "collectionType",
+  "collectionName": "comunas",
+  "info": {
+    "singularName": "comuna",
+    "pluralName": "comunas",
+    "displayName": "Ubicación. Comuna"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "comuna_nombre": {
+      "type": "string",
+      "required": true,
+      "unique": false
+    },
+    "comuna_id": {
+      "type": "integer",
+      "unique": true
+    },
+    "provincia_nombre": {
+      "type": "string"
+    },
+    "provincia_id": {
+      "type": "integer"
+    },
+    "region_nombre": {
+      "type": "string"
+    },
+    "region_id": {
+      "type": "integer"
+    },
+    "zona_nombre": {
+      "type": "string"
+    },
+    "zona_id": {
+      "type": "integer"
+    },
+    "colegios": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::colegio.colegio",
+      "mappedBy": "comuna"
+    }
+  }
+}

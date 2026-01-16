@@ -1,0 +1,51 @@
+{
+  "kind": "collectionType",
+  "collectionName": "user_mailboxes",
+  "info": {
+    "singularName": "user-mailbox",
+    "pluralName": "user-mailboxes",
+    "displayName": "User · Mailbox",
+    "description": "Credenciales SMTP asociadas a usuarios o cuentas compartidas"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "email": {
+      "type": "email",
+      "required": true,
+      "unique": true
+    },
+    "smtp_host": {
+      "type": "string",
+      "required": true
+    },
+    "smtp_port": {
+      "type": "integer",
+      "required": true
+    },
+    "secure": {
+      "type": "boolean",
+      "default": true
+    },
+    "username": {
+      "type": "string",
+      "required": true
+    },
+    "password": {
+      "type": "password",
+      "required": true,
+      "private": true
+    },
+    "from_name": {
+      "type": "string"
+    },
+    "reply_to": {
+      "type": "email"
+    },
+    "meta": {
+      "type": "json"
+    }
+  }
+}
+

@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_campanias_notes",
+  "info": {
+    "displayName": "Note",
+    "icon": "sticky-note"
+  },
+  "options": {},
+  "attributes": {
+    "value": {
+      "type": "text"
+    }
+  }
+}

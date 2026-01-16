@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_campanias_module_outcomes",
+  "info": {
+    "displayName": "Module outcome",
+    "icon": "check"
+  },
+  "options": {},
+  "attributes": {
+    "value": {
+      "type": "string"
+    }
+  }
+}

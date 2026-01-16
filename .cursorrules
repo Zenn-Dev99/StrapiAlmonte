@@ -1,0 +1,27 @@
+# Reglas para Auto (Agente de Cursor)
+
+## Contexto del Proyecto
+- Backend con Strapi (CMS headless)
+- Integración con WooCommerce
+- Integración con Google Sheets
+- Base de datos PostgreSQL en producción, SQLite en desarrollo
+- Deploy en Railway
+
+## Estilo de Código
+- Usar TypeScript para archivos nuevos
+- Seguir las convenciones de Strapi
+- Comentar código complejo
+- Usar nombres descriptivos en español para variables de negocio
+
+## Reglas Específicas
+- Siempre responder en español
+- Verificar que los cambios no rompan el build antes de hacer commit
+- Para cambios en producción, verificar que el build funcione localmente primero
+- No hardcodear tokens o credenciales (usar variables de entorno)
+- Documentar cambios importantes en archivos README o docs/
+
+## Preferencias
+- Preferir soluciones simples sobre complejas
+- Priorizar estabilidad sobre features nuevas
+- Probar cambios localmente antes de deployar
+

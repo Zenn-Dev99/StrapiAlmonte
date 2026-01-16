@@ -1,0 +1,55 @@
+{
+  "kind": "collectionType",
+  "collectionName": "omr_evaluaciones",
+  "info": {
+    "singularName": "omr-evaluacion",
+    "pluralName": "omr-evaluaciones",
+    "displayName": "MIRA · OMR Evaluación",
+    "description": "Resultados de procesamiento OMR de hojas de respuestas"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "estudiante": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::persona-mira.persona-mira",
+      "required": true
+    },
+    "libro_mira": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::libro-mira.libro-mira",
+      "description": "Libro relacionado (opcional)"
+    },
+    "imagen_hoja": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "description": "Imagen de la hoja de respuestas escaneada"
+    },
+    "fecha_procesamiento": {
+      "type": "datetime"
+    },
+    "estado": {
+      "type": "enumeration",
+      "enum": [
+        "pendiente",
+        "procesado",
+        "error"
+      ],
+      "default": "pendiente"
+    },
+    "resultados": {
+      "type": "json",
+      "description": "Resultados del procesamiento OMR (respuestas detectadas, puntaje, etc.)"
+    },
+    "notas": {
+      "type": "text",
+      "description": "Notas adicionales sobre la evaluación"
+    }
+  }
+}
+

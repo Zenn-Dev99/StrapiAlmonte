@@ -1,0 +1,435 @@
+═══════════════════════════════════════════════════════════════════
+🔧 FIX COMPLETO: Descripciones Bidireccionales
+═══════════════════════════════════════════════════════════════════
+
+PROBLEMA IDENTIFICADO:
+❌ Descripciones NO se sincronizan Intranet → WooCommerce
+❌ Descripciones NO se sincronizan WooCommerce → Intranet
+
+CAUSA:
+- Campo incorrecto en Strapi (usaba subtitulo_libro)
+- Falta rawWooData con description y short_description en formato HTML
+
+SOLUCIÓN IMPLEMENTADA EN STRAPI:
+✅ Strapi ahora lee descripcion (campo blocks) y lo convierte a texto
+✅ Strapi ahora guarda description de WooCommerce en descripcion (blocks)
+✅ Strapi ahora guarda short_description en subtitulo_libro
+
+═══════════════════════════════════════════════════════════════════
+SOLUCIÓN PARA LA INTRANET
+═══════════════════════════════════════════════════════════════════
+
+DEBES ENVIAR DESCRIPCIONES EN rawWooData EN FORMATO HTML
+
+PAYLOAD CORRECTO:
+
+{
+  data: {
+    nombre_libro: "Cálculo I - 10ª Edición",
+    isbn_libro: "9788491820123",
+    precio: 49990,
+    stock_quantity: 100,
+    estado_publicacion: "Publicado",
+    canales: [1, 2],
+    
+    // ✅ CAMPO OPCIONAL: descripcion en formato blocks (para Strapi)
+    descripcion: [
+      {
+        type: "paragraph",
+        children: [
+          {
+            type: "text",
+            text: "Descripción completa del producto en texto plano"
+          }
+        ]
+      }
+    ],
+    
+    // ✅ CAMPO OPCIONAL: subtitulo_libro (descripción corta en Strapi)
+    subtitulo_libro: "Resumen breve del producto",
+    
+    // ✅ CRÍTICO: rawWooData con descripciones en HTML
+    rawWooData: {
+      name: "Cálculo I - 10ª Edición",
+      type: "simple",
+      status: "publish",
+      
+      // ✅ DESCRIPCIÓN COMPLETA EN HTML
+      description: "<p>Descripción completa del producto con formato HTML.</p><p>Puede incluir múltiples párrafos.</p>",
+      
+      // ✅ DESCRIPCIÓN CORTA EN HTML (máximo 150-200 caracteres)
+      short_description: "<p>Resumen breve del producto en HTML.</p>",
+      
+      regular_price: "49990.00",
+      manage_stock: true,
+      stock_quantity: 100,
+      stock_status: "instock",
+      backorders: "no"
+    }
+  }
+}
+
+═══════════════════════════════════════════════════════════════════
+IMPORTANTE: FORMATO DE DESCRIPCIONES
+═══════════════════════════════════════════════════════════════════
+
+1. DESCRIPCIÓN COMPLETA (description)
+   ✅ Debe estar en formato HTML
+   ✅ Usar etiquetas <p>, <h3>, <ul>, <li>, <strong>, <em>, etc.
+   ✅ Sin límite de caracteres
+   
+   EJEMPLOS:
+   
+   Básico:
+   description: "<p>Descripción del producto</p>"
+   
+   Con formato:
+   description: `
+     <p>Cálculo I es un libro fundamental para estudiantes de ingeniería.</p>
+     <h3>Características:</h3>
+     <ul>
+       <li>10ª Edición actualizada</li>
+       <li>Más de 500 ejercicios resueltos</li>
+       <li>Soluciones paso a paso</li>
+     </ul>
+     <h3>Contenido:</h3>
+     <p>El libro cubre los temas fundamentales del cálculo diferencial e integral.</p>
+   `
+
+2. DESCRIPCIÓN CORTA (short_description)
+   ✅ Debe estar en formato HTML
+   ✅ Máximo 150-200 caracteres
+   ✅ Usar etiqueta <p> al menos
+   ✅ Aparece en listados de productos
+   
+   EJEMPLOS:
+   
+   short_description: "<p>Libro de Cálculo I para ingeniería. 10ª Edición con 500+ ejercicios.</p>"
+
+═══════════════════════════════════════════════════════════════════
+FUNCIÓN HELPER: CONVERTIR TEXTO A HTML
+═══════════════════════════════════════════════════════════════════
+
+Si tienes texto plano y necesitas convertirlo a HTML:
+
+// Función para convertir texto plano a HTML
+function textoAHTML(texto) {
+  if (!texto) return '';
+  
+  // Convertir saltos de línea dobles en párrafos
+  const parrafos = texto.split('\n\n')
+    .filter(p => p.trim())
+    .map(p => `<p>${p.trim()}</p>`)
+    .join('');
+  
+  return parrafos || `<p>${texto}</p>`;
+}
+
+// Función para generar descripción corta
+function generarDescripcionCorta(texto, maxCaracteres = 150) {
+  if (!texto) return '';
+  
+  const textoLimpio = texto.replace(/\n/g, ' ').trim();
+  const textoCorto = textoLimpio.length > maxCaracteres
+    ? textoLimpio.substring(0, maxCaracteres) + '...'
+    : textoLimpio;
+  
+  return `<p>${textoCorto}</p>`;
+}
+
+// Uso:
+const descripcionHTML = textoAHTML(formData.descripcion);
+const descripcionCortaHTML = generarDescripcionCorta(formData.descripcion, 150);
+
+rawWooData: {
+  description: descripcionHTML,
+  short_description: descripcionCortaHTML
+}
+
+═══════════════════════════════════════════════════════════════════
+IMPLEMENTACIÓN EN EL FORMULARIO
+═══════════════════════════════════════════════════════════════════
+
+En tu componente de crear/editar producto:
+
+const handleSubmit = async (formData) => {
+  // 1. Convertir texto plano a HTML
+  const descripcionHTML = formData.descripcion
+    ? textoAHTML(formData.descripcion)
+    : '';
+  
+  const descripcionCortaHTML = formData.descripcion
+    ? generarDescripcionCorta(formData.descripcion, 150)
+    : '';
+  
+  // 2. Convertir texto plano a formato blocks (opcional)
+  const descripcionBlocks = formData.descripcion
+    ? [
+        {
+          type: 'paragraph',
+          children: [
+            { type: 'text', text: formData.descripcion }
+          ]
+        }
+      ]
+    : null;
+  
+  // 3. Construir payload
+  const payload = {
+    data: {
+      nombre_libro: formData.nombre,
+      isbn_libro: formData.isbn,
+      precio: parseFloat(formData.precio),
+      stock_quantity: parseInt(formData.stock) || 0,
+      estado_publicacion: "Publicado",
+      canales: [1, 2],
+      
+      // ✅ Opcional: descripcion en formato blocks
+      ...(descripcionBlocks && { descripcion: descripcionBlocks }),
+      
+      // ✅ Opcional: subtitulo_libro como descripción corta
+      ...(formData.descripcion && { 
+        subtitulo_libro: formData.descripcion.substring(0, 255) 
+      }),
+      
+      // ✅ CRÍTICO: rawWooData con HTML
+      rawWooData: {
+        name: formData.nombre,
+        type: "simple",
+        status: "publish",
+        
+        // ✅ Descripciones en HTML
+        description: descripcionHTML,
+        short_description: descripcionCortaHTML,
+        
+        regular_price: formData.precio.toString(),
+        manage_stock: true,
+        stock_quantity: parseInt(formData.stock) || 0,
+        stock_status: parseInt(formData.stock) > 0 ? 'instock' : 'outofstock',
+        backorders: 'no',
+        
+        // Otros campos...
+      }
+    }
+  };
+  
+  // 4. Enviar a Strapi
+  const response = await fetch(
+    modoEdicion 
+      ? `https://strapi.moraleja.cl/api/libros/${productoId}`
+      : 'https://strapi.moraleja.cl/api/libros',
+    {
+      method: modoEdicion ? 'PUT' : 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }
+  );
+  
+  if (response.ok) {
+    console.log('✅ Producto guardado con descripciones');
+  }
+};
+
+═══════════════════════════════════════════════════════════════════
+CARGAR DESCRIPCIONES AL EDITAR
+═══════════════════════════════════════════════════════════════════
+
+Al obtener un producto para editar, necesitas extraer el texto de blocks:
+
+const cargarProducto = async (productoId) => {
+  const response = await fetch(
+    `https://strapi.moraleja.cl/api/libros/${productoId}?populate=*`
+  );
+  const data = await response.json();
+  const producto = data.data.attributes;
+  
+  // Convertir descripcion (blocks) a texto plano
+  let descripcionTexto = '';
+  if (producto.descripcion && Array.isArray(producto.descripcion)) {
+    descripcionTexto = producto.descripcion
+      .map(block => {
+        if (block.children && Array.isArray(block.children)) {
+          return block.children.map(child => child.text || '').join('');
+        }
+        return '';
+      })
+      .join('\n\n');
+  }
+  
+  // Llenar formulario
+  setFormData({
+    nombre: producto.nombre_libro,
+    isbn: producto.isbn_libro,
+    precio: producto.precio,
+    stock: producto.stock_quantity,
+    descripcion: descripcionTexto || producto.subtitulo_libro || '',
+    // ...otros campos
+  });
+};
+
+═══════════════════════════════════════════════════════════════════
+VALIDACIONES RECOMENDADAS
+═══════════════════════════════════════════════════════════════════
+
+Antes de enviar, valida:
+
+function validarDescripciones(formData) {
+  const errores = {};
+  
+  // Descripción mínima
+  if (!formData.descripcion || formData.descripcion.length < 10) {
+    errores.descripcion = 'La descripción debe tener al menos 10 caracteres';
+  }
+  
+  // Descripción máxima razonable
+  if (formData.descripcion && formData.descripcion.length > 5000) {
+    errores.descripcion = 'La descripción es demasiado larga (máximo 5000 caracteres)';
+  }
+  
+  return errores;
+}
+
+═══════════════════════════════════════════════════════════════════
+VERIFICAR QUE FUNCIONA
+═══════════════════════════════════════════════════════════════════
+
+1. CREAR PRODUCTO DESDE INTRANET
+   ✅ Enviar con rawWooData.description en HTML
+   ✅ Verificar en WooCommerce Admin que aparece la descripción
+   ✅ Verificar en el frontend que se muestra correctamente
+
+2. EDITAR PRODUCTO EN WOOCOMMERCE
+   ✅ Cambiar description y short_description en WooCommerce Admin
+   ✅ Webhook sincroniza a Strapi
+   ✅ Verificar en Strapi que descripcion (blocks) se actualizó
+   ✅ Abrir producto en Intranet y ver que cargó la nueva descripción
+
+3. EDITAR PRODUCTO DESDE INTRANET
+   ✅ Cambiar descripción en formulario
+   ✅ Guardar cambios
+   ✅ Verificar en WooCommerce que se actualizó
+
+═══════════════════════════════════════════════════════════════════
+EJEMPLO COMPLETO
+═══════════════════════════════════════════════════════════════════
+
+// Helper functions (agregar al inicio del archivo)
+function textoAHTML(texto) {
+  if (!texto) return '';
+  const parrafos = texto.split('\n\n')
+    .filter(p => p.trim())
+    .map(p => `<p>${p.trim()}</p>`)
+    .join('');
+  return parrafos || `<p>${texto}</p>`;
+}
+
+function generarDescripcionCorta(texto, max = 150) {
+  if (!texto) return '';
+  const limpio = texto.replace(/\n/g, ' ').trim();
+  const corto = limpio.length > max ? limpio.substring(0, max) + '...' : limpio;
+  return `<p>${corto}</p>`;
+}
+
+// En el componente
+const FormularioProducto = () => {
+  const [formData, setFormData] = useState({
+    nombre: '',
+    isbn: '',
+    precio: '',
+    stock: 0,
+    descripcion: '', // ✅ Campo de texto para descripción
+  });
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    const payload = {
+      data: {
+        nombre_libro: formData.nombre,
+        isbn_libro: formData.isbn,
+        precio: parseFloat(formData.precio),
+        stock_quantity: parseInt(formData.stock) || 0,
+        estado_publicacion: "Publicado",
+        canales: [1, 2],
+        
+        // Opcional: formato blocks
+        descripcion: formData.descripcion ? [
+          {
+            type: 'paragraph',
+            children: [{ type: 'text', text: formData.descripcion }]
+          }
+        ] : null,
+        
+        rawWooData: {
+          name: formData.nombre,
+          
+          // ✅ Descripciones en HTML
+          description: textoAHTML(formData.descripcion),
+          short_description: generarDescripcionCorta(formData.descripcion),
+          
+          regular_price: formData.precio.toString(),
+          manage_stock: true,
+          stock_quantity: parseInt(formData.stock) || 0,
+          stock_status: parseInt(formData.stock) > 0 ? 'instock' : 'outofstock'
+        }
+      }
+    };
+    
+    const response = await fetch('https://strapi.moraleja.cl/api/libros', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    
+    if (response.ok) {
+      console.log('✅ Producto creado con descripciones');
+    }
+  };
+  
+  return (
+    <form onSubmit={handleSubmit}>
+      <input
+        type="text"
+        value={formData.nombre}
+        onChange={(e) => setFormData({...formData, nombre: e.target.value})}
+        placeholder="Nombre del producto"
+      />
+      
+      <textarea
+        value={formData.descripcion}
+        onChange={(e) => setFormData({...formData, descripcion: e.target.value})}
+        placeholder="Descripción completa del producto"
+        rows={10}
+      />
+      
+      <button type="submit">Crear Producto</button>
+    </form>
+  );
+};
+
+═══════════════════════════════════════════════════════════════════
+RESUMEN
+═══════════════════════════════════════════════════════════════════
+
+✅ STRAPI YA ESTÁ CORREGIDO
+   - Lee descripcion (blocks) y lo convierte a texto para WooCommerce
+   - Guarda description de WooCommerce en descripcion (blocks)
+   - Sincronización bidireccional funcionando
+
+✅ INTRANET DEBE:
+   1. Enviar rawWooData.description en formato HTML
+   2. Enviar rawWooData.short_description en formato HTML
+   3. Usar funciones helper para convertir texto a HTML
+   4. Al editar, convertir blocks a texto plano para mostrar
+
+✅ FLUJO COMPLETO:
+   Intranet → rawWooData con HTML → Strapi → WooCommerce ✅
+   WooCommerce → Webhook → Strapi blocks → Intranet texto ✅
+
+═══════════════════════════════════════════════════════════════════
+
+IMPLEMENTA ESTAS FUNCIONES HELPER Y ACTUALIZA EL FORMULARIO
+PARA QUE LAS DESCRIPCIONES SE SINCRONICEN CORRECTAMENTE.
+
+═══════════════════════════════════════════════════════════════════
+

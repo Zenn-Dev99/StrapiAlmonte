@@ -1,0 +1,25 @@
+version: 1
+entity: colegio
+table: v2_colegios
+uid: colegio
+unique:
+  - rbd
+fields:
+  rbd:
+    type: integer
+    required: true
+    description: "RBD Mineduc"
+  nombre:
+    type: string
+    required: true
+    maxLength: 180
+  dependencia:
+    type: enum
+    enumRef: dependencia
+  comuna:
+    type: relation
+    target: comuna
+    kind: manyToOne
+  activo:
+    type: boolean
+    default: true

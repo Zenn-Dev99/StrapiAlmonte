@@ -1,0 +1,67 @@
+{
+    "kind": "collectionType",
+    "collectionName": "etiquetas_pdfs",
+    "info": {
+        "singularName": "etiqueta-pdf",
+        "pluralName": "etiquetas-pdf",
+        "displayName": "Etiquetas - PDFs",
+        "description": "Almacena los PDFs generados para las etiquetas escolares"
+    },
+    "options": {
+        "draftAndPublish": false
+    },
+    "pluginOptions": {},
+    "attributes": {
+        "apoderado": {
+            "type": "relation",
+            "relation": "manyToOne",
+            "target": "api::etiqueta-apoderado.etiqueta-apoderado",
+            "required": true
+        },
+        "alumno": {
+            "type": "relation",
+            "relation": "manyToOne",
+            "target": "api::etiqueta-alumno.etiqueta-alumno",
+            "required": true
+        },
+        "fecha_generacion": {
+            "type": "datetime",
+            "required": true,
+            "default": "now"
+        },
+        "hash_qr": {
+            "type": "string",
+            "required": true,
+            "unique": true,
+            "maxLength": 16,
+            "minLength": 8
+        },
+        "archivo_pdf": {
+            "type": "media",
+            "multiple": false,
+            "required": true,
+            "allowedTypes": ["files"]
+        },
+        "numero_orden": {
+            "type": "integer",
+            "required": true
+        },
+        "año_escolar": {
+            "type": "integer",
+            "required": true,
+            "min": 2000,
+            "max": 2100
+        },
+        "colegio_nombre": {
+            "type": "string",
+            "required": true,
+            "maxLength": 256
+        },
+        "estado": {
+            "type": "enumeration",
+            "enum": ["generado", "impreso", "archivado"],
+            "default": "generado",
+            "required": false
+        }
+    }
+}

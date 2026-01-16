@@ -1,0 +1,48 @@
+{
+  "collectionName": "components_listas_utiles_quality_flags",
+  "info": {
+    "displayName": "Quality Flag",
+    "description": "Flags de control de calidad asociados a listas de útiles"
+  },
+  "options": {},
+  "attributes": {
+    "code": {
+      "type": "enumeration",
+      "enum": [
+        "isbn_invalido",
+        "editorial_incongruente",
+        "nombre_inexacto",
+        "instruccion_confusa",
+        "faltan_productos",
+        "otros"
+      ],
+      "required": true
+    },
+    "label": {
+      "type": "string",
+      "maxLength": 160
+    },
+    "severity": {
+      "type": "enumeration",
+      "enum": [
+        "info",
+        "warning",
+        "error"
+      ],
+      "default": "info",
+      "required": true
+    },
+    "resolved": {
+      "type": "boolean",
+      "default": false
+    },
+    "resolved_by": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "admin::user"
+    },
+    "resolved_at": {
+      "type": "datetime"
+    }
+  }
+}

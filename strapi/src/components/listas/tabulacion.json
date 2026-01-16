@@ -1,0 +1,44 @@
+{
+  "collectionName": "components_listas_tabulaciones",
+  "info": {
+    "displayName": "Tabulación",
+    "description": "Fila tabulada derivada del análisis del documento"
+  },
+  "options": {},
+  "attributes": {
+    "curso": {
+      "type": "string",
+      "required": true
+    },
+    "asignatura": {
+      "type": "string"
+    },
+    "titulo_item": {
+      "type": "string"
+    },
+    "descripcion": {
+      "type": "text"
+    },
+    "libro_base": {
+      "type": "boolean",
+      "default": false
+    },
+    "sugerido": {
+      "type": "boolean",
+      "default": false
+    },
+    "estado_revision": {
+      "type": "enumeration",
+      "enum": ["pendiente", "ajustado", "aprobado"],
+      "default": "pendiente"
+    },
+    "resaltados": {
+      "type": "component",
+      "repeatable": true,
+      "component": "listas.resaltado"
+    },
+    "observaciones": {
+      "type": "text"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "collectionName": "components_listas_historiales",
+  "info": {
+    "displayName": "Historial",
+    "description": "Registro de cambios de estado y acciones realizadas"
+  },
+  "options": {},
+  "attributes": {
+    "estado": {
+      "type": "enumeration",
+      "enum": [
+        "cargada",
+        "analizada",
+        "pendiente_validacion",
+        "pendiente_aprobacion",
+        "aprobada",
+        "rechazada"
+      ]
+    },
+    "mensaje": {
+      "type": "text"
+    },
+    "actor_nombre": {
+      "type": "string"
+    },
+    "actor_rol": {
+      "type": "string"
+    },
+    "creado_en": {
+      "type": "datetime"
+    }
+  }
+}

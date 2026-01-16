@@ -1,0 +1,156 @@
+{
+  "kind": "collectionType",
+  "collectionName": "colegios",
+  "info": {
+    "singularName": "colegio",
+    "pluralName": "colegios",
+    "displayName": "Colegio"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "rbd": {
+      "type": "integer",
+      "required": true,
+      "unique": true
+    },
+    "colegio_nombre": {
+      "type": "string",
+      "required": true,
+      "unique": false
+    },
+    "estado_nombre": {
+      "type": "enumeration",
+      "enum": [
+        "Por Verificar",
+        "Verificado",
+        "Aprobado",
+        "Rechazado"
+      ],
+      "default": "Por Verificar"
+    },
+    "estado": {
+      "type": "enumeration",
+      "enum": [
+        "Por Verificar",
+        "Verificado",
+        "Aprobado"
+      ],
+      "default": "Por Verificar"
+    },
+    "rbd_digito_verificador": {
+      "type": "string"
+    },
+    "dependencia": {
+      "type": "enumeration",
+      "enum": [
+        "Corporación de Administración Delegada",
+        "Municipal",
+        "Particular Subvencionado",
+        "Particular Pagado",
+        "Servicio Local de Educación"
+      ]
+    },
+    "ruralidad": {
+      "type": "enumeration",
+      "enum": [
+        "Urbano",
+        "Rural"
+      ]
+    },
+    "estado_estab": {
+      "type": "enumeration",
+      "enum": [
+        "Funcionando",
+        "En receso",
+        "Cerrado",
+        "Autorizado sin matrícula"
+      ]
+    },
+    "region": {
+      "type": "string"
+    },
+    "provincia": {
+      "type": "string"
+    },
+    "zona": {
+      "type": "string"
+    },
+    "comuna": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::comuna.comuna",
+      "inversedBy": "colegios"
+    },
+    "cartera_asignaciones": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::cartera-asignacion.cartera-asignacion",
+      "mappedBy": "colegio"
+    },
+    "persona_trayectorias": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::persona-trayectoria.persona-trayectoria",
+      "mappedBy": "colegio"
+    },
+    "telefonos": {
+      "type": "component",
+      "component": "contacto.telefono",
+      "repeatable": true
+    },
+    "emails": {
+      "type": "component",
+      "component": "contacto.email",
+      "repeatable": true
+    },
+    "direcciones": {
+      "type": "component",
+      "component": "contacto.direccion",
+      "repeatable": true
+    },
+    "Website": {
+      "type": "component",
+      "component": "contacto.website",
+      "repeatable": true
+    },
+    "logo": {
+      "type": "component",
+      "component": "contacto.logo-o-avatar",
+      "repeatable": false
+    },
+    "sostenedor": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::colegio-sostenedor.colegio-sostenedor",
+      "inversedBy": "colegios"
+    },
+    "listas_utiles": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::colegio-list.colegio-list",
+      "mappedBy": "colegio"
+    },
+    "listas_escolares": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::lista-escolar.lista-escolar",
+      "mappedBy": "colegio"
+    },
+    "cursos": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::curso.curso",
+      "mappedBy": "colegio"
+    },
+    "attio_company_id": {
+      "type": "string",
+      "unique": true
+    },
+    "attio_metadata": {
+      "type": "json"
+    }
+  }
+}

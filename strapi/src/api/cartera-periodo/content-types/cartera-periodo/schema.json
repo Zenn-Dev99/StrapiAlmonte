@@ -1,0 +1,48 @@
+{
+  "kind": "collectionType",
+  "collectionName": "cartera_periodos",
+  "info": {
+    "singularName": "cartera-periodo",
+    "pluralName": "cartera-periodos",
+    "displayName": "Promoción · Colegios · Cartera Periodo",
+    "description": "Periodo o ciclo para la asignación comercial"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nombre": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "nombre"
+    },
+    "fecha_inicio": {
+      "type": "date"
+    },
+    "fecha_fin": {
+      "type": "date"
+    },
+    "estado": {
+      "type": "enumeration",
+      "default": "borrador",
+      "enum": [
+        "borrador",
+        "vigente",
+        "cerrado"
+      ]
+    },
+    "notas": {
+      "type": "text"
+    },
+    "asignaciones": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::cartera-asignacion.cartera-asignacion",
+      "mappedBy": "periodo"
+    }
+  }
+}

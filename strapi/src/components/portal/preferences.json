@@ -1,0 +1,53 @@
+{
+  "collectionName": "components_portal_preferences",
+  "info": {
+    "displayName": "preferences",
+    "description": "Preferencias de uso del portal"
+  },
+  "options": {},
+  "attributes": {
+    "language": {
+      "type": "enumeration",
+      "enum": ["es", "en"],
+      "default": "es"
+    },
+    "timezone": {
+      "type": "string"
+    },
+    "notifications_email": {
+      "type": "boolean",
+      "default": true
+    },
+    "notifications_push": {
+      "type": "boolean",
+      "default": false
+    },
+    "notifications_whatsapp": {
+      "type": "boolean",
+      "default": false
+    },
+    "marketing_opt_in": {
+      "type": "boolean",
+      "default": false
+    },
+    "default_dashboard": {
+      "type": "enumeration",
+      "enum": [
+        "general",
+        "pedidos",
+        "licencias",
+        "documentos",
+        "soporte"
+      ],
+      "default": "general"
+    },
+    "shortcuts": {
+      "type": "component",
+      "component": "portal.shortcut",
+      "repeatable": true
+    },
+    "hidden_widgets": {
+      "type": "json"
+    }
+  }
+}

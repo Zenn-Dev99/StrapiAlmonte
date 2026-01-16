@@ -1,0 +1,74 @@
+{
+  "kind": "collectionType",
+  "collectionName": "stocks",
+  "info": {
+    "singularName": "stock",
+    "pluralName": "stocks",
+    "displayName": "Product · Inventario · Stock",
+    "description": "Registro de stock de un libro en una ubicación específica"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "libro": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::libro.libro"
+    },
+    "ubicacion": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::ubicacion.ubicacion"
+    },
+    "pasillo": {
+      "type": "string"
+    },
+    "rack": {
+      "type": "string"
+    },
+    "repisa": {
+      "type": "string"
+    },
+    "caja": {
+      "type": "string"
+    },
+    "cantidad_disponible": {
+      "type": "integer",
+      "required": true,
+      "default": 0,
+      "min": 0
+    },
+    "cantidad_preventa": {
+      "type": "integer",
+      "default": 0,
+      "min": 0
+    },
+    "cantidad_en_produccion": {
+      "type": "integer",
+      "default": 0,
+      "min": 0
+    },
+    "fecha_estimada_produccion": {
+      "type": "date"
+    },
+    "cantidad_en_transito": {
+      "type": "integer",
+      "default": 0,
+      "min": 0
+    },
+    "fecha_estimada_transito": {
+      "type": "date"
+    },
+    "stock_minimo": {
+      "type": "integer",
+      "default": 0,
+      "min": 0
+    },
+    "activo": {
+      "type": "boolean",
+      "default": true
+    }
+  }
+}

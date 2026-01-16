@@ -1,0 +1,36 @@
+{
+  "kind": "collectionType",
+  "collectionName": "etiquetas",
+  "info": {
+    "singularName": "etiqueta",
+    "pluralName": "etiquetas",
+    "displayName": "Etiqueta (Tag)",
+    "description": "Etiquetas de productos para WooCommerce (Product Tags)"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "descripcion": {
+      "type": "text"
+    },
+    "externalIds": {
+      "type": "json",
+      "description": "IDs externos de WooCommerce: { woo_moraleja: 123, woo_escolar: 456 }"
+    },
+    "estado_publicacion": {
+      "type": "enumeration",
+      "default": "pendiente",
+      "enum": [
+        "pendiente",
+        "publicado",
+        "borrador"
+      ]
+    }
+  }
+}

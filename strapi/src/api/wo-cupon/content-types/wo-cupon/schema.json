@@ -1,0 +1,64 @@
+{
+  "kind": "collectionType",
+  "collectionName": "wo_cupones",
+  "info": {
+    "singularName": "wo-cupon",
+    "pluralName": "wo-cupones",
+    "displayName": "WO-Cupones",
+    "description": "Cupones sincronizados desde WooCommerce (Moraleja/Escolar)"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "codigo": {
+      "type": "string",
+      "required": true
+    },
+    "tipo_cupon": {
+      "type": "string"
+    },
+    "importe_cupon": {
+      "type": "decimal"
+    },
+    "descripcion": {
+      "type": "text"
+    },
+    "producto_ids": {
+      "type": "json"
+    },
+    "uso_limite": {
+      "type": "integer"
+    },
+    "fecha_caducidad": {
+      "type": "datetime"
+    },
+    "originPlatform": {
+      "type": "enumeration",
+      "enum": [
+        "woo_moraleja",
+        "woo_escolar",
+        "otros"
+      ]
+    },
+    "externalIds": {
+      "type": "json"
+    },
+    "wooId": {
+      "type": "integer"
+    },
+    "rawWooData": {
+      "type": "json"
+    },
+    "pedidos": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::pedido.pedido",
+      "mappedBy": "cupon",
+      "description": "Pedidos que utilizaron este cupón"
+    }
+  }
+}
+
+

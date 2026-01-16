@@ -1,0 +1,66 @@
+{
+  "kind": "collectionType",
+  "collectionName": "listas_escolares",
+  "info": {
+    "singularName": "lista-escolar",
+    "pluralName": "listas-escolares",
+    "displayName": "Lista Escolar",
+    "description": "Flujo de carga, tabulación y aprobación de listas escolares"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "titulo": {
+      "type": "string"
+    },
+    "colegio": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::colegio.colegio",
+      "inversedBy": "listas_escolares"
+    },
+    "anio": {
+      "type": "integer",
+      "required": true
+    },
+    "estado": {
+      "type": "enumeration",
+      "enum": [
+        "cargada",
+        "analizada",
+        "pendiente_validacion",
+        "pendiente_aprobacion",
+        "aprobada",
+        "rechazada"
+      ],
+      "default": "cargada"
+    },
+    "documentos": {
+      "type": "component",
+      "repeatable": true,
+      "component": "listas.documento"
+    },
+    "tabulaciones": {
+      "type": "component",
+      "repeatable": true,
+      "component": "listas.tabulacion"
+    },
+    "historial": {
+      "type": "component",
+      "repeatable": true,
+      "component": "listas.historial"
+    },
+    "version_actual": {
+      "type": "integer",
+      "default": 1
+    },
+    "etiquetas": {
+      "type": "json"
+    },
+    "metadata": {
+      "type": "json"
+    }
+  }
+}

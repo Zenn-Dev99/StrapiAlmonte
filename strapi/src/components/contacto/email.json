@@ -1,0 +1,40 @@
+{
+  "collectionName": "components_contacto_email",
+  "info": {
+    "displayName": "Email",
+    "description": "Email de contacto con estado y verificación"
+  },
+  "attributes": {
+    "email": {
+      "type": "email",
+      "required": true
+    },
+    "tipo": {
+      "type": "enumeration",
+      "enum": [
+        "Personal",
+        "Laboral",
+        "Institucional"
+      ]
+    },
+    "principal": {
+      "type": "boolean",
+      "default": false
+    },
+    "vigente_hasta": {
+      "type": "date"
+    },
+    "estado": {
+      "type": "enumeration",
+      "enum": [
+        "Por Verificar",
+        "Verificado",
+        "Aprobado"
+      ]
+    },
+    "status": {
+      "type": "boolean",
+      "default": true
+    }
+  }
+}

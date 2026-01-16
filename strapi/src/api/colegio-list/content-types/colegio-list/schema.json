@@ -1,0 +1,57 @@
+{
+  "kind": "collectionType",
+  "collectionName": "colegio_lists",
+  "info": {
+    "singularName": "colegio-list",
+    "pluralName": "colegio-lists",
+    "displayName": "Listas · Colegio",
+    "description": "Cabecera de listas de útiles por colegio y año"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "slug": {
+      "type": "uid",
+      "required": true,
+      "unique": true
+    },
+    "anio": {
+      "type": "integer",
+      "required": true,
+      "min": 2000
+    },
+    "colegio": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::colegio.colegio",
+      "inversedBy": "listas_utiles",
+      "required": true
+    },
+    "descripcion_interna": {
+      "type": "text"
+    },
+    "estado_global": {
+      "type": "enumeration",
+      "enum": [
+        "sin_versiones",
+        "en_proceso",
+        "publicado"
+      ],
+      "default": "sin_versiones",
+      "required": true
+    },
+    "version_actual": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::colegio-list-version.colegio-list-version"
+    },
+    "versiones": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::colegio-list-version.colegio-list-version",
+      "mappedBy": "colegio_list"
+    }
+  }
+}

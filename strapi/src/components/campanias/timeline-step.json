@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_campanias_timeline_steps",
+  "info": {
+    "displayName": "Timeline step",
+    "icon": "time"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "detail": {
+      "type": "text"
+    }
+  }
+}

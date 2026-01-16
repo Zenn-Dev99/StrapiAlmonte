@@ -1,0 +1,24 @@
+{
+  "kind": "collectionType",
+  "collectionName": "canales",
+  "info": {
+    "singularName": "canal",
+    "pluralName": "canales",
+    "displayName": "Product · Libro · Canal"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "key": {
+      "type": "uid",
+      "targetField": "name",
+      "required": true
+    }
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "kind": "collectionType",
+  "collectionName": "colegio_sostenedores",
+  "info": {
+    "singularName": "colegio-sostenedor",
+    "pluralName": "colegio-sostenedores",
+    "displayName": "Colegio · Sostenedores",
+    "description": "Registro de sostenedores de colegios"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "rut_sostenedor": {
+      "type": "biginteger",
+      "required": true,
+      "unique": true
+    },
+    "dv_rut": {
+      "type": "string",
+      "required": true
+    },
+    "rut_completo": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "razon_social": {
+      "type": "string",
+      "required": true
+    },
+    "nombre_fantasia": {
+      "type": "string"
+    },
+    "giro": {
+      "type": "string"
+    },
+    "tipo_sostenedor": {
+      "type": "enumeration",
+      "enum": [
+        "Municipalidad",
+        "Corporación Municipal",
+        "Servicio Local de Educación",
+        "SLEP",
+        "Particular",
+        "Corporación",
+        "Fundación",
+        "Otro"
+      ]
+    },
+    "direccion": {
+      "type": "component",
+      "component": "contacto.direccion",
+      "repeatable": false
+    },
+    "contacto": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::persona.persona"
+    },
+    "telefonos": {
+      "type": "component",
+      "component": "contacto.telefono",
+      "repeatable": true
+    },
+    "emails": {
+      "type": "component",
+      "component": "contacto.email",
+      "repeatable": true
+    },
+    "colegios": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::colegio.colegio",
+      "mappedBy": "sostenedor"
+    }
+  }
+}

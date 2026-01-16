@@ -1,0 +1,32 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Backend centralizado que incluye Strapi (CMS) y servicios auxiliares.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "build": "cd strapi && npm install && npm run build",
+    "start": "cd strapi && npm start",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "analizar:woo": "node scripts/analizar-producto-woocommerce.mjs",
+    "auditar:woo": "node scripts/auditar-estructura-woocommerce.mjs",
+    "auditar:woo:completo": "node scripts/auditar-estructura-completa-woocommerce.mjs",
+    "completar:woo": "node scripts/completar-datos-woocommerce-desde-strapi.mjs",
+    "configurar:woo": "node scripts/configurar-woocommerce-desde-estructura-strapi.mjs",
+    "sync:cron": "node scripts/sincronizacion-cron.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "form-data": "^4.0.5",
+    "googleapis": "^166.0.0",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "@vitest/ui": "^4.0.16",
+    "vitest": "^4.0.16"
+  }
+}

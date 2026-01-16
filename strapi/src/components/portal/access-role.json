@@ -1,0 +1,59 @@
+{
+  "collectionName": "components_portal_access_roles",
+  "info": {
+    "displayName": "accessRole",
+    "description": "Contexto de acceso al portal por rol"
+  },
+  "options": {},
+  "attributes": {
+    "role": {
+      "type": "enumeration",
+      "enum": [
+        "colegio_admin",
+        "docente",
+        "apoderado",
+        "estudiante",
+        "staff"
+      ],
+      "required": true
+    },
+    "is_primary": {
+      "type": "boolean",
+      "default": false
+    },
+    "colegio": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::colegio.colegio"
+    },
+    "cursos": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::curso.curso"
+    },
+    "dependientes": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::persona.persona"
+    },
+    "default_dashboard": {
+      "type": "enumeration",
+      "enum": [
+        "general",
+        "pedidos",
+        "licencias",
+        "documentos",
+        "soporte"
+      ]
+    },
+    "scopes": {
+      "type": "json"
+    },
+    "valid_until": {
+      "type": "datetime"
+    },
+    "notes": {
+      "type": "text"
+    }
+  }
+}

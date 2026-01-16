@@ -1,0 +1,50 @@
+{
+  "kind": "collectionType",
+  "collectionName": "etiquetas_apoderados",
+  "info": {
+    "singularName": "etiqueta-apoderado",
+    "pluralName": "etiquetas-apoderados",
+    "displayName": "Etiquetas - Apoderados",
+    "description": "Apoderados asociados a alumnos"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nombres": {
+      "type": "string",
+      "required": true
+    },
+    "primer_apellido": {
+      "type": "string",
+      "required": true
+    },
+    "segundo_apellido": {
+      "type": "string"
+    },
+    "rut": {
+      "type": "string",
+      "required": false,
+      "unique": true
+    },
+    "telefono": {
+      "type": "string"
+    },
+    "email": {
+      "type": "email"
+    },
+    "uid": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "alumnos": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::etiqueta-alumno.etiqueta-alumno",
+      "mappedBy": "apoderado"
+    }
+  }
+}
+

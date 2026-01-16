@@ -1,0 +1,57 @@
+{
+  "collectionName": "components_portal_accounts",
+  "info": {
+    "displayName": "account",
+    "description": "Estado de cuenta del portal Moraleja"
+  },
+  "options": {},
+  "attributes": {
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "pending_invite",
+        "active",
+        "suspended",
+        "revoked"
+      ],
+      "default": "pending_invite"
+    },
+    "sso_provider": {
+      "type": "enumeration",
+      "enum": [
+        "auth0",
+        "keycloak",
+        "google",
+        "microsoft",
+        "internal",
+        "otro"
+      ],
+      "default": "auth0"
+    },
+    "username": {
+      "type": "string"
+    },
+    "primary_email": {
+      "type": "email"
+    },
+    "portal_id": {
+      "type": "string"
+    },
+    "last_login_at": {
+      "type": "datetime"
+    },
+    "onboarded_at": {
+      "type": "datetime"
+    },
+    "mfa_enabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "accepted_terms_at": {
+      "type": "datetime"
+    },
+    "notes": {
+      "type": "text"
+    }
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "kind": "collectionType",
+  "collectionName": "colegio_list_documents",
+  "info": {
+    "singularName": "colegio-list-document",
+    "pluralName": "colegio-list-documents",
+    "displayName": "Listas · Documento",
+    "description": "Documentos fuente (PDF) utilizados para indexar listas de útiles"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nombre_archivo": {
+      "type": "string",
+      "required": true
+    },
+    "archivo_pdf": {
+      "type": "media",
+      "allowedTypes": [
+        "files"
+      ],
+      "required": false
+    },
+    "curso_detectado": {
+      "type": "string"
+    },
+    "curso_normalizado": {
+      "type": "string"
+    },
+    "pagina_inicio": {
+      "type": "integer",
+      "min": 1
+    },
+    "pagina_fin": {
+      "type": "integer",
+      "min": 1
+    },
+    "pdf_hash": {
+      "type": "string",
+      "maxLength": 191
+    },
+    "estado_procesamiento": {
+      "type": "enumeration",
+      "enum": [
+        "pendiente",
+        "procesando",
+        "completado",
+        "error"
+      ],
+      "default": "pendiente",
+      "required": true
+    },
+    "procesamiento_log": {
+      "type": "json"
+    },
+    "orden": {
+      "type": "integer"
+    },
+    "version": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::colegio-list-version.colegio-list-version",
+      "inversedBy": "documentos",
+      "required": true
+    },
+    "items": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::colegio-list-item.colegio-list-item",
+      "mappedBy": "documento"
+    },
+    "notas": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::colegio-list-note.colegio-list-note",
+      "mappedBy": "documento"
+    }
+  }
+}

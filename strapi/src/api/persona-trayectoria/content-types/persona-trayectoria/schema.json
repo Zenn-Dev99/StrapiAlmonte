@@ -1,0 +1,85 @@
+{
+  "kind": "collectionType",
+  "collectionName": "persona_trayectorias",
+  "info": {
+    "singularName": "persona-trayectoria",
+    "pluralName": "persona-trayectorias",
+    "displayName": "Colegio · Profesores",
+    "description": "Historial de cargos por colegio/curso/asignatura"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "persona": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::persona.persona",
+      "inversedBy": "trayectorias",
+      "pluginOptions": {
+        "content-manager": {
+          "visible": true,
+          "mainField": "nombre_completo"
+        }
+      }
+    },
+    "colegio": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::colegio.colegio",
+      "inversedBy": "persona_trayectorias"
+    },
+    "curso": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::curso.curso"
+    },
+    "asignatura": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::asignatura.asignatura"
+    },
+    "curso_asignatura": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::curso-asignatura.curso-asignatura"
+    },
+    "cargo": {
+      "type": "string"
+    },
+    "anio": {
+      "type": "integer"
+    },
+    "fecha_inicio": {
+      "type": "date"
+    },
+    "fecha_fin": {
+      "type": "date"
+    },
+    "notas": {
+      "type": "text"
+    },
+    "org_display_name": {
+      "type": "string"
+    },
+    "role_key": {
+      "type": "string"
+    },
+    "department": {
+      "type": "string"
+    },
+    "is_current": {
+      "type": "boolean",
+      "default": false
+    },
+    "colegio_comuna": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::comuna.comuna"
+    },
+    "colegio_region": {
+      "type": "string"
+    }
+  }
+}

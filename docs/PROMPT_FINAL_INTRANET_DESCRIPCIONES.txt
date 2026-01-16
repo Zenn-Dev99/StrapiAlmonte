@@ -1,0 +1,335 @@
+═══════════════════════════════════════════════════════════════════
+📢 SOLUCIÓN DEFINITIVA: Descripciones en WooCommerce
+═══════════════════════════════════════════════════════════════════
+
+PROBLEMAS A RESOLVER:
+1. ❌ Las descripciones NO aparecen en WooCommerce (están vacías)
+2. ❌ Cuando aparecen, ambas descripciones muestran el MISMO texto completo
+
+SOLUCIÓN COMPLETA:
+✅ Incluir descripciones en rawWooData
+✅ Usar funciones helper para convertir texto a HTML
+✅ Limitar descripción corta a 150 caracteres
+
+═══════════════════════════════════════════════════════════════════
+PASO 1: AGREGAR FUNCIONES HELPER
+═══════════════════════════════════════════════════════════════════
+
+Agrega estas dos funciones al inicio del archivo donde creas/editas productos:
+
+// Función 1: Convierte texto plano a HTML con párrafos
+function textoAHTML(texto) {
+  if (!texto || texto.trim() === '') return '';
+  
+  // Convertir saltos de línea dobles en párrafos
+  const parrafos = texto.split('\n\n')
+    .filter(p => p.trim())
+    .map(p => `<p>${p.trim().replace(/\n/g, '<br>')}</p>`)
+    .join('');
+  
+  return parrafos || `<p>${texto}</p>`;
+}
+
+// Función 2: Genera descripción CORTA limitada a X caracteres
+function generarDescripcionCorta(texto, maxCaracteres = 150) {
+  if (!texto || texto.trim() === '') return '';
+  
+  // Limpiar saltos de línea y convertir a una sola línea
+  const textoLimpio = texto.replace(/\n/g, ' ').trim();
+  
+  // Limitar a X caracteres
+  let textoCorto;
+  if (textoLimpio.length > maxCaracteres) {
+    // Cortar en la última palabra completa antes del límite
+    textoCorto = textoLimpio.substring(0, maxCaracteres);
+    const ultimoEspacio = textoCorto.lastIndexOf(' ');
+    if (ultimoEspacio > 0) {
+      textoCorto = textoCorto.substring(0, ultimoEspacio);
+    }
+    textoCorto += '...';
+  } else {
+    textoCorto = textoLimpio;
+  }
+  
+  return `<p>${textoCorto}</p>`;
+}
+
+═══════════════════════════════════════════════════════════════════
+PASO 2: USAR EN EL PAYLOAD
+═══════════════════════════════════════════════════════════════════
+
+En tu función de crear/actualizar producto, construye el payload así:
+
+const handleSubmit = async (formData) => {
+  try {
+    // ✅ Procesar descripciones con las funciones helper
+    const descripcionCompleta = textoAHTML(formData.descripcion);
+    const descripcionCorta = generarDescripcionCorta(formData.descripcion, 150);
+    
+    // Debug (opcional - ver en consola)
+    console.log('📝 Descripción completa:', descripcionCompleta.length, 'caracteres');
+    console.log('📝 Descripción corta:', descripcionCorta.length, 'caracteres');
+    
+    const payload = {
+      data: {
+        nombre_libro: formData.nombre,
+        isbn_libro: formData.isbn,
+        precio: parseFloat(formData.precio),
+        stock_quantity: parseInt(formData.stock) || 0,
+        estado_publicacion: "Publicado",
+        canales: [1, 2], // 1 = moraleja, 2 = escolar
+        
+        rawWooData: {
+          name: formData.nombre,
+          type: "simple",
+          status: "publish",
+          sku: formData.isbn,
+          
+          // ✅ CRÍTICO: Incluir descripciones procesadas
+          description: descripcionCompleta,      // HTML completo
+          short_description: descripcionCorta,   // Limitado a 150 chars
+          
+          regular_price: formData.precio.toString(),
+          sale_price: formData.precio_oferta?.toString() || '',
+          
+          manage_stock: true,
+          stock_quantity: parseInt(formData.stock) || 0,
+          stock_status: parseInt(formData.stock) > 0 ? 'instock' : 'outofstock',
+          backorders: 'no',
+          backorders_allowed: false,
+          
+          weight: formData.peso || '',
+          dimensions: {
+            length: formData.largo || '',
+            width: formData.ancho || '',
+            height: formData.alto || ''
+          },
+          shipping_class: formData.clase_envio || '',
+          
+          images: formData.imagenUrl ? [
+            {
+              src: formData.imagenUrl,
+              name: formData.nombre,
+              alt: formData.nombre
+            }
+          ] : []
+        }
+      }
+    };
+    
+    // Enviar a Strapi
+    const endpoint = modoEdicion
+      ? `https://strapi.moraleja.cl/api/libros/${productoId}`
+      : 'https://strapi.moraleja.cl/api/libros';
+    
+    const response = await fetch(endpoint, {
+      method: modoEdicion ? 'PUT' : 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error?.message || 'Error al guardar producto');
+    }
+    
+    console.log('✅ Producto guardado con descripciones correctas');
+    
+    // Redirigir o mostrar mensaje de éxito
+    alert('✅ Producto guardado exitosamente');
+    
+  } catch (error) {
+    console.error('❌ Error:', error);
+    alert('❌ Error al guardar: ' + error.message);
+  }
+};
+
+═══════════════════════════════════════════════════════════════════
+PASO 3: VALIDACIONES (OPCIONAL PERO RECOMENDADO)
+═══════════════════════════════════════════════════════════════════
+
+Antes de enviar el payload, valida que las descripciones no estén vacías:
+
+function validarFormulario(formData) {
+  const errores = {};
+  
+  if (!formData.descripcion || formData.descripcion.trim() === '') {
+    errores.descripcion = 'La descripción es requerida';
+  }
+  
+  if (formData.descripcion && formData.descripcion.length < 10) {
+    errores.descripcion = 'La descripción debe tener al menos 10 caracteres';
+  }
+  
+  return errores;
+}
+
+// Usar en handleSubmit:
+const errores = validarFormulario(formData);
+if (Object.keys(errores).length > 0) {
+  console.error('Errores de validación:', errores);
+  alert('Por favor completa la descripción del producto');
+  return;
+}
+
+═══════════════════════════════════════════════════════════════════
+EJEMPLO COMPLETO DE RESULTADO
+═══════════════════════════════════════════════════════════════════
+
+ENTRADA (formData.descripcion):
+"Cálculo I es un libro fundamental para estudiantes de ingeniería y ciencias.
+
+Incluye más de 500 ejercicios resueltos paso a paso, con explicaciones detalladas de cada concepto matemático.
+
+Los temas cubiertos incluyen límites, derivadas, integrales y sus aplicaciones prácticas."
+
+SALIDA EN rawWooData:
+
+description:
+"<p>Cálculo I es un libro fundamental para estudiantes de ingeniería y ciencias.</p>
+<p>Incluye más de 500 ejercicios resueltos paso a paso, con explicaciones detalladas de cada concepto matemático.</p>
+<p>Los temas cubiertos incluyen límites, derivadas, integrales y sus aplicaciones prácticas.</p>"
+
+short_description:
+"<p>Cálculo I es un libro fundamental para estudiantes de ingeniería y ciencias. Incluye más de 500 ejercicios resueltos paso a...</p>"
+
+RESULTADO EN WOOCOMMERCE:
+✅ Descripción completa: Todo el texto con formato de párrafos
+✅ Descripción corta: Solo las primeras 150 caracteres
+
+═══════════════════════════════════════════════════════════════════
+VERIFICAR QUE FUNCIONA
+═══════════════════════════════════════════════════════════════════
+
+1. CREAR UN PRODUCTO DE PRUEBA
+   - Llenar el campo descripción con texto largo (200+ caracteres)
+   - Guardar el producto
+   
+2. VER EN CONSOLA DEL NAVEGADOR
+   Debe mostrar:
+   📝 Descripción completa: 300 caracteres
+   📝 Descripción corta: 153 caracteres
+   
+3. VERIFICAR EN WOOCOMMERCE ADMIN
+   - Ir a: https://moraleja.cl/wp-admin/edit.php?post_type=product
+   - Editar el producto recién creado
+   - Tab "Descripción" → Debe tener todo el texto
+   - Tab "Descripción corta" → Debe tener solo ~150 caracteres
+   
+4. VERIFICAR EN EL FRONTEND
+   - Ir a la página del producto en la tienda
+   - La descripción completa debe aparecer en el tab "Descripción"
+   - La descripción corta debe aparecer en listados de productos
+
+═══════════════════════════════════════════════════════════════════
+DEBUGGING SI NO FUNCIONA
+═══════════════════════════════════════════════════════════════════
+
+Si después de implementar SIGUE sin funcionar:
+
+1. Verificar que las funciones están definidas:
+   console.log('¿textoAHTML existe?', typeof textoAHTML === 'function');
+   console.log('¿generarDescripcionCorta existe?', typeof generarDescripcionCorta === 'function');
+   
+2. Verificar que formData.descripcion tiene valor:
+   console.log('formData.descripcion:', formData.descripcion);
+   
+3. Verificar las descripciones procesadas:
+   console.log('descripcionCompleta:', descripcionCompleta);
+   console.log('descripcionCorta:', descripcionCorta);
+   
+4. Verificar que son DIFERENTES:
+   console.log('¿Son diferentes?', descripcionCompleta !== descripcionCorta);
+   // Debe mostrar: true
+   
+5. Ver el payload completo antes de enviar:
+   console.log('Payload completo:', JSON.stringify(payload, null, 2));
+
+═══════════════════════════════════════════════════════════════════
+AJUSTES OPCIONALES
+═══════════════════════════════════════════════════════════════════
+
+CAMBIAR LONGITUD DE DESCRIPCIÓN CORTA:
+
+// Más corta (100 caracteres)
+const descripcionCorta = generarDescripcionCorta(formData.descripcion, 100);
+
+// Normal (150 caracteres) - RECOMENDADO
+const descripcionCorta = generarDescripcionCorta(formData.descripcion, 150);
+
+// Más larga (200 caracteres)
+const descripcionCorta = generarDescripcionCorta(formData.descripcion, 200);
+
+═══════════════════════════════════════════════════════════════════
+CÓDIGO PARA EDITAR PRODUCTOS
+═══════════════════════════════════════════════════════════════════
+
+Al EDITAR un producto, necesitas convertir el formato blocks de Strapi
+de vuelta a texto para mostrarlo en el formulario:
+
+const cargarProducto = async (productoId) => {
+  const response = await fetch(
+    `https://strapi.moraleja.cl/api/libros/${productoId}?populate=*`
+  );
+  const data = await response.json();
+  const producto = data.data.attributes;
+  
+  // Convertir descripcion (blocks) a texto plano
+  let descripcionTexto = '';
+  if (producto.descripcion && Array.isArray(producto.descripcion)) {
+    descripcionTexto = producto.descripcion
+      .map(block => {
+        if (block.children && Array.isArray(block.children)) {
+          return block.children.map(child => child.text || '').join('');
+        }
+        return '';
+      })
+      .join('\n\n');
+  }
+  
+  // Llenar formulario
+  setFormData({
+    nombre: producto.nombre_libro,
+    isbn: producto.isbn_libro,
+    precio: producto.precio,
+    stock: producto.stock_quantity,
+    descripcion: descripcionTexto || producto.subtitulo_libro || '',
+  });
+};
+
+═══════════════════════════════════════════════════════════════════
+RESUMEN EJECUTIVO
+═══════════════════════════════════════════════════════════════════
+
+IMPLEMENTACIÓN EN 3 PASOS:
+
+1. COPIAR las dos funciones helper (textoAHTML y generarDescripcionCorta)
+   
+2. AGREGAR en el payload:
+   description: textoAHTML(formData.descripcion)
+   short_description: generarDescripcionCorta(formData.descripcion, 150)
+   
+3. PROBAR creando un producto con descripción larga
+
+RESULTADO:
+✅ Descripciones aparecen en WooCommerce
+✅ Descripción completa: Texto completo con formato HTML
+✅ Descripción corta: Solo 150 caracteres
+✅ Ambas descripciones son DIFERENTES
+
+TIEMPO ESTIMADO:
+10-15 minutos de implementación
+
+PRIORIDAD:
+🔴 URGENTE - Implementar inmediatamente
+
+═══════════════════════════════════════════════════════════════════
+
+IMPLEMENTA ESTAS FUNCIONES Y EL PROBLEMA DE DESCRIPCIONES QUEDARÁ
+COMPLETAMENTE RESUELTO.
+
+DESPUÉS DE IMPLEMENTAR, CREA UN PRODUCTO DE PRUEBA Y VERIFICA QUE
+LAS DESCRIPCIONES APAREZCAN CORRECTAMENTE EN WOOCOMMERCE.
+
+═══════════════════════════════════════════════════════════════════
+

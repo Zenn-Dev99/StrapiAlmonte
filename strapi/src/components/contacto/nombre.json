@@ -1,0 +1,42 @@
+{
+  "collectionName": "components_contacto_nombres",
+  "info": {
+    "displayName": "Verificación Nombre",
+    "icon": "handHeart"
+  },
+  "options": {},
+  "attributes": {
+    "estado": {
+      "type": "enumeration",
+      "enum": [
+        "Por Verificar",
+        "Verificado",
+        "Aprobado",
+        "Rechazado",
+        "Otro"
+      ]
+    },
+    "nota": {
+      "type": "string"
+    },
+    "fuente": {
+      "type": "string"
+    },
+    "verificado_por": {
+      "type": "string"
+    },
+    "aprobado_por": {
+      "type": "string"
+    },
+    "fecha_aprobacion": {
+      "type": "date"
+    },
+    "fecha_verificacion": {
+      "type": "date"
+    },
+    "confiance_score": {
+      "type": "integer"
+    }
+  },
+  "config": {}
+}

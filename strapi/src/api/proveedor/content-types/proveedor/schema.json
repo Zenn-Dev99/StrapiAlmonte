@@ -1,0 +1,48 @@
+{
+  "kind": "collectionType",
+  "collectionName": "proveedores",
+  "info": {
+    "singularName": "proveedor",
+    "pluralName": "proveedores",
+    "displayName": "Product · Inventario · Proveedor",
+    "description": "Proveedores de productos (editoriales, distribuidores, etc.)"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nombre": {
+      "type": "string",
+      "required": true
+    },
+    "codigo": {
+      "type": "string",
+      "unique": true
+    },
+    "rut": {
+      "type": "string"
+    },
+    "contacto_nombre": {
+      "type": "string"
+    },
+    "contacto_email": {
+      "type": "email"
+    },
+    "contacto_telefono": {
+      "type": "string"
+    },
+    "direccion": {
+      "type": "text"
+    },
+    "tiempo_entrega_dias": {
+      "type": "integer",
+      "default": 0,
+      "min": 0
+    },
+    "activo": {
+      "type": "boolean",
+      "default": true
+    }
+  }
+}

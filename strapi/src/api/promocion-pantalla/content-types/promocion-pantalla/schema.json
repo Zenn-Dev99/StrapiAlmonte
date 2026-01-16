@@ -1,0 +1,63 @@
+{
+  "kind": "collectionType",
+  "collectionName": "promociones_pantalla",
+  "info": {
+    "singularName": "promocion-pantalla",
+    "pluralName": "promociones-pantalla",
+    "displayName": "Promoción · Pantalla",
+    "description": "Promociones para mostrar en la pantalla pública de turnos"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "titulo": {
+      "type": "string",
+      "required": true
+    },
+    "subtitulo": {
+      "type": "string"
+    },
+    "descripcion": {
+      "type": "text"
+    },
+    "color_inicio": {
+      "type": "string",
+      "default": "blue-600"
+    },
+    "color_fin": {
+      "type": "string",
+      "default": "purple-600"
+    },
+    "imagen": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "video": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "videos",
+        "files"
+      ]
+    },
+    "orden": {
+      "type": "integer",
+      "default": 0
+    },
+    "activo": {
+      "type": "boolean",
+      "default": true
+    },
+    "duracion_segundos": {
+      "type": "integer",
+      "default": 10
+    }
+  }
+}

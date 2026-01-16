@@ -1,0 +1,54 @@
+{
+  "kind": "collectionType",
+  "collectionName": "libros_mira",
+  "info": {
+    "singularName": "libro-mira",
+    "pluralName": "libros-mira",
+    "displayName": "MIRA · Libro",
+    "description": "Libros configurados para MIRA.APP con códigos de activación y recursos"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "libro": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::libro.libro",
+      "required": true,
+      "unique": true
+    },
+    "url_qr_redireccion": {
+      "type": "string",
+      "description": "URL a la que redirige el QR del libro (ej: /qr?libro=ISBN)"
+    },
+    "google_drive_folder_id": {
+      "type": "string",
+      "description": "ID de la carpeta en Google Drive con los recursos del libro"
+    },
+    "tiene_omr": {
+      "type": "boolean",
+      "default": false,
+      "description": "Si el libro tiene funcionalidad OMR habilitada"
+    },
+    "activo": {
+      "type": "boolean",
+      "default": true,
+      "description": "Si el libro está activo en MIRA.APP"
+    },
+    "licencias": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::licencia-estudiante.licencia-estudiante",
+      "mappedBy": "libro_mira"
+    },
+    "evaluaciones": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::evaluacion.evaluacion",
+      "mappedBy": "libro_mira"
+    }
+  }
+}
+

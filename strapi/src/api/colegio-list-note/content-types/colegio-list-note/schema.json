@@ -1,0 +1,55 @@
+{
+  "kind": "collectionType",
+  "collectionName": "colegio_list_notes",
+  "info": {
+    "singularName": "colegio-list-note",
+    "pluralName": "colegio-list-notes",
+    "displayName": "Listas · Nota",
+    "description": "Notas y anotaciones encontradas en listas de útiles"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "tipo": {
+      "type": "enumeration",
+      "enum": [
+        "encabezado",
+        "pie",
+        "general",
+        "instruccion"
+      ],
+      "required": true
+    },
+    "contenido": {
+      "type": "text",
+      "required": true
+    },
+    "pagina": {
+      "type": "integer",
+      "min": 1
+    },
+    "bounding_box": {
+      "type": "component",
+      "repeatable": false,
+      "component": "listas-utiles.bounding-box"
+    },
+    "version": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::colegio-list-version.colegio-list-version",
+      "inversedBy": "notas",
+      "required": true
+    },
+    "documento": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::colegio-list-document.colegio-list-document",
+      "inversedBy": "notas"
+    },
+    "orden": {
+      "type": "integer"
+    }
+  }
+}

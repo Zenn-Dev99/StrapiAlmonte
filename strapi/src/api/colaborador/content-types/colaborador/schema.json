@@ -1,0 +1,111 @@
+{
+  "kind": "collectionType",
+  "collectionName": "colaboradores",
+  "info": {
+    "singularName": "colaborador",
+    "pluralName": "colaboradores",
+    "displayName": "Intranet · Colaboradores",
+    "description": "Usuarios internos que operan roles en la intranet"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "persona": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::persona.persona"
+    },
+    "empresa": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::empresa.empresa",
+      "inversedBy": "colaboradores"
+    },
+    "email_login": {
+      "type": "email",
+      "required": true,
+      "unique": true
+    },
+    "password": {
+      "type": "password",
+      "private": true,
+      "minLength": 6
+    },
+    "session_token": {
+      "type": "string",
+      "private": true
+    },
+    "usuario": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "rol": {
+      "type": "enumeration",
+      "enum": [
+        "soporte",
+        "encargado_adquisiciones",
+        "super_admin",
+        "supervisor"
+      ]
+    },
+    "auth_provider": {
+      "type": "enumeration",
+      "default": "google",
+      "enum": [
+        "google",
+        "strapi",
+        "otro"
+      ]
+    },
+    "rol_principal": {
+      "type": "enumeration",
+      "enum": [
+        "soporte",
+        "encargado_adquisiciones",
+        "super_admin",
+        "supervisor"
+      ]
+    },
+    "rol_operativo": {
+      "type": "enumeration",
+      "enum": [
+        "support_verify",
+        "support_approve",
+        "support_super",
+        "sales_exec",
+        "sales_manager"
+      ],
+      "default": "support_verify"
+    },
+    "plataforma": {
+      "type": "enumeration",
+      "enum": [
+        "moraleja",
+        "escolar",
+        "general"
+      ],
+      "default": "general"
+    },
+    "perfiles_operativos": {
+      "type": "json",
+      "default": []
+    },
+    "metadata": {
+      "type": "json",
+      "default": {}
+    },
+    "activo": {
+      "type": "boolean",
+      "default": true
+    },
+    "notas": {
+      "type": "text"
+    },
+    "identificadores_externos": {
+      "type": "json"
+    }
+  }
+}

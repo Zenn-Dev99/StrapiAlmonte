@@ -1,0 +1,80 @@
+{
+  "kind": "collectionType",
+  "collectionName": "email_logs",
+  "info": {
+    "singularName": "email-log",
+    "pluralName": "email-logs",
+    "displayName": "Email · Log",
+    "description": "Historial de envíos de correos automatizados"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "template": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::email-template.email-template",
+      "inversedBy": "logs"
+    },
+    "template_key": {
+      "type": "string",
+      "required": true
+    },
+    "status": {
+      "type": "enumeration",
+      "default": "pending",
+      "enum": [
+        "pending",
+        "sent",
+        "failed"
+      ]
+    },
+    "subject": {
+      "type": "string"
+    },
+    "from_address": {
+      "type": "string"
+    },
+    "to": {
+      "type": "json",
+      "required": true
+    },
+    "to_primary": {
+      "type": "string"
+    },
+    "cc": {
+      "type": "json"
+    },
+    "bcc": {
+      "type": "json"
+    },
+    "reply_to": {
+      "type": "string"
+    },
+    "payload": {
+      "type": "json"
+    },
+    "attachments": {
+      "type": "json"
+    },
+    "response": {
+      "type": "json"
+    },
+    "campaign_id": {
+      "type": "string"
+    },
+    "error_message": {
+      "type": "text"
+    },
+    "sent_at": {
+      "type": "datetime"
+    },
+    "triggered_by": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    }
+  }
+}

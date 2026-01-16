@@ -1,0 +1,30 @@
+{
+  "collectionName": "components_contacto_websites",
+  "info": {
+    "displayName": "Website",
+    "icon": "globe"
+  },
+  "options": {},
+  "attributes": {
+    "website": {
+      "type": "string"
+    },
+    "estado": {
+      "type": "enumeration",
+      "enum": [
+        "Por Verificar",
+        "Verificado",
+        "Aprobado"
+      ]
+    },
+    "vigente_hasta": {
+      "type": "date"
+    },
+    "status": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "config": {}
+}
+

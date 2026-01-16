@@ -1,0 +1,55 @@
+{
+  "kind": "collectionType",
+  "collectionName": "empresas",
+  "info": {
+    "singularName": "empresa",
+    "pluralName": "empresas",
+    "displayName": "Intranet · Empresa"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nombre": {
+      "type": "string",
+      "required": true
+    },
+    "nombre_corto": {
+      "type": "string"
+    },
+    "website": {
+      "type": "string"
+    },
+    "logo_principal": {
+      "type": "component",
+      "component": "shared.media",
+      "repeatable": false
+    },
+    "logo_secundario": {
+      "type": "component",
+      "component": "shared.media",
+      "repeatable": false
+    },
+    "favicon": {
+      "type": "component",
+      "component": "shared.media",
+      "repeatable": false
+    },
+    "colaboradores": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::colaborador.colaborador",
+      "mappedBy": "empresa"
+    },
+    "colores": {
+      "type": "json",
+      "default": {}
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "nombre",
+      "required": true
+    }
+  }
+}
