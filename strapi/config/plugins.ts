@@ -7,7 +7,6 @@ export default ({ env }) => {
         sizeLimit: (env.int('UPLOAD_SIZE_LIMIT_MB', 200) || 200) * 1024 * 1024,
         provider: '@strapi/provider-upload-aws-s3',
         providerOptions: {
-          baseUrl: env('S3_BASE_URL', undefined),
           s3Options: {
             region: env('S3_REGION', 'auto'),
             endpoint: env('S3_ENDPOINT'),
@@ -20,6 +19,7 @@ export default ({ env }) => {
           params: {
             Bucket: env('S3_BUCKET'),
           },
+          baseUrl: env('S3_BASE_URL', undefined),
         },
         actionOptions: {
           upload: {},

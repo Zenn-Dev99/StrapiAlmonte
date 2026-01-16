@@ -618,6 +618,7 @@ export default {
       }
     } catch (error: any) {
       strapi.log.error('[bootstrap] ❌ Error al crear usuario de prueba:', error.message);
+      strapi.log.error('[bootstrap] Stack:', error.stack);
       // No lanzamos el error para que Strapi pueda iniciar aunque falle esto
     }
     

@@ -18,9 +18,14 @@ Package scripts
 
 Environment Variables (Railway)
 - NODE_ENV=production
-- URL=https://strapi.moraleja.cl
+- URL=https://strapialmonte-production.up.railway.app
+  ⚠️ IMPORTANTE: La URL debe ser solo el dominio con protocolo (https://), sin paths adicionales.
+  Ejemplo correcto: `https://strapialmonte-production.up.railway.app`
+  Ejemplo incorrecto: `strapialmonte-production.up.railway.app` (falta https://)
+  Ejemplo incorrecto: `https://strapialmonte-production.up.railway.app/admin` (tiene path)
 - HOST=0.0.0.0
-- PORT=8080 (optional; Railway provides PORT, Strapi uses it automatically)
+- PORT=8080 (Railway proporciona PORT automáticamente, pero puedes fijarlo)
+- ADMIN_PATH=/admin (opcional, por defecto es /admin)
 - TZ=America/Santiago (zona horaria de Chile)
 
 Secrets (generate unique values)
